@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: gateway
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${remote-ip}:8848
+        namespace: demo-config
+        group: DEFAULT_GROUP
+      config:
+        server-addr: ${remote-ip}:8848
+        namespace: demo-config
+        group: GATEWAY
+        prefix: ${spring.application.name}
+        fileExtension: yaml
+
+# 自定义变量
+remote-ip: lyc.io
+

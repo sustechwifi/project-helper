@@ -1,0 +1,7 @@
+### 查看验证信息
+
+GET http://localhost:8080/auth-info
+
+
+### 登出
+GET http://localhost:8080/logout

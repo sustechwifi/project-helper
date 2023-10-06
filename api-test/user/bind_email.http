@@ -1,0 +1,23 @@
+### 绑定邮箱
+
+GET localhost:8080/user/bind/email?email=12110919@mail.sustech.edu.cn
+
+
+### 绑定邮箱
+
+POST localhost:8080/user/bind/email
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+
+--WebAppBoundary
+Content-Disposition: form-data; name="email"
+Content-Type: text/plain
+
+12110919@mail.sustech.edu.cn
+
+--WebAppBoundary
+Content-Disposition: form-data; name="code"
+Content-Type: text/plain
+
+123546
+

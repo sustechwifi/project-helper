@@ -1,0 +1,14 @@
+### 修改个人信息
+
+POST localhost:8080/user/edit/info
+Content-Type: application/json
+
+{
+  "name": "小星星",
+  "avatar": "test.com",
+  "college": "树礼书院",
+  "introduction": "这是一段自我介绍",
+  "sex": "female",
+  "grade": "2021级",
+  "major": "计算机科学与技术"
+}

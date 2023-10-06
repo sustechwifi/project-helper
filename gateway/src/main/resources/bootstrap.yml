@@ -7,15 +7,39 @@ spring:
     nacos:
       discovery:
         server-addr: ${remote-ip}:8848
-        namespace: demo-config
+        namespace: ooad
         group: DEFAULT_GROUP
       config:
         server-addr: ${remote-ip}:8848
-        namespace: demo-config
+        namespace: ooad
         group: GATEWAY
         prefix: ${spring.application.name}
         fileExtension: yaml
 
+
 # 自定义变量
-remote-ip: lyc.io
+remote-ip: 139.199.172.27
+
+
+
+#server:
+#  port: 8080
+#
+#spring:
+#  cloud:
+#    gateway:
+#      routes:
+#        - id: main_service
+#          # 目标服务的基础 URL
+#          uri: lb://main-service
+#          predicates:
+#            # 匹配的请求路径断言
+#            - Path=/api/**
+#
+#        - id: oauth_server
+#          uri: lb://oauth2-service
+#          predicates:
+#            - Path=/oauth/**
+
+
 

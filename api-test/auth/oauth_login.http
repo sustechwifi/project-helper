@@ -1,0 +1,12 @@
+
+
+### 向服务器发送第三方授权码请求
+
+GET http://localhost:8080/oauth2/authorization/github
+
+
+### 向服务器发送第三方授权码请求
+
+GET http://localhost:8080/oauth2/authorization/gitee
+
+

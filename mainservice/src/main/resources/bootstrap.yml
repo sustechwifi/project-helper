@@ -1,28 +1,39 @@
+server:
+  port: 8070
+
 spring:
   application:
-    name: auth
+    name: main-service
   profiles:
     active: dev
   cloud:
     nacos:
       discovery:
         server-addr: ${remote-ip}:8848
-        namespace: demo-config
+        namespace: ooad
         group: DEFAULT_GROUP
       config:
         server-addr: ${remote-ip}:8848
-        namespace: demo-config
-        group: AUTH
+        namespace: ooad
+        group: DEFAULT_GROUP
         file-extension: yaml
         refreshEnabled: true
-        # 常规配置文件 优先级大于 shared-configs，在 shared-configs 之后加载
         extension-configs:
           - data-id: ${spring.application.name}-${spring.profiles.active}.yaml
-            group: AUTH
+            group: DEFAULT_GROUP
             refresh: true
 
 
+
+
+
+
+
+
 # 以下是自定义变量
-remote-ip: lyc.io
+remote-ip: 139.199.172.27
+
+
+
 
 

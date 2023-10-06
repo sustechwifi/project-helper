@@ -1,0 +1,52 @@
+
+### 获取验证码
+GET http://localhost:8080/generate/captcha
+
+
+### Login
+POST http://localhost:8080/login
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="username"
+Content-Type: text/plain
+
+test
+--WebAppBoundary
+Content-Disposition: form-data; name="password"
+Content-Type: text/plain
+
+123456
+
+--WebAppBoundary
+Content-Disposition: form-data; name="captchaId"
+Content-Type: text/plain
+
+superkey
+
+--WebAppBoundary
+Content-Disposition: form-data; name="captcha"
+Content-Type: text/plain
+
+super
+
+
+### 发送邮件验证码
+GET http://localhost:8080/generate/email/captcha?email=12110919@mail.sustech.edu.cn
+
+
+### 邮件验证码登录
+POST http://localhost:8080/email/login
+Content-Type: multipart/form-data; boundary=SmsBoundary
+
+--SmsBoundary
+Content-Disposition: form-data; name="email"
+Content-Type: text/plain
+
+12110919@mail.sustech.edu.cn
+
+--SmsBoundary
+Content-Disposition: form-data; name="code"
+Content-Type: text/plain
+
+151361

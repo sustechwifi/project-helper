@@ -14,7 +14,7 @@ public class MinioConfiguration {
     @Value("${minio.access-key}")
     private String minioAccessKey;
 
-    @Value("${secret-key}")
+    @Value("${minio.secret-key}")
     private String minioSecretKey;
 
 

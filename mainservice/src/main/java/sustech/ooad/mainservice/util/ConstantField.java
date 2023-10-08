@@ -16,6 +16,8 @@ public class ConstantField {
     public static final int CAPTCHA_ERR = 201;
     public static final int REPEATED_USERNAME = 202;
     public static final int REPEATED_EMAIL = 203;
+    public static final int REGISTER_ERR = 203;
+    public static final int UPLOAD_ERROR = 301;
 
 
     // 角色
@@ -51,6 +53,7 @@ public class ConstantField {
     // 其他常数
     public static final Duration ONE_MINUTES = Duration.ofMinutes(1);
     public static final Duration FIVE_MINUTES = Duration.ofMinutes(5);
+    public static final Duration FIFTEEN_MINUTES = Duration.ofMinutes(15);
     public static final Duration ONE_DAY = Duration.ofDays(1);
 
     // 工具方法

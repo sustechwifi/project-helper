@@ -32,7 +32,7 @@ public class UserController {
     @Resource
     StringRedisTemplate stringRedisTemplate;
 
-    // 认证角色：发送邮箱验证码
+
     @GetMapping("/auth/role")
     public Result<?> genAuthRole(@RequestParam("email") String email) {
         log.info(email + "请求获取验证码");
@@ -46,8 +46,7 @@ public class UserController {
         return Result.ok(5);
     }
 
-    // 只能认证一次角色
-    @PreAuthorize("hasRole('UNKNOWN')")
+
     @PostMapping("/auth/role")
     public Result<?> authRole(@RequestParam("code") String code,
                               @RequestParam("role") String role){
@@ -65,24 +64,13 @@ public class UserController {
     }
 
 
-//    @PostMapping("/auth/course/{course}")
-//    public Result< ? > updateCourseAuthority(@PathVariable("course")String course,
-//                                       @RequestParam("authority")String authority,
-//                                       @RequestParam("code") String code
-//    ) {
-//        // TODO 修改角色的课程权限
-//        return Result.ok(null);
-//    }
-
-
-
     // 修改/绑定邮箱
     @GetMapping("/bind/email")
     public Result<?> sendBindEmailCode(@RequestParam("email") String email) {
         log.info(email + "请求获取验证码");
         // 2. 以邮箱号为KEY，验证码为值，存入Redis，过期时间5分钟
         String code = RandomUtil.randomNumbers(6);
-        mailService.sendSimpleMail(email,"Project helper - Auth role",code);
+        mailService.sendSimpleMail(email,"Project helper - Bind email",code);
         // 存入 redis
         stringRedisTemplate.opsForValue().set(EMAIL_BIND_USER+email, code, FIVE_MINUTES);
         log.info(email + "生成验证码：" + code);
@@ -94,12 +82,13 @@ public class UserController {
     @PostMapping ("/bind/email")
     public Result<?> bindEmail(@RequestParam("email") String email,
                                @RequestParam("code") String code) {
-        long uid = authFunctionality.getUser().getId();
         String key = EMAIL_BIND_USER+email;
         String s = stringRedisTemplate.opsForValue().get(key);
-        if (StrUtil.isEmpty(s) || !s.equals(code)){
+        System.out.println(key);
+        if (!code.equals(s)){
             return Result.err(CAPTCHA_ERR,"invalid check code");
         }
+        long uid = authFunctionality.getUser().getId();
         if (authService.bindEmail(uid,email)){
             return Result.ok(null);
         }else {

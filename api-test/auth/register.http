@@ -1,8 +1,10 @@
 ### 获取验证码
 GET http://localhost:8080/generate/captcha
 
-### 表单注册
+### 检查用户名
+GET http://localhost:8080/register/check/username?username=tes44t
 
+### 表单注册
 POST http://localhost:8080/register
 Content-Type: multipart/form-data; boundary=WebAppBoundary
 

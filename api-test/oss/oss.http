@@ -1,0 +1,8 @@
+### 上传文件
+POST http://localhost:8080/content/upload/image-bucket/avatar/xxx.png
+Content-Type: image/png
+
+
+### 下载文件
+GET http://localhost:8080/content/image-bucket/avatar/xxx.png
+

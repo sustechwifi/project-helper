@@ -27,19 +27,24 @@ remote-ip: 139.199.172.27
 #
 #spring:
 #  cloud:
+#    loadbalancer:
+#      enabled: true
+#      nacos:
+#        enabled: true
 #    gateway:
+#      discovery:
+#        locator:
+#          enabled: false
+#          lower-case-service-id: true
 #      routes:
 #        - id: main_service
-#          # 目标服务的基础 URL
 #          uri: lb://main-service
 #          predicates:
 #            # 匹配的请求路径断言
-#            - Path=/api/**
-#
-#        - id: oauth_server
-#          uri: lb://oauth2-service
-#          predicates:
-#            - Path=/oauth/**
+#            - Path=/**
+
+
+
 
 
 

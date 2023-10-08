@@ -1,0 +1,30 @@
+### 邀请用户加入课程
+POST http://localhost:8080/course/{{cid}}/invite
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="sid"
+Content-Type: text/plain
+
+105973763039684608
+--WebAppBoundary
+Content-Disposition: form-data; name="authority"
+Content-Type: text/plain
+
+student
+
+
+### 更改课程成员权限
+POST http://localhost:8080/course/{{cid}}/update/member/authority
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="sid"
+Content-Type: text/plain
+
+105973763039684608
+--WebAppBoundary
+Content-Disposition: form-data; name="authority"
+Content-Type: text/plain
+
+group leader

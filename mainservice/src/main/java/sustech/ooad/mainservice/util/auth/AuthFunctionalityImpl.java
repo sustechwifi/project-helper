@@ -39,7 +39,7 @@ public class AuthFunctionalityImpl implements AuthFunctionality {
 
     @Override
     public AuthUser getUser() {
-        return (AuthUser) getAuthentication().getDetails();
+        return (AuthUser) getAuthentication().getPrincipal();
     }
 
     @Override

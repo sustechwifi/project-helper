@@ -126,18 +126,24 @@ public class AuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2U
     RedisTemplate<String,String> redisTemplate;
 
     public boolean authRole(String email, String role) {
-        AuthUser r = authUserMapper.selectByEmail(email);
+        AuthUser r = null;
+        try {
+            r = authUserMapper.selectByEmail(email);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return false;
+        }
         if (StrUtil.isEmpty(r.getEmail())){
             return false;
         }
         switch (role){
-            case AUTHORITY_STUDENT : {
-                if (r.getRole().equals(AUTHORITY_DEFAULT)){
+            case ROLE_STUDENT: {
+                if (r.getRole().equals(ROLE_DEFAULT)){
                     authUserMapper.updateRole(role,r.getId());
                     return true;
                 }
             }
-            case AUTHORITY_TEACHER:{
+            case ROLE_TEACHER:{
                 // TODO 认证老师邮箱
 
             }

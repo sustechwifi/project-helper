@@ -4,6 +4,7 @@ POST localhost:8080/user/edit/info
 Content-Type: application/json
 
 {
+  "id": 105973763039684608,
   "name": "小星星",
   "avatar": "test.com",
   "college": "树礼书院",

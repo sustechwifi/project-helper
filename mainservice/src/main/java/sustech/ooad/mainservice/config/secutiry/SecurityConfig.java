@@ -36,7 +36,8 @@ public class SecurityConfig {
                         "/email/login/**",
                         "/login/**",
                         "/register/**",
-                        "/generate/**"
+                        "/generate/**",
+                        "/content/download/**"
                 ).permitAll()
                 // 基于路径的访问控制
                 //.requestMatchers("/user/**").hasRole("ROLE_User")
@@ -73,7 +74,7 @@ public class SecurityConfig {
         // 登出配置
         http.logout()
                 .clearAuthentication(true) // 清理Authentication ，默认true
-                .deleteCookies("jwt") // 删除指定 cookie
+                //.deleteCookies("jwt") // 删除指定 cookie
                 .invalidateHttpSession(true) // 设置当前登录用户Session（保存登录后的用户信息）无效，默认true
                 .logoutRequestMatcher(new OrRequestMatcher(
                         new AntPathRequestMatcher("/logout", "GET")

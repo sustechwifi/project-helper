@@ -1,20 +1,22 @@
 package sustech.ooad.mainservice.model;
 
-import jakarta.servlet.http.HttpServletRequest;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
 
-public class OssContent {
-    private MultipartFile originalFile;
-    private String type;
-    private String fileName;
-    private byte[] data;
-    private long expiration;
-    private String uri;
-    private String url;
+import java.io.IOException;
 
-    public OssContent(MultipartFile originalFile, HttpServletRequest request) {
-        this.originalFile = originalFile;
-    }
+@Slf4j
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class OssContent {
+    private String uri;
+    private String bucket;
+    private byte[] data;
+    private String type;
 
 
 }

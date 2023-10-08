@@ -44,14 +44,14 @@ public class LoginController {
     @GetMapping("/generate/email/captcha")
     public Result<?> msmCaptcha(@RequestParam("email") String email) {
         log.info(email + "请求获取验证码");
-        // 2. 以邮箱号为KEY，验证码为值，存入Redis，过期时间5分钟
+        // 2. 以邮箱号为KEY，验证码为值，存入Redis，过期时间15分钟
         String code = RandomUtil.randomNumbers(6);
         loginUserService.sendCaptcha(email,code);
         // 存入 redis
-        stringRedisTemplate.opsForValue().set(EMAIL_LOGIN+email, code, FIVE_MINUTES);
+        stringRedisTemplate.opsForValue().set(EMAIL_LOGIN+email, code, FIFTEEN_MINUTES);
         log.info(email + "生成验证码：" + code);
         // 3. 返回过期时间，方便前端提示多少时间内有效
-        return Result.ok(5);
+        return Result.ok(15);
     }
 
     @GetMapping("/generate/captcha")
@@ -73,7 +73,7 @@ public class LoginController {
     }
 
     @GetMapping("/register/check/username")
-    public Result<?> checkUsername(@RequestParam String username){
+    public Result<?> checkUsername(@RequestParam("username") String username){
         if (loginUserService.checkUsername(username)){
             return Result.ok("valid username");
         }else {
@@ -89,8 +89,11 @@ public class LoginController {
             @RequestParam("captcha") String captcha
     ){
         if (Objects.equals(stringRedisTemplate.opsForValue().get(captchaId), captcha)){
-            loginUserService.registerFormUser(username,password);
-            return Result.ok(null);
+            if (loginUserService.registerFormUser(username,password)) {
+                return Result.ok(null);
+            }else {
+                return Result.err(REGISTER_ERR,"注册失败");
+            }
         }else {
             return Result.err(CAPTCHA_ERR,"验证码错误");
         }

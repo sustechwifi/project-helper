@@ -2,6 +2,7 @@ package sustech.ooad.mainservice.service;
 
 
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,7 +16,7 @@ import sustech.ooad.mainservice.model.AuthUser;
 import sustech.ooad.mainservice.util.MailService;
 import sustech.ooad.mainservice.util.QqMailServiceImpl;
 import sustech.ooad.mainservice.util.Result;
-
+@Slf4j
 @Service
 public class LoginUserService implements UserDetailsService {
 
@@ -57,7 +58,13 @@ public class LoginUserService implements UserDetailsService {
         return authUser == null;
     }
 
-    public void registerFormUser(String username, String password) {
-        authUserMapper.saveFormUser(new AuthUser(username, password));
+    public boolean registerFormUser(String username, String password) {
+        try {
+            authUserMapper.saveFormUser(new AuthUser(username, password));
+            return true;
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return false;
+        }
     }
 }

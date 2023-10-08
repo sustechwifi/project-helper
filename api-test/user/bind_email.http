@@ -1,4 +1,4 @@
-### 绑定邮箱
+### 发送绑定邮箱验证码
 
 GET localhost:8080/user/bind/email?email=12110919@mail.sustech.edu.cn
 
@@ -13,11 +13,11 @@ Content-Type: multipart/form-data; boundary=WebAppBoundary
 Content-Disposition: form-data; name="email"
 Content-Type: text/plain
 
-12110919@mail.sustech.edu.cn
+test@gmail.com
 
 --WebAppBoundary
 Content-Disposition: form-data; name="code"
 Content-Type: text/plain
 
-123546
+123456
 

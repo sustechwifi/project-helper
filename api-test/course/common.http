@@ -1,0 +1,11 @@
+### 获取当前用户全部课程信息
+GET http://localhost:8080/course/all
+
+
+### 某一个课程
+GET http://localhost:8080/course/{{cid}}/home
+
+
+### 退出课程
+DELETE http://localhost:8080/course/{{cid}}/quit
+

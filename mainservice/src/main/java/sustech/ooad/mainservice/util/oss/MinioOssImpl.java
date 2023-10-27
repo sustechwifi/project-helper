@@ -20,7 +20,9 @@ import java.security.NoSuchAlgorithmException;
 @Component
 public class MinioOssImpl implements OssClient {
 
-    String endpoint = "http://localhost:8080/content";
+
+    @Value("${minio.endpoint}")
+    String endpoint;
 
     @Value("${minio.bucket.image-bucket}")
     private String imageBucket;

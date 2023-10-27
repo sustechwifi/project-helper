@@ -37,7 +37,8 @@ public class SecurityConfig {
                         "/login/**",
                         "/register/**",
                         "/generate/**",
-                        "/content/download/**"
+                        "/content/download/**",
+                        "/ws/chat/**"
                 ).permitAll()
                 // 基于路径的访问控制
                 //.requestMatchers("/user/**").hasRole("ROLE_User")

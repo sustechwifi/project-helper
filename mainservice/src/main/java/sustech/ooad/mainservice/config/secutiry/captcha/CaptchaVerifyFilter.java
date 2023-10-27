@@ -57,7 +57,6 @@ public class CaptchaVerifyFilter extends GenericFilterBean {
                 if (!cacheData.equals(captcha)) {
                     throw new CaptchaVerifyException("验证码输入错误");
                 }
-                // 删除验证码...
                 filterChain.doFilter(request, response);
             } catch (AuthenticationException e) {
                 failureHandler.onAuthenticationFailure((HttpServletRequest) request, (HttpServletResponse) response, e);

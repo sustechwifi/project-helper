@@ -133,12 +133,12 @@
             <artifactId>spring-webflux</artifactId>
         </dependency>
 
+
         <!-- websocket -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-websocket</artifactId>
         </dependency>
-
 
         <!-- Spring 测试 -->
         <dependency>

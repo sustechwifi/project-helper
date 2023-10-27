@@ -19,6 +19,8 @@ public class ConstantField {
     public static final int REGISTER_ERR = 203;
     public static final int UPLOAD_ERROR = 301;
 
+    public static final int BAD_PARAMETER = 400;
+
 
     // 角色
     public static final String ROLE_DEFAULT = "UNKNOWN";
@@ -49,6 +51,13 @@ public class ConstantField {
     public static final String EMAIL_BIND_USER = "email:bind:user:";
 
     public static final String USER_COURSES = "course:courses:user";
+
+    public static final String PREFIX_CHAT_USER_RECORD = "chat:userList:record";
+    public static final String PREFIX_CHAT_OLD_MESSAGE = "chat:message:old";
+    public static final String PREFIX_CHAT_NEW_MESSAGE = "chat:message:new";
+    public static final String PREFIX_CHAT_MAPPING = "chat:pair";
+
+
 
     // 其他常数
     public static final Duration ONE_MINUTES = Duration.ofMinutes(1);

@@ -7,7 +7,9 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 import sustech.ooad.mainservice.model.AuthUser;
+import sustech.ooad.mainservice.model.dto.ChatUserDto;
 
+import java.util.List;
 
 
 @Repository
@@ -47,4 +49,12 @@ public interface AuthUserMapper {
 
     @Update("update ooad_project_helper.public.oauth_user set email = #{email} where uuid = #{uid}")
     void bindEmail(@Param("uid") long uid, @Param("email") String email);
+
+    @Select("select (select count(u.uuid) from ooad_project_helper.public.oauth_user u where u.name like #{patten}) < 10")
+    boolean checkPatten(@Param("patten") String patten);
+
+    List<ChatUserDto> getChatUserByPatten(@Param("patten") String patten);
+
+
+    ChatUserDto getChatUserDtoById(@Param("id") long id);
 }

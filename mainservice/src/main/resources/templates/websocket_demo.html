@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>POST Request Example</title>
+    <script>
+
+
+        function sendGetRequest() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "http://localhost:8080/chat/users", true);
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    // 处理返回的 JSON，这里只是做一个简单的示例
+                    document.getElementById('board').value += JSON.stringify(response)
+                } else {
+                    console.log("请求失败！错误码：" + xhr.status);
+                }
+            };
+            xhr.send();
+        }
+
+        function begin() {
+            var form = document.getElementById("myForm2");
+            var formData = new FormData(form);
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "http://localhost:8080/chat/with", true);
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    // 处理返回的 JSON，这里只是做一个简单的示例
+                    document.getElementById('board').value += JSON.stringify(response)
+                } else {
+                    alert("请求失败！错误码：" + xhr.status);
+                }
+            };
+            xhr.send(formData);
+        }
+
+        let socket
+
+        function send(word){
+            socket.send(word)
+        }
+
+        function connectWebSocket() {
+            socket = new WebSocket("ws://localhost:8080/ws/chat");
+            socket.onopen = function (event) {
+                // 自定义处理连接成功的操作
+                document.getElementById('board').value += "WebSocket 连接成功！"
+            };
+
+            socket.onmessage = function (event) {
+                // 自定义处理收到消息的操作
+                document.getElementById('board').value += event.data
+            };
+
+            socket.onclose = function (event) {
+                // 自定义处理连接关闭的操作
+                console.log("WebSocket 连接关闭！");
+            };
+
+            // 发送 cookie
+            socket.onopen = function () {
+                let uid = document.getElementById('ws-cookie').value
+                socket.send("uid=" + uid);
+            };
+        }
+    </script>
+</head>
+<body>
+
+
+<form id="myForm" action="http://localhost:8080/login" method="post">
+    <input type="text" name="username" value="test" placeholder="用户名" required><br>
+    <input type="password" name="password" value="123456" placeholder="密码" required><br>
+    <input type="text" name="captchaId" value="superkey" placeholder="验证码 ID" required><br>
+    <input type="text" name="captcha" value="super" placeholder="验证码" required><br>
+    <input type="submit" value="认证" >
+</form>
+
+<br>
+
+ws uid <input type="text" id='ws-cookie'>
+
+<br>
+
+<div style="width: 100%">
+    <textarea id="board" style="width: 200px;height: 400px;margin-right: 300px">
+
+    </textarea>
+
+
+    <textarea id="input-box" style="width: 200px;height: 300px">
+
+        </textarea>
+    <input type="button" value="发送" onclick="send(document.getElementById('input-box'))" >
+
+</div>
+
+
+<hr>
+<input type="button" value="获取聊天列表" onclick="sendGetRequest()">
+<br>
+
+<div>
+    <form id="myForm2">
+        <input type="text" value="选定用户开始聊天" placeholder="用户uid">
+        <input type="submit" value="选定用户开始聊天" onclick="connectWebSocket()">
+    </form>
+</div>
+
+<br>
+<input type="button" value="添加用户">
+
+</body>
+</html>

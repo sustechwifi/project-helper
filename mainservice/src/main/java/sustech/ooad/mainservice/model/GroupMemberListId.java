@@ -2,6 +2,7 @@ package sustech.ooad.mainservice.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -15,11 +16,11 @@ import org.hibernate.Hibernate;
 public class GroupMemberListId implements Serializable {
 
     private static final long serialVersionUID = 4716562382583175136L;
-    @jakarta.validation.constraints.NotNull
+    @NotNull
     @Column(name = "group_id", nullable = false)
     private Integer groupId;
 
-    @jakarta.validation.constraints.NotNull
+    @NotNull
     @Column(name = "user_uuid", nullable = false)
     private BigDecimal userUuid;
 

@@ -24,4 +24,9 @@ public class CourseMemberList {
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
+    @MapsId("userUuid")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_uuid", nullable = false)
+    private AuthUser userUuid;
+
 }

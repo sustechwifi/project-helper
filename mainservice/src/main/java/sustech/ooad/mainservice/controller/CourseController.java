@@ -37,10 +37,8 @@ public class CourseController {
         if (!valid) {
             return Result.err(ACCESS_COURSE_DENIED, "无法访问此课程");
         }
-        // 此课程的用户权限
-        String authority = authFunctionality.getCourseAuthority(courseId);
         // TODO 获取此课程的详细信息
-        throw new UnsupportedOperationException();
+        return Result.ok(courseService.getCourseInfo((int) courseId));
     }
 
     @PreAuthorize(ROLE_CHECK)
@@ -52,43 +50,43 @@ public class CourseController {
             return Result.err(ACCESS_COURSE_DENIED, "无法访问此课程");
         }
         long uid = authFunctionality.getUser().getId();
-        courseService.quitCourse(courseId,uid);
+        courseService.quitCourse(courseId, uid);
         return Result.ok(null);
     }
 
     @PreAuthorize(ROLE_CHECK_TEACHER)
     @PostMapping("{cid}/invite")
     public Result<?> addMember(@PathVariable("cid") long courseId,
-                                @RequestParam("sid") long sid,
-                                @RequestParam("authority") String authority
-                               ) {
+        @RequestParam("sid") long sid,
+        @RequestParam("authority") String authority
+    ) {
         boolean valid = authFunctionality.inCourse(courseId);
         if (!valid) {
             return Result.err(ACCESS_COURSE_DENIED, "无法访问此课程");
         }
-        boolean isCourseTeacher = authFunctionality.hasCourseAuthority(courseId,AUTHORITY_TEACHER);
-        if (!isCourseTeacher){
+        boolean isCourseTeacher = authFunctionality.hasCourseAuthority(courseId, AUTHORITY_TEACHER);
+        if (!isCourseTeacher) {
             return Result.err(COURSE_INVALID_AUTHORITY, "课程权限不足");
         }
-        courseService.addCourseAuthority(courseId,sid,authority);
+        courseService.addCourseAuthority(courseId, sid, authority);
         return Result.ok(null);
     }
 
     @PreAuthorize(ROLE_CHECK_TEACHER)
     @PostMapping("{cid}/update/member/authority")
     public Result<?> changeAuthority(@PathVariable("cid") long courseId,
-                               @RequestParam("sid") long sid,
-                               @RequestParam("authority") String authority
+        @RequestParam("sid") long sid,
+        @RequestParam("authority") String authority
     ) {
         boolean valid = authFunctionality.inCourse(courseId);
         if (!valid) {
             return Result.err(ACCESS_COURSE_DENIED, "无法访问此课程");
         }
-        boolean isCourseTeacher = authFunctionality.hasCourseAuthority(courseId,AUTHORITY_TEACHER);
-        if (!isCourseTeacher){
+        boolean isCourseTeacher = authFunctionality.hasCourseAuthority(courseId, AUTHORITY_TEACHER);
+        if (!isCourseTeacher) {
             return Result.err(COURSE_INVALID_AUTHORITY, "课程权限不足");
         }
-        courseService.updateCourseAuthority(courseId,sid,authority);
+        courseService.updateCourseAuthority(courseId, sid, authority);
         return Result.ok(null);
     }
 }

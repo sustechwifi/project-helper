@@ -24,4 +24,9 @@ public class GroupMemberList {
     @JoinColumn(name = "group_id", nullable = false)
     private Group group;
 
+    @MapsId("userUuid")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_uuid", nullable = false)
+    private AuthUser userUuid;
+
 }

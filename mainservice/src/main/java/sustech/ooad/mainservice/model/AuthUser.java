@@ -1,5 +1,10 @@
 package sustech.ooad.mainservice.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,28 +26,38 @@ import java.util.stream.Collectors;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthUser implements OAuth2User,UserDetails {
+@Entity
+@Table(name = "oauth_user")
+public class AuthUser implements OAuth2User, UserDetails {
 
+    @Id
+    @Column(name = "uuid")
     long id;
+
     String login;
     String name;
     String password;
     String email;
+
+    @Column(name = "authority")
     String role;
 
 
     String platform;
+    @Column(name = "avatar_url")
     String avatar;
+
     String college;
     String sex;
     String grade;
     String major;
     String introduction;
     boolean enabled;
+    @Column(name = "create_time")
     LocalDate createTime;
 
     // 表单注册
-    public AuthUser(String username,String password) {
+    public AuthUser(String username, String password) {
         this.login = username;
         this.name = username;
         this.password = authUserPassEncoder.encode(password);
@@ -50,7 +65,7 @@ public class AuthUser implements OAuth2User,UserDetails {
     }
 
     // 第三方免注册
-    public AuthUser(String username ,String name, String platform,String avatar) {
+    public AuthUser(String username, String name, String platform, String avatar) {
         this.login = username;
         this.name = name;
         this.platform = platform;
@@ -60,22 +75,23 @@ public class AuthUser implements OAuth2User,UserDetails {
 
     public static PasswordEncoder authUserPassEncoder = new BCryptPasswordEncoder();
 
+    @Transient
     public static AuthUser defaultUser = new AuthUser(
-                -1,
-                "test",
-                "test_user",
-                "123456",
-                "123@qq.com",
-            ConstantField.ROLE_DEFAULT,
-                "local",
-                "https://ts1.cn.mm.bing.net/th/id/R-C.2229eb8e5a576c3089b76f041b36077d?rik=d9LvVt%2bjoE8mAg&pid=ImgRaw&r=0",
-                null,
-                null,
-                null,
-                null,
-                null,
-                true,
-                null);
+        -1,
+        "test",
+        "test_user",
+        "123456",
+        "123@qq.com",
+        ConstantField.ROLE_DEFAULT,
+        "local",
+        "https://ts1.cn.mm.bing.net/th/id/R-C.2229eb8e5a576c3089b76f041b36077d?rik=d9LvVt%2bjoE8mAg&pid=ImgRaw&r=0",
+        null,
+        null,
+        null,
+        null,
+        null,
+        true,
+        null);
 
 
     @Override

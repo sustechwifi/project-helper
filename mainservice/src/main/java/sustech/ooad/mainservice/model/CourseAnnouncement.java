@@ -24,6 +24,10 @@ public class CourseAnnouncement {
     @JoinColumn(name = "course_id")
     private Course course;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_uuid")
+    private AuthUser userUuid;
+
     @Column(name = "type", length = Integer.MAX_VALUE)
     private String type;
 

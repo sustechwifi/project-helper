@@ -3,6 +3,9 @@ package sustech.ooad.mainservice.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.LinkedHashSet;
@@ -25,6 +28,12 @@ public class Course {
 
     @OneToMany(mappedBy = "course")
     private Set<CourseAnnouncement> courseAnnouncements = new LinkedHashSet<>();
+
+    @ManyToMany
+    @JoinTable(name = "course_member_list",
+        joinColumns = @JoinColumn(name = "course_id"),
+        inverseJoinColumns = @JoinColumn(name = "user_uuid"))
+    private Set<AuthUser> oauthUsers = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "course")
     private Set<Group> groups = new LinkedHashSet<>();

@@ -22,6 +22,12 @@ public class CourseController {
     CourseService courseService;
 
     @PreAuthorize(ROLE_CHECK)
+    @GetMapping("/{courseId}/project/home")
+    public Result<?> getCourseProjectInfo(@PathVariable("courseId") long courseId) {
+        return Result.ok(courseService.getProjectInfo((int) courseId));
+    }
+
+    @PreAuthorize(ROLE_CHECK)
     @GetMapping("/all")
     public Result<?> getAllCourse() {
         // TODO 根据<课程id,权限> 获取当前用户的所有课程信息

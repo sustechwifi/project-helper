@@ -6,7 +6,9 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import sustech.ooad.mainservice.mapper.CourseAuthorityMapper;
 import sustech.ooad.mainservice.mapper.CourseRepository;
+import sustech.ooad.mainservice.mapper.ProjectRepository;
 import sustech.ooad.mainservice.model.Course;
+import sustech.ooad.mainservice.model.Project;
 import sustech.ooad.mainservice.util.auth.AuthFunctionality;
 
 import static sustech.ooad.mainservice.util.ConstantField.USER_COURSES;
@@ -24,6 +26,8 @@ public class CourseService {
     AuthFunctionality authFunctionality;
 
     CourseRepository courseRepository;
+
+    ProjectRepository projectRepository;
 
     private void deleteCache(long uid) {
         // 清除缓存
@@ -49,5 +53,9 @@ public class CourseService {
 
     public Course getCourseInfo(Integer id) {
         return courseRepository.findCourseById(id);
+    }
+
+    public Project getProjectInfo(Integer courseId) {
+        return projectRepository.findProjectByCourse(courseRepository.findCourseById(courseId));
     }
 }

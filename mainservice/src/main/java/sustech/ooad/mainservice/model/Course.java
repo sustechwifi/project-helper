@@ -35,13 +35,6 @@ public class Course {
         inverseJoinColumns = @JoinColumn(name = "user_uuid"))
     private Set<AuthUser> oauthUsers = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "course")
-    private Set<Group> groups = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "course")
-    private Set<Homework> homework = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "course")
-    private Set<Project> projects = new LinkedHashSet<>();
 
 }

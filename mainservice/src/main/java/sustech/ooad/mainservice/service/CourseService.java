@@ -1,13 +1,17 @@
 package sustech.ooad.mainservice.service;
 
 import jakarta.annotation.Resource;
+import java.util.List;
 import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import sustech.ooad.mainservice.mapper.CourseAuthorityMapper;
 import sustech.ooad.mainservice.mapper.CourseRepository;
+import sustech.ooad.mainservice.mapper.HomeworkRepository;
 import sustech.ooad.mainservice.mapper.ProjectRepository;
 import sustech.ooad.mainservice.model.Course;
+import sustech.ooad.mainservice.model.Homework;
 import sustech.ooad.mainservice.model.Project;
 import sustech.ooad.mainservice.util.auth.AuthFunctionality;
 
@@ -25,9 +29,12 @@ public class CourseService {
     @Resource
     AuthFunctionality authFunctionality;
 
+    @Autowired
     CourseRepository courseRepository;
-
+    @Autowired
     ProjectRepository projectRepository;
+    @Autowired
+    HomeworkRepository homeworkRepository;
 
     private void deleteCache(long uid) {
         // 清除缓存
@@ -55,7 +62,11 @@ public class CourseService {
         return courseRepository.findCourseById(id);
     }
 
-    public Project getProjectInfo(Integer courseId) {
-        return projectRepository.findProjectByCourse(courseRepository.findCourseById(courseId));
+    public List<Project> getProjectInfo(Integer courseId) {
+        return projectRepository.findProjectsByCourse(courseRepository.findCourseById(courseId));
+    }
+
+    public List<Homework> getHomeworkTable(Integer courseId) {
+        return homeworkRepository.findAllByCourse(courseRepository.findCourseById(courseId));
     }
 }

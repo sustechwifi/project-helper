@@ -34,4 +34,14 @@ public class Homework {
     @JoinColumn(name = "course_id")
     private Course course;
 
+    @Column(name = "attachment", length = Integer.MAX_VALUE)
+    private String attachment;
+
+    @Column(name = "isgroup")
+    private Boolean isgroup;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "groupid")
+    private Group groupid;
+
 }

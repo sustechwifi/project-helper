@@ -1,6 +1,7 @@
 package sustech.ooad.mainservice.controller;
 
 import jakarta.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import sustech.ooad.mainservice.service.CourseService;
@@ -22,8 +23,22 @@ public class CourseController {
     CourseService courseService;
 
     @PreAuthorize(ROLE_CHECK)
-    @GetMapping("/{courseId}/project/home")
+    @GetMapping("/{courseId}/assignment/table")
+    public Result<?> getCourseHomeworkTable(@PathVariable("courseId") long courseId) {
+        boolean valid = authFunctionality.inCourse(courseId);
+        if (!valid) {
+            return Result.err(ACCESS_COURSE_DENIED, "无法访问此课程");
+        }
+        return Result.ok(courseService.getHomeworkTable((int) courseId));
+    }
+
+    @PreAuthorize(ROLE_CHECK)
+    @GetMapping("/{courseId}/project/table")
     public Result<?> getCourseProjectInfo(@PathVariable("courseId") long courseId) {
+        boolean valid = authFunctionality.inCourse(courseId);
+        if (!valid) {
+            return Result.err(ACCESS_COURSE_DENIED, "无法访问此课程");
+        }
         return Result.ok(courseService.getProjectInfo((int) courseId));
     }
 
@@ -37,7 +52,7 @@ public class CourseController {
 
 
     @PreAuthorize(ROLE_CHECK)
-    @GetMapping("{cid}/home")
+    @GetMapping("{cid}/info")
     public Result<?> getCourseProfile(@PathVariable("cid") long courseId) {
         boolean valid = authFunctionality.inCourse(courseId);
         if (!valid) {
@@ -55,7 +70,7 @@ public class CourseController {
         if (!valid) {
             return Result.err(ACCESS_COURSE_DENIED, "无法访问此课程");
         }
-        long uid = authFunctionality.getUser().getId();
+        long uid = authFunctionality.getUser().getId();  //获取自身用户
         courseService.quitCourse(courseId, uid);
         return Result.ok(null);
     }

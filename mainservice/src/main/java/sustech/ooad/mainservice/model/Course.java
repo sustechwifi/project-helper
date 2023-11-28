@@ -29,11 +29,7 @@ public class Course {
     @OneToMany(mappedBy = "course")
     private Set<CourseAnnouncement> courseAnnouncements = new LinkedHashSet<>();
 
-    @ManyToMany
-    @JoinTable(name = "course_member_list",
-        joinColumns = @JoinColumn(name = "course_id"),
-        inverseJoinColumns = @JoinColumn(name = "user_uuid"))
-    private Set<AuthUser> oauthUsers = new LinkedHashSet<>();
+
 
 
 

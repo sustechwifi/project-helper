@@ -26,9 +26,6 @@ public class Course {
     @Column(name = "name", length = Integer.MAX_VALUE)
     private String name;
 
-    @OneToMany(mappedBy = "course")
-    private Set<CourseAnnouncement> courseAnnouncements = new LinkedHashSet<>();
-
 
 
 

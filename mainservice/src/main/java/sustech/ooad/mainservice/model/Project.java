@@ -40,8 +40,6 @@ public class Project {
     @Column(name = "description", length = Integer.MAX_VALUE)
     private String description;
 
-    @OneToMany(mappedBy = "project")
-    private Set<Group> groups = new LinkedHashSet<>();
 
     @Column(name = "attachment", length = Integer.MAX_VALUE)
     private String attachment;

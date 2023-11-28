@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="sustech.ooad.mainservice.mapper.AuthUserMapper">
+
+  <resultMap id="userRM" type="sustech.ooad.mainservice.model.AuthUser">
+    <!--
+    id 只对主键进行映射
+    result 对一般字段的映射
+    -->
+    <result column="authority" property="role"/>
+    <result column="create_time" property="createTime"/>
+    <result column="uuid" property="id"/>
+    <result column="avatar_url" property="avatar"/>
+
+  </resultMap>
+
+
+  <resultMap id="chatUserRM" type="sustech.ooad.mainservice.model.dto.ChatUserDto">
+    <!--
+    id 只对主键进行映射
+    result 对一般字段的映射
+    -->
+
+    <result column="uuid" property="id"/>
+    <result column="avatar_url" property="avatar"/>
+
+  </resultMap>
+
+  <select id="selectOne" resultMap="userRM">
+
+  </select>
+
+  <select id="selectThirdUser" resultMap="userRM">
+    select * from ooad_project_helper.public.oauth_user u
+    where u.platform = #{platformId} and u.login = #{username}
+  </select>
+
+  <select id="selectFormUser"  resultMap="userRM">
+    select * from ooad_project_helper.public.oauth_user u
+    where u.platform = 'local' and u.login = #{username}
+  </select>
+
+  <select id="selectOneById" resultMap="userRM">
+    select * from ooad_project_helper.public.oauth_user u
+    where u.uuid = #{id}
+  </select>
+
+  <select id="selectEmailUser" resultMap="userRM">
+    select * from ooad_project_helper.public.oauth_user u
+    where u.email = #{email}
+  </select>
+
+  <select id="selectByEmail"  resultMap="userRM">
+    select * from ooad_project_helper.public.oauth_user u
+    where email = #{email}
+  </select>
+
+  <select id="getChatUserByPatten" resultMap="chatUserRM">
+    select u.uuid,u.name,u.avatar_url from ooad_project_helper.public.oauth_user u
+    where name like #{patten}
+  </select>
+
+  <select id="getChatUserDtoById" resultMap="chatUserRM">
+    select u.uuid,u.name,u.avatar_url from ooad_project_helper.public.oauth_user u
+    where u.uuid = #{id}
+  </select>
+
+
+</mapper>

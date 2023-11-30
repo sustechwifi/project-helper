@@ -13,8 +13,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "homework")
-public class Homework {
+@Table(name = "submit")
+public class submit {
 
     @Id
     @Column(name = "id", nullable = false)
@@ -43,5 +43,12 @@ public class Homework {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "groupid")
     private Group groupid;
+
+    @Column(name = "name", length = Integer.MAX_VALUE)
+    private String name;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "homework")
+    private Homework homework;
 
 }

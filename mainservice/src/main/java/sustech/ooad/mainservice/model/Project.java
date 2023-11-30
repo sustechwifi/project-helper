@@ -32,7 +32,7 @@ public class Project {
     private Course course;
 
     @Column(name = "\"time\"")
-    private Instant time;
+    private String time;
 
     @Column(name = "time_state", length = Integer.MAX_VALUE)
     private String timeState;

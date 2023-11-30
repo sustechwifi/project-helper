@@ -22,6 +22,66 @@ public class CourseController {
     @Resource
     CourseService courseService;
 
+    public String merge(String[] array) {
+        StringBuilder str = new StringBuilder();
+        for (int i = 0; i < array.length; i++) {
+            str.append(array[i]);
+            str.append(";");
+        }
+        return str.toString();
+    }
+
+    @PreAuthorize(ROLE_CHECK_TEACHER)
+    @PostMapping("/{courseId}/project/{projectId}/table/edit")
+    public Result<?> modifyProject(@PathVariable("courseId") long courseId,
+        @PathVariable("projectId") Integer projectId,
+        @RequestParam("projectName") String projectName, @RequestParam("deadline") String ddl,
+        @RequestParam("attachment") String[] attachments,
+        @RequestParam("description") String description, @RequestParam("state") String state) {
+        boolean valid = authFunctionality.inCourse(courseId);
+        if (!valid) {
+            return Result.err(ACCESS_COURSE_DENIED, "无法访问此课程");
+        }
+        courseService.modifyProject(projectName, ddl, description, merge(attachments),
+            (int) courseId, state, projectId);
+        return Result.ok("");
+
+    }
+
+    @PreAuthorize(ROLE_CHECK_TEACHER)
+    @PostMapping("/{courseId}/assignment/table/add")
+    public Result<?> addProject(@PathVariable("courseId") long courseId,
+        @RequestParam("assignmentName") String assignmentName, @RequestParam("deadline") String ddl,
+        @RequestParam("attachment") String[] attachments,
+        @RequestParam("description") String description, @RequestParam("isGroup") Integer isGroup) {
+        boolean valid = authFunctionality.inCourse(courseId);
+        if (!valid) {
+            return Result.err(ACCESS_COURSE_DENIED, "无法访问此课程");
+        }
+        long uid = authFunctionality.getUser().getId();
+        courseService.addHomework(assignmentName, ddl, description, merge(attachments),
+            (int) courseId,
+            isGroup, uid);
+        return Result.ok("");
+    }
+
+    @PreAuthorize(ROLE_CHECK_TEACHER)
+    @PostMapping("/{courseId}/project/table/add")
+    public Result<?> addProject(@PathVariable("courseId") long courseId,
+        @RequestParam("projectName") String projectName, @RequestParam("deadline") String ddl,
+        @RequestParam("attachment") String[] attachments, @RequestParam("group") String[] group,
+        @RequestParam("description") String description, @RequestParam("state") String state) {
+        boolean valid = authFunctionality.inCourse(courseId);
+        if (!valid) {
+            return Result.err(ACCESS_COURSE_DENIED, "无法访问此课程");
+        }
+        courseService.addProject(projectName, ddl, description, merge(attachments), group,
+            (int) courseId,
+            state);
+        return Result.ok("");
+
+    }
+
     @PreAuthorize(ROLE_CHECK)
     @GetMapping("/{courseId}/assignment/table")
     public Result<?> getCourseHomeworkTable(@PathVariable("courseId") long courseId) {

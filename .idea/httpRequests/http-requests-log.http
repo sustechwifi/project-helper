@@ -1,0 +1,1406 @@
+POST http://localhost:8080/course/2/project/4/table/edit
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Content-Length: 846
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=YWJhMjE0MGItMmVhMi00M2EwLTkxNmEtMzA2Yjc2OGFkYWM3
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+--WebAppBoundary
+Content-Disposition: form-data; name="projectName"
+Content-Type: text/plain
+
+testmodify
+--WebAppBoundary
+Content-Disposition: form-data; name="deadline"
+Content-Type: text/plain
+
+123
+--WebAppBoundary
+Content-Disposition: form-data; name="description"
+Content-Type: text/plain
+
+test
+--WebAppBoundary
+Content-Disposition: form-data; name="attachment"
+Content-Type: text/plain
+
+213,123,221,123123
+--WebAppBoundary
+Content-Disposition: form-data; name="group"
+Content-Type: text/plain
+
+1,2,3
+--WebAppBoundary
+Content-Disposition: form-data; name="state"
+Content-Type: text/plain
+
+test
+--WebAppBoundary--
+
+<> 2023-11-30T204757.200.json
+
+###
+
+POST http://localhost:8080/login
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Content-Length: 571
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=NjllMTEyMzMtMmQ4Ni00ZmZiLWIwYzktYzEyZDc1NWEzMTk4
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+--WebAppBoundary
+Content-Disposition: form-data; name="username"
+Content-Type: text/plain
+
+test_teacher
+--WebAppBoundary
+Content-Disposition: form-data; name="password"
+Content-Type: text/plain
+
+123456
+--WebAppBoundary
+Content-Disposition: form-data; name="captchaId"
+Content-Type: text/plain
+
+superkey
+--WebAppBoundary
+Content-Disposition: form-data; name="captcha"
+Content-Type: text/plain
+
+super
+--WebAppBoundary--
+
+<> 2023-11-30T204753.200.json
+
+###
+
+POST http://localhost:8080/course/2/assignment/table/add
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Content-Length: 710
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=NjllMTEyMzMtMmQ4Ni00ZmZiLWIwYzktYzEyZDc1NWEzMTk4
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+--WebAppBoundary
+Content-Disposition: form-data; name="assignmentName"
+Content-Type: text/plain
+
+test
+--WebAppBoundary
+Content-Disposition: form-data; name="deadline"
+Content-Type: text/plain
+
+123
+--WebAppBoundary
+Content-Disposition: form-data; name="description"
+Content-Type: text/plain
+
+test
+--WebAppBoundary
+Content-Disposition: form-data; name="attachment"
+Content-Type: text/plain
+
+213,123,221,123123
+--WebAppBoundary
+Content-Disposition: form-data; name="isGroup"
+Content-Type: text/plain
+
+1
+--WebAppBoundary--
+
+<> 2023-11-30T202048.200.json
+
+###
+
+POST http://localhost:8080/login
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Content-Length: 571
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=YWQyYWVjZWItOGEyYS00M2UxLWI1MTYtYjRlMjc1YzhlZTY0
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+--WebAppBoundary
+Content-Disposition: form-data; name="username"
+Content-Type: text/plain
+
+test_teacher
+--WebAppBoundary
+Content-Disposition: form-data; name="password"
+Content-Type: text/plain
+
+123456
+--WebAppBoundary
+Content-Disposition: form-data; name="captchaId"
+Content-Type: text/plain
+
+superkey
+--WebAppBoundary
+Content-Disposition: form-data; name="captcha"
+Content-Type: text/plain
+
+super
+--WebAppBoundary--
+
+<> 2023-11-30T202027.200.json
+
+###
+
+POST http://localhost:8080/course/2/assignment/table/add
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Content-Length: 710
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=YWQyYWVjZWItOGEyYS00M2UxLWI1MTYtYjRlMjc1YzhlZTY0
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+--WebAppBoundary
+Content-Disposition: form-data; name="assignmentName"
+Content-Type: text/plain
+
+test
+--WebAppBoundary
+Content-Disposition: form-data; name="deadline"
+Content-Type: text/plain
+
+123
+--WebAppBoundary
+Content-Disposition: form-data; name="description"
+Content-Type: text/plain
+
+test
+--WebAppBoundary
+Content-Disposition: form-data; name="attachment"
+Content-Type: text/plain
+
+213,123,221,123123
+--WebAppBoundary
+Content-Disposition: form-data; name="isGroup"
+Content-Type: text/plain
+
+1
+--WebAppBoundary--
+
+<> 2023-11-30T201530.200.json
+
+###
+
+POST http://localhost:8080/login
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Content-Length: 571
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=NzBiMWJiNmYtNjhjYi00ZmRjLTkzZmEtMThiOGYxMGE2Njdj
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+--WebAppBoundary
+Content-Disposition: form-data; name="username"
+Content-Type: text/plain
+
+test_teacher
+--WebAppBoundary
+Content-Disposition: form-data; name="password"
+Content-Type: text/plain
+
+123456
+--WebAppBoundary
+Content-Disposition: form-data; name="captchaId"
+Content-Type: text/plain
+
+superkey
+--WebAppBoundary
+Content-Disposition: form-data; name="captcha"
+Content-Type: text/plain
+
+super
+--WebAppBoundary--
+
+<> 2023-11-30T201524.200.json
+
+###
+
+POST http://localhost:8080/course/2/assignment/table/add
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Content-Length: 710
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=NzBiMWJiNmYtNjhjYi00ZmRjLTkzZmEtMThiOGYxMGE2Njdj
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+--WebAppBoundary
+Content-Disposition: form-data; name="assignmentName"
+Content-Type: text/plain
+
+test
+--WebAppBoundary
+Content-Disposition: form-data; name="deadline"
+Content-Type: text/plain
+
+123
+--WebAppBoundary
+Content-Disposition: form-data; name="description"
+Content-Type: text/plain
+
+test
+--WebAppBoundary
+Content-Disposition: form-data; name="attachment"
+Content-Type: text/plain
+
+213,123,221,123123
+--WebAppBoundary
+Content-Disposition: form-data; name="isGroup"
+Content-Type: text/plain
+
+1
+--WebAppBoundary--
+
+<> 2023-11-30T201353.500.json
+
+###
+
+POST http://localhost:8080/course/2/project/table/add
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Content-Length: 840
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=NzBiMWJiNmYtNjhjYi00ZmRjLTkzZmEtMThiOGYxMGE2Njdj
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+--WebAppBoundary
+Content-Disposition: form-data; name="projectName"
+Content-Type: text/plain
+
+test
+--WebAppBoundary
+Content-Disposition: form-data; name="deadline"
+Content-Type: text/plain
+
+123
+--WebAppBoundary
+Content-Disposition: form-data; name="description"
+Content-Type: text/plain
+
+test
+--WebAppBoundary
+Content-Disposition: form-data; name="attachment"
+Content-Type: text/plain
+
+213,123,221,123123
+--WebAppBoundary
+Content-Disposition: form-data; name="group"
+Content-Type: text/plain
+
+1,2,3
+--WebAppBoundary
+Content-Disposition: form-data; name="state"
+Content-Type: text/plain
+
+test
+--WebAppBoundary--
+
+<> 2023-11-30T201129.200.json
+
+###
+
+POST http://localhost:8080/login
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Content-Length: 571
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=N2ZkM2IzMzEtOWIxNy00OWVmLThkNzktYTc1ODc0ZjQwYjg3
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+--WebAppBoundary
+Content-Disposition: form-data; name="username"
+Content-Type: text/plain
+
+test_teacher
+--WebAppBoundary
+Content-Disposition: form-data; name="password"
+Content-Type: text/plain
+
+123456
+--WebAppBoundary
+Content-Disposition: form-data; name="captchaId"
+Content-Type: text/plain
+
+superkey
+--WebAppBoundary
+Content-Disposition: form-data; name="captcha"
+Content-Type: text/plain
+
+super
+--WebAppBoundary--
+
+<> 2023-11-30T201108.200.json
+
+###
+
+POST http://localhost:8080/course/2/project/table/add
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Content-Length: 827
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=N2ZkM2IzMzEtOWIxNy00OWVmLThkNzktYTc1ODc0ZjQwYjg3
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+--WebAppBoundary
+Content-Disposition: form-data; name="projectName"
+Content-Type: text/plain
+
+test
+--WebAppBoundary
+Content-Disposition: form-data; name="deadline"
+Content-Type: text/plain
+
+123
+--WebAppBoundary
+Content-Disposition: form-data; name="description"
+Content-Type: text/plain
+
+test
+--WebAppBoundary
+Content-Disposition: form-data; name="attachment"
+Content-Type: text/plain
+
+213
+--WebAppBoundary
+Content-Disposition: form-data; name="group"
+Content-Type: text/plain
+
+[1,2,3]
+--WebAppBoundary
+Content-Disposition: form-data; name="state"
+Content-Type: text/plain
+
+test
+--WebAppBoundary--
+
+<> 2023-11-28T213735.200.json
+
+###
+
+POST http://localhost:8080/login
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Content-Length: 571
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=ZmZiMTk4MmUtNDEwZi00MjIxLWI5YjQtMmI3YTdkZjgyOWY5
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+--WebAppBoundary
+Content-Disposition: form-data; name="username"
+Content-Type: text/plain
+
+test_teacher
+--WebAppBoundary
+Content-Disposition: form-data; name="password"
+Content-Type: text/plain
+
+123456
+--WebAppBoundary
+Content-Disposition: form-data; name="captchaId"
+Content-Type: text/plain
+
+superkey
+--WebAppBoundary
+Content-Disposition: form-data; name="captcha"
+Content-Type: text/plain
+
+super
+--WebAppBoundary--
+
+<> 2023-11-28T213731.200.json
+
+###
+
+POST http://localhost:8080/course/2/project/table/add
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Content-Length: 827
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=ZmZiMTk4MmUtNDEwZi00MjIxLWI5YjQtMmI3YTdkZjgyOWY5
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+--WebAppBoundary
+Content-Disposition: form-data; name="projectName"
+Content-Type: text/plain
+
+test
+--WebAppBoundary
+Content-Disposition: form-data; name="deadline"
+Content-Type: text/plain
+
+123
+--WebAppBoundary
+Content-Disposition: form-data; name="description"
+Content-Type: text/plain
+
+test
+--WebAppBoundary
+Content-Disposition: form-data; name="attachment"
+Content-Type: text/plain
+
+213
+--WebAppBoundary
+Content-Disposition: form-data; name="group"
+Content-Type: text/plain
+
+[1,2,3]
+--WebAppBoundary
+Content-Disposition: form-data; name="state"
+Content-Type: text/plain
+
+test
+--WebAppBoundary--
+
+<> 2023-11-28T213512.500.json
+
+###
+
+POST http://localhost:8080/login
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Content-Length: 571
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=Y2VhMTc1OTktMjU0NS00NzlmLTlkNGQtNjY2YTM2ODhhNDgy
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+--WebAppBoundary
+Content-Disposition: form-data; name="username"
+Content-Type: text/plain
+
+test_teacher
+--WebAppBoundary
+Content-Disposition: form-data; name="password"
+Content-Type: text/plain
+
+123456
+--WebAppBoundary
+Content-Disposition: form-data; name="captchaId"
+Content-Type: text/plain
+
+superkey
+--WebAppBoundary
+Content-Disposition: form-data; name="captcha"
+Content-Type: text/plain
+
+super
+--WebAppBoundary--
+
+<> 2023-11-28T213504.200.json
+
+###
+
+POST http://localhost:8080/course/2/project/table/add
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Content-Length: 827
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=Y2VhMTc1OTktMjU0NS00NzlmLTlkNGQtNjY2YTM2ODhhNDgy
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+--WebAppBoundary
+Content-Disposition: form-data; name="projectName"
+Content-Type: text/plain
+
+test
+--WebAppBoundary
+Content-Disposition: form-data; name="deadline"
+Content-Type: text/plain
+
+123
+--WebAppBoundary
+Content-Disposition: form-data; name="description"
+Content-Type: text/plain
+
+test
+--WebAppBoundary
+Content-Disposition: form-data; name="attachment"
+Content-Type: text/plain
+
+213
+--WebAppBoundary
+Content-Disposition: form-data; name="group"
+Content-Type: text/plain
+
+[1,2,3]
+--WebAppBoundary
+Content-Disposition: form-data; name="state"
+Content-Type: text/plain
+
+test
+--WebAppBoundary--
+
+<> 2023-11-28T212930.500.json
+
+###
+
+POST http://localhost:8080/login
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Content-Length: 571
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=ZTU2NDRkYzctZDhjZi00YTAxLWIzZTQtNDAzZDQ4ZmVmNjVh
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+--WebAppBoundary
+Content-Disposition: form-data; name="username"
+Content-Type: text/plain
+
+test_teacher
+--WebAppBoundary
+Content-Disposition: form-data; name="password"
+Content-Type: text/plain
+
+123456
+--WebAppBoundary
+Content-Disposition: form-data; name="captchaId"
+Content-Type: text/plain
+
+superkey
+--WebAppBoundary
+Content-Disposition: form-data; name="captcha"
+Content-Type: text/plain
+
+super
+--WebAppBoundary--
+
+<> 2023-11-28T212919.200.json
+
+###
+
+POST http://localhost:8080/course/2/project/table/add
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Content-Length: 827
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=ZTU2NDRkYzctZDhjZi00YTAxLWIzZTQtNDAzZDQ4ZmVmNjVh
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+--WebAppBoundary
+Content-Disposition: form-data; name="projectName"
+Content-Type: text/plain
+
+test
+--WebAppBoundary
+Content-Disposition: form-data; name="deadline"
+Content-Type: text/plain
+
+123
+--WebAppBoundary
+Content-Disposition: form-data; name="description"
+Content-Type: text/plain
+
+test
+--WebAppBoundary
+Content-Disposition: form-data; name="attachment"
+Content-Type: text/plain
+
+213
+--WebAppBoundary
+Content-Disposition: form-data; name="group"
+Content-Type: text/plain
+
+[1,2,3]
+--WebAppBoundary
+Content-Disposition: form-data; name="state"
+Content-Type: text/plain
+
+test
+--WebAppBoundary--
+
+<> 2023-11-28T212503.500.json
+
+###
+
+POST http://localhost:8080/course/2/project/table/add
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Content-Length: 696
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=ZTU2NDRkYzctZDhjZi00YTAxLWIzZTQtNDAzZDQ4ZmVmNjVh
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+--WebAppBoundary
+Content-Disposition: form-data; name="projectName"
+Content-Type: text/plain
+
+test
+--WebAppBoundary
+Content-Disposition: form-data; name="deadline"
+Content-Type: text/plain
+
+123
+--WebAppBoundary
+Content-Disposition: form-data; name="description"
+Content-Type: text/plain
+
+test
+--WebAppBoundary
+Content-Disposition: form-data; name="attachment"
+Content-Type: text/plain
+
+213
+--WebAppBoundary
+Content-Disposition: form-data; name="group"
+Content-Type: text/plain
+
+[1,2,3]
+--WebAppBoundary--
+
+<> 2023-11-28T212403.400.json
+
+###
+
+POST http://localhost:8080/course/2/project/table/add
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Content-Length: 696
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=ZTU2NDRkYzctZDhjZi00YTAxLWIzZTQtNDAzZDQ4ZmVmNjVh
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+--WebAppBoundary
+Content-Disposition: form-data; name="projectName"
+Content-Type: text/plain
+
+test
+--WebAppBoundary
+Content-Disposition: form-data; name="deadline"
+Content-Type: text/plain
+
+123
+--WebAppBoundary
+Content-Disposition: form-data; name="description"
+Content-Type: text/plain
+
+test
+--WebAppBoundary
+Content-Disposition: form-data; name="attachment"
+Content-Type: text/plain
+
+213
+--WebAppBoundary
+Content-Disposition: form-data; name="group"
+Content-Type: text/plain
+
+[1,2,3]
+--WebAppBoundary--
+
+<> 2023-11-28T212247.400.json
+
+###
+
+POST http://localhost:8080/login
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Content-Length: 571
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=MGJjYWU1N2UtZGJiNi00YzkwLTliZTAtZjgwY2Q1ZmM2ZjJl
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+--WebAppBoundary
+Content-Disposition: form-data; name="username"
+Content-Type: text/plain
+
+test_teacher
+--WebAppBoundary
+Content-Disposition: form-data; name="password"
+Content-Type: text/plain
+
+123456
+--WebAppBoundary
+Content-Disposition: form-data; name="captchaId"
+Content-Type: text/plain
+
+superkey
+--WebAppBoundary
+Content-Disposition: form-data; name="captcha"
+Content-Type: text/plain
+
+super
+--WebAppBoundary--
+
+<> 2023-11-28T212242.200.json
+
+###
+
+POST http://localhost:8080/course/2/project/table/add
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Content-Length: 696
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=MzNjNTQ2ZDUtY2NmYi00NTNjLWE3ODEtM2JiNTViNjlhYzA0
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+--WebAppBoundary
+Content-Disposition: form-data; name="projectName"
+Content-Type: text/plain
+
+test
+--WebAppBoundary
+Content-Disposition: form-data; name="deadline"
+Content-Type: text/plain
+
+123
+--WebAppBoundary
+Content-Disposition: form-data; name="description"
+Content-Type: text/plain
+
+test
+--WebAppBoundary
+Content-Disposition: form-data; name="attachment"
+Content-Type: text/plain
+
+213
+--WebAppBoundary
+Content-Disposition: form-data; name="group"
+Content-Type: text/plain
+
+[1,2,3]
+--WebAppBoundary--
+
+<> 2023-11-28T212234.400.json
+
+###
+
+GET http://localhost:8080/course/2/project/table
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=MzNjNTQ2ZDUtY2NmYi00NTNjLWE3ODEtM2JiNTViNjlhYzA0
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-11-28T202924.200.json
+
+###
+
+GET http://localhost:8080/course/2/assignment/table
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=MzNjNTQ2ZDUtY2NmYi00NTNjLWE3ODEtM2JiNTViNjlhYzA0
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-11-28T202921.200.json
+
+###
+
+POST http://localhost:8080/login
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Content-Length: 571
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=MDU2MDA2ZDgtYmZiMS00M2EyLTg4MGMtY2UzMzFhZDE4NzE4
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+--WebAppBoundary
+Content-Disposition: form-data; name="username"
+Content-Type: text/plain
+
+test_teacher
+--WebAppBoundary
+Content-Disposition: form-data; name="password"
+Content-Type: text/plain
+
+123456
+--WebAppBoundary
+Content-Disposition: form-data; name="captchaId"
+Content-Type: text/plain
+
+superkey
+--WebAppBoundary
+Content-Disposition: form-data; name="captcha"
+Content-Type: text/plain
+
+super
+--WebAppBoundary--
+
+<> 2023-11-28T202917.200.json
+
+###
+
+GET http://localhost:8080/course/2/project/table
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=MDU2MDA2ZDgtYmZiMS00M2EyLTg4MGMtY2UzMzFhZDE4NzE4
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-11-28T202625.200.json
+
+###
+
+GET http://localhost:8080/course/2/assignment/table
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=MDU2MDA2ZDgtYmZiMS00M2EyLTg4MGMtY2UzMzFhZDE4NzE4
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-11-28T202620.200.json
+
+###
+
+GET http://localhost:8080/course/0/assignment/table
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=MDU2MDA2ZDgtYmZiMS00M2EyLTg4MGMtY2UzMzFhZDE4NzE4
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-11-28T202558.200.json
+
+###
+
+POST http://localhost:8080/login
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Content-Length: 571
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=ZDA3YjQ2ZWUtOTNiNi00YjEzLTkzZTAtMTMwOTg3MTY3Zjgz
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+--WebAppBoundary
+Content-Disposition: form-data; name="username"
+Content-Type: text/plain
+
+test_teacher
+--WebAppBoundary
+Content-Disposition: form-data; name="password"
+Content-Type: text/plain
+
+123456
+--WebAppBoundary
+Content-Disposition: form-data; name="captchaId"
+Content-Type: text/plain
+
+superkey
+--WebAppBoundary
+Content-Disposition: form-data; name="captcha"
+Content-Type: text/plain
+
+super
+--WebAppBoundary--
+
+<> 2023-11-28T202554.200.json
+
+###
+
+GET http://localhost:8080/course/0/project/table
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=ZDA3YjQ2ZWUtOTNiNi00YjEzLTkzZTAtMTMwOTg3MTY3Zjgz
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-11-28T194219.200.json
+
+###
+
+GET http://localhost:8080/course/0/assignment/table
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=ZDA3YjQ2ZWUtOTNiNi00YjEzLTkzZTAtMTMwOTg3MTY3Zjgz
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-11-28T194216.200.json
+
+###
+
+POST http://localhost:8080/login
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Content-Length: 571
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=YWNjZjEzMWUtYjRiZC00ZWFlLWFhZjQtMzE2NzUxMGQzMGY3
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+--WebAppBoundary
+Content-Disposition: form-data; name="username"
+Content-Type: text/plain
+
+test_teacher
+--WebAppBoundary
+Content-Disposition: form-data; name="password"
+Content-Type: text/plain
+
+123456
+--WebAppBoundary
+Content-Disposition: form-data; name="captchaId"
+Content-Type: text/plain
+
+superkey
+--WebAppBoundary
+Content-Disposition: form-data; name="captcha"
+Content-Type: text/plain
+
+super
+--WebAppBoundary--
+
+<> 2023-11-28T194208.200.json
+
+###
+
+GET http://localhost:8080/course/0/project/table
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=YWNjZjEzMWUtYjRiZC00ZWFlLWFhZjQtMzE2NzUxMGQzMGY3
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-11-28T194059.200.json
+
+###
+
+GET http://localhost:8080/course/0/assignment/table
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=YWNjZjEzMWUtYjRiZC00ZWFlLWFhZjQtMzE2NzUxMGQzMGY3
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-11-28T193844.200.json
+
+###
+
+POST http://localhost:8080/login
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Content-Length: 571
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=YTdhNmQ3ZjktMTZjOS00MDAxLWE0ZGUtZGI4NGUzMmEzYmU2
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+--WebAppBoundary
+Content-Disposition: form-data; name="username"
+Content-Type: text/plain
+
+test_teacher
+--WebAppBoundary
+Content-Disposition: form-data; name="password"
+Content-Type: text/plain
+
+123456
+--WebAppBoundary
+Content-Disposition: form-data; name="captchaId"
+Content-Type: text/plain
+
+superkey
+--WebAppBoundary
+Content-Disposition: form-data; name="captcha"
+Content-Type: text/plain
+
+super
+--WebAppBoundary--
+
+<> 2023-11-28T193823.200.json
+
+###
+
+GET http://localhost:8080/course/0/assignment/table
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=YTdhNmQ3ZjktMTZjOS00MDAxLWE0ZGUtZGI4NGUzMmEzYmU2
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-11-28T184507.200.json
+
+###
+
+POST http://localhost:8080/login
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Content-Length: 571
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=ODdjYmNhNTMtYjdlNS00MTk3LWFlOWQtN2ZjZDNmM2JkZGUx
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+--WebAppBoundary
+Content-Disposition: form-data; name="username"
+Content-Type: text/plain
+
+test_teacher
+--WebAppBoundary
+Content-Disposition: form-data; name="password"
+Content-Type: text/plain
+
+123456
+--WebAppBoundary
+Content-Disposition: form-data; name="captchaId"
+Content-Type: text/plain
+
+superkey
+--WebAppBoundary
+Content-Disposition: form-data; name="captcha"
+Content-Type: text/plain
+
+super
+--WebAppBoundary--
+
+<> 2023-11-28T184500.200.json
+
+###
+
+POST http://localhost:8080/login
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Content-Length: 571
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=ODdjYmNhNTMtYjdlNS00MTk3LWFlOWQtN2ZjZDNmM2JkZGUx
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+--WebAppBoundary
+Content-Disposition: form-data; name="username"
+Content-Type: text/plain
+
+test_teacher
+--WebAppBoundary
+Content-Disposition: form-data; name="password"
+Content-Type: text/plain
+
+123456
+--WebAppBoundary
+Content-Disposition: form-data; name="captchaId"
+Content-Type: text/plain
+
+superkey
+--WebAppBoundary
+Content-Disposition: form-data; name="captcha"
+Content-Type: text/plain
+
+super
+--WebAppBoundary--
+
+<> 2023-11-28T184419.500.html
+
+###
+
+GET http://localhost:8080/course/0/assignment/table
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=ODdjYmNhNTMtYjdlNS00MTk3LWFlOWQtN2ZjZDNmM2JkZGUx
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-11-28T184158.200.json
+
+###
+
+POST http://localhost:8080/login
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Content-Length: 571
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=NTY2YTg0MDEtMjE1My00NWJlLTk0OWUtNTY2MjFmYjJmMDll
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+--WebAppBoundary
+Content-Disposition: form-data; name="username"
+Content-Type: text/plain
+
+test_teacher
+--WebAppBoundary
+Content-Disposition: form-data; name="password"
+Content-Type: text/plain
+
+123456
+--WebAppBoundary
+Content-Disposition: form-data; name="captchaId"
+Content-Type: text/plain
+
+superkey
+--WebAppBoundary
+Content-Disposition: form-data; name="captcha"
+Content-Type: text/plain
+
+super
+--WebAppBoundary--
+
+<> 2023-11-28T184155.200.json
+
+###
+
+POST http://localhost:8080/login
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Content-Length: 571
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=Y2EzZDY2YjMtZGM4ZC00ODUyLWI2NGEtZjIyNTY4NTY2YTgz
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+--WebAppBoundary
+Content-Disposition: form-data; name="username"
+Content-Type: text/plain
+
+test_teacher
+--WebAppBoundary
+Content-Disposition: form-data; name="password"
+Content-Type: text/plain
+
+123456
+--WebAppBoundary
+Content-Disposition: form-data; name="captchaId"
+Content-Type: text/plain
+
+superkey
+--WebAppBoundary
+Content-Disposition: form-data; name="captcha"
+Content-Type: text/plain
+
+super
+--WebAppBoundary--
+
+<> 2023-11-28T183756.200.json
+
+###
+
+POST http://localhost:8080/login
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Content-Length: 571
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=Y2QwZWU4NjUtZmVkOC00MGZiLWEwZDAtZTgyYTNiZjY4Y2Y3
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+--WebAppBoundary
+Content-Disposition: form-data; name="username"
+Content-Type: text/plain
+
+test_teacher
+--WebAppBoundary
+Content-Disposition: form-data; name="password"
+Content-Type: text/plain
+
+123456
+--WebAppBoundary
+Content-Disposition: form-data; name="captchaId"
+Content-Type: text/plain
+
+superkey
+--WebAppBoundary
+Content-Disposition: form-data; name="captcha"
+Content-Type: text/plain
+
+super
+--WebAppBoundary--
+
+<> 2023-11-28T183225.200.json
+
+###
+
+GET http://localhost:8080/course/0/assignment/table
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=Y2QwZWU4NjUtZmVkOC00MGZiLWEwZDAtZTgyYTNiZjY4Y2Y3
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-11-28T183004.500.json
+
+###
+
+POST http://localhost:8080/login
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Content-Length: 571
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=OWY3NzYwMjQtYjMzNy00YmFjLWE5MGUtMDA4MTZkNzhlYzcy
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+--WebAppBoundary
+Content-Disposition: form-data; name="username"
+Content-Type: text/plain
+
+test_teacher
+--WebAppBoundary
+Content-Disposition: form-data; name="password"
+Content-Type: text/plain
+
+123456
+--WebAppBoundary
+Content-Disposition: form-data; name="captchaId"
+Content-Type: text/plain
+
+superkey
+--WebAppBoundary
+Content-Disposition: form-data; name="captcha"
+Content-Type: text/plain
+
+super
+--WebAppBoundary--
+
+<> 2023-11-28T182955.200.json
+
+###
+
+GET http://localhost:8080/course/0/assignment/table
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=OWY3NzYwMjQtYjMzNy00YmFjLWE5MGUtMDA4MTZkNzhlYzcy
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-11-28T182445.200.json
+
+###
+
+POST http://localhost:8080/login
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Content-Length: 571
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=OTUwYWMxNTEtZjJmNC00ODk0LTlmZmQtZmEzZmI4MTUzMjRl
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+--WebAppBoundary
+Content-Disposition: form-data; name="username"
+Content-Type: text/plain
+
+test_teacher
+--WebAppBoundary
+Content-Disposition: form-data; name="password"
+Content-Type: text/plain
+
+123456
+--WebAppBoundary
+Content-Disposition: form-data; name="captchaId"
+Content-Type: text/plain
+
+superkey
+--WebAppBoundary
+Content-Disposition: form-data; name="captcha"
+Content-Type: text/plain
+
+super
+--WebAppBoundary--
+
+<> 2023-11-28T182437.200.json
+
+###
+
+GET http://localhost:8080/course/0/assignment/table
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=OTUwYWMxNTEtZjJmNC00ODk0LTlmZmQtZmEzZmI4MTUzMjRl
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-11-28T181842.200.json
+
+###
+
+GET http://localhost:8080/course/0/assignment/table
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=OTUwYWMxNTEtZjJmNC00ODk0LTlmZmQtZmEzZmI4MTUzMjRl
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-11-28T181829.200.json
+
+###
+
+GET http://localhost:8080/course/0/assignment/table
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=OTUwYWMxNTEtZjJmNC00ODk0LTlmZmQtZmEzZmI4MTUzMjRl
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-11-28T181649.200.json
+
+###
+
+POST http://localhost:8080/login
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Content-Length: 571
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=ZmU0ZTg3MDEtYmI3ZS00ODc0LWEzNTQtODI2MzQ2MWQwZWU5
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+--WebAppBoundary
+Content-Disposition: form-data; name="username"
+Content-Type: text/plain
+
+test_teacher
+--WebAppBoundary
+Content-Disposition: form-data; name="password"
+Content-Type: text/plain
+
+123456
+--WebAppBoundary
+Content-Disposition: form-data; name="captchaId"
+Content-Type: text/plain
+
+superkey
+--WebAppBoundary
+Content-Disposition: form-data; name="captcha"
+Content-Type: text/plain
+
+super
+--WebAppBoundary--
+
+<> 2023-11-28T181551.200.json
+
+###
+
+POST http://localhost:8080/login
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Content-Length: 571
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=ZmU0ZTg3MDEtYmI3ZS00ODc0LWEzNTQtODI2MzQ2MWQwZWU5
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+--WebAppBoundary
+Content-Disposition: form-data; name="username"
+Content-Type: text/plain
+
+test_teacher
+--WebAppBoundary
+Content-Disposition: form-data; name="password"
+Content-Type: text/plain
+
+123456
+--WebAppBoundary
+Content-Disposition: form-data; name="captchaId"
+Content-Type: text/plain
+
+superkey
+--WebAppBoundary
+Content-Disposition: form-data; name="captcha"
+Content-Type: text/plain
+
+super
+--WebAppBoundary--
+
+<> 2023-11-28T180627.401.json
+
+###
+
+POST http://localhost:8080/login
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Content-Length: 571
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Cookie: SESSION=ZmU0ZTg3MDEtYmI3ZS00ODc0LWEzNTQtODI2MzQ2MWQwZWU5
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+--WebAppBoundary
+Content-Disposition: form-data; name="username"
+Content-Type: text/plain
+
+test_teacher
+--WebAppBoundary
+Content-Disposition: form-data; name="password"
+Content-Type: text/plain
+
+123456
+--WebAppBoundary
+Content-Disposition: form-data; name="captchaId"
+Content-Type: text/plain
+
+superkey
+--WebAppBoundary
+Content-Disposition: form-data; name="captcha"
+Content-Type: text/plain
+
+super
+--WebAppBoundary--
+
+<> 2023-11-28T180614.401.json
+
+###
+

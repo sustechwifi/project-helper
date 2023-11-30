@@ -8,5 +8,7 @@ import sustech.ooad.mainservice.model.Project;
 public interface ProjectRepository extends JpaRepository<Project, Integer> {
 
     List<Project> findProjectsByCourse(Course course);
-    
+
+    Project findByCourseAndName(Course course, String name);
+
 }

@@ -33,6 +33,6 @@ public class CourseAnnouncement {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "attachment")
-    private Homework attachment;
+    private submit attachment;
 
 }

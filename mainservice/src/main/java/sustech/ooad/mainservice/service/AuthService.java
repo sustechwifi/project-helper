@@ -139,7 +139,7 @@ public class AuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2U
         switch (role){
             case ROLE_STUDENT: {
                 if (r.getRole().equals(ROLE_DEFAULT)){
-                    authUserMapper.updateRole(role,r.getId());
+                    authUserMapper.updateRole(role,r.getId().longValue());
                     return true;
                 }
             }

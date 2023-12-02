@@ -22,4 +22,5 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
     @Query(value = "update project set name=?1,course_id=?2,time=?3,time_state=?4,description=?5,attachment=?6 where id=?7", nativeQuery = true)
     int modifyProject(String name, Integer courseId, String ddl, String state, String description,
         String attachment,Integer projectId);
+
 }

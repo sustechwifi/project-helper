@@ -1,6 +1,5 @@
 package sustech.ooad.mainservice.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotNull;
@@ -10,20 +9,20 @@ import java.util.Objects;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.Hibernate;
-@JsonIgnoreProperties(value = { "hibernateLazyInitializer"})
+
 @Getter
 @Setter
 @Embeddable
-public class GroupMemberListId implements Serializable {
+public class UserprojectId implements Serializable {
 
-    private static final long serialVersionUID = 4716562382583175136L;
+    private static final long serialVersionUID = 9177533477980539229L;
     @NotNull
-    @Column(name = "group_id", nullable = false)
-    private Integer groupId;
+    @Column(name = "uuid", nullable = false)
+    private BigDecimal uuid;
 
     @NotNull
-    @Column(name = "user_uuid", nullable = false)
-    private BigDecimal userUuid;
+    @Column(name = "projectid", nullable = false)
+    private Integer projectid;
 
     @Override
     public boolean equals(Object o) {
@@ -33,14 +32,14 @@ public class GroupMemberListId implements Serializable {
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
             return false;
         }
-        GroupMemberListId entity = (GroupMemberListId) o;
-        return Objects.equals(this.groupId, entity.groupId) &&
-            Objects.equals(this.userUuid, entity.userUuid);
+        UserprojectId entity = (UserprojectId) o;
+        return Objects.equals(this.uuid, entity.uuid) &&
+            Objects.equals(this.projectid, entity.projectid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(groupId, userUuid);
+        return Objects.hash(uuid, projectid);
     }
 
 }

@@ -10,7 +10,7 @@ import sustech.ooad.mainservice.model.submit;
 
 public interface submitRepository extends JpaRepository<submit, Integer> {
 
-    List<submit> findAllByCourse(Course course);
+
 
 
 }

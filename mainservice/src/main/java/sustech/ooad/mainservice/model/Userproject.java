@@ -1,6 +1,6 @@
 package sustech.ooad.mainservice.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,24 +10,27 @@ import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-@JsonIgnoreProperties(value = { "hibernateLazyInitializer"})
+
 @Getter
 @Setter
 @Entity
-@Table(name = "group_member_list")
-public class GroupMemberList {
+@Table(name = "userproject")
+public class Userproject {
 
     @EmbeddedId
-    private GroupMemberListId id;
+    private UserprojectId id;
 
-    @MapsId("groupId")
+    @MapsId("uuid")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "group_id", nullable = false)
-    private Group group;
+    @JoinColumn(name = "uuid", nullable = false)
+    private AuthUser user;
 
-    @MapsId("userUuid")
+    @MapsId("projectid")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_uuid", nullable = false)
-    private AuthUser userUuid;
+    @JoinColumn(name = "projectid", nullable = false)
+    private Project project;
+
+    @Column(name = "exhibit", length = Integer.MAX_VALUE)
+    private String exhibit;
 
 }

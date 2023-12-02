@@ -1,9 +1,12 @@
 package sustech.ooad.mainservice.controller;
 
 import jakarta.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import sustech.ooad.mainservice.model.dto.CourseInfoDto;
 import sustech.ooad.mainservice.service.CourseService;
 import sustech.ooad.mainservice.util.Result;
 import sustech.ooad.mainservice.util.auth.AuthFunctionality;
@@ -31,6 +34,48 @@ public class CourseController {
         return str.toString();
     }
 
+    //获取某个作业
+    @PreAuthorize(ROLE_CHECK)
+    @GetMapping("/{courseId}/assignment/{assignmentId}")
+    public Result<?> getHomework(@PathVariable("courseId") long courseId,
+        @PathVariable("assignmentId") Integer assignmentId) {
+        boolean valid = authFunctionality.inCourse(courseId);
+        if (!valid) {
+            return Result.err(ACCESS_COURSE_DENIED, "无法访问此课程");
+        }
+        return Result.ok(courseService.getHomework(assignmentId));
+    }
+
+    //获取某个项目
+    @PreAuthorize(ROLE_CHECK)
+    @GetMapping("/{courseId}/project/{projectId}")
+    public Result<?> getProject(@PathVariable("courseId") long courseId,
+        @PathVariable("projectId") Integer projectId) {
+        boolean valid = authFunctionality.inCourse(courseId);
+        if (!valid) {
+            return Result.err(ACCESS_COURSE_DENIED, "无法访问此课程");
+        }
+        return Result.ok(courseService.getProject(projectId));
+    }
+
+    //修改课程作业信息
+    @PreAuthorize(ROLE_CHECK_TEACHER)
+    @PostMapping("/{courseId}/assignment/{assignmentId}/table/edit")
+    public Result<?> modifyHomework(@PathVariable("courseId") long courseId,
+        @PathVariable("assignmentId") Integer assignmentId,
+        @RequestParam("assignmentName") String assignmentName, @RequestParam("deadline") String ddl,
+        @RequestParam("attachment") String[] attachments,
+        @RequestParam("description") String description) {
+        boolean valid = authFunctionality.inCourse(courseId);
+        if (!valid) {
+            return Result.err(ACCESS_COURSE_DENIED, "无法访问此课程");
+        }
+        courseService.modifyHomework(assignmentName, ddl, description, merge(attachments),
+            assignmentId);
+        return Result.ok("");
+    }
+
+    //修改课程项目信息
     @PreAuthorize(ROLE_CHECK_TEACHER)
     @PostMapping("/{courseId}/project/{projectId}/table/edit")
     public Result<?> modifyProject(@PathVariable("courseId") long courseId,
@@ -48,9 +93,10 @@ public class CourseController {
 
     }
 
+    //添加课程作业
     @PreAuthorize(ROLE_CHECK_TEACHER)
     @PostMapping("/{courseId}/assignment/table/add")
-    public Result<?> addProject(@PathVariable("courseId") long courseId,
+    public Result<?> addHomework(@PathVariable("courseId") long courseId,
         @RequestParam("assignmentName") String assignmentName, @RequestParam("deadline") String ddl,
         @RequestParam("attachment") String[] attachments,
         @RequestParam("description") String description, @RequestParam("isGroup") Integer isGroup) {
@@ -58,13 +104,14 @@ public class CourseController {
         if (!valid) {
             return Result.err(ACCESS_COURSE_DENIED, "无法访问此课程");
         }
-        long uid = authFunctionality.getUser().getId();
+        long uid = authFunctionality.getUser().getId().longValue();
         courseService.addHomework(assignmentName, ddl, description, merge(attachments),
             (int) courseId,
             isGroup, uid);
         return Result.ok("");
     }
 
+    //添加课程项目
     @PreAuthorize(ROLE_CHECK_TEACHER)
     @PostMapping("/{courseId}/project/table/add")
     public Result<?> addProject(@PathVariable("courseId") long courseId,
@@ -82,6 +129,7 @@ public class CourseController {
 
     }
 
+    //获得课程所有作业
     @PreAuthorize(ROLE_CHECK)
     @GetMapping("/{courseId}/assignment/table")
     public Result<?> getCourseHomeworkTable(@PathVariable("courseId") long courseId) {
@@ -92,6 +140,7 @@ public class CourseController {
         return Result.ok(courseService.getHomeworkTable((int) courseId));
     }
 
+    //获得课程所有项目
     @PreAuthorize(ROLE_CHECK)
     @GetMapping("/{courseId}/project/table")
     public Result<?> getCourseProjectInfo(@PathVariable("courseId") long courseId) {
@@ -102,12 +151,13 @@ public class CourseController {
         return Result.ok(courseService.getProjectInfo((int) courseId));
     }
 
+    //获取我的课程
     @PreAuthorize(ROLE_CHECK)
-    @GetMapping("/all")
+    @GetMapping("/user/class")
     public Result<?> getAllCourse() {
-        // TODO 根据<课程id,权限> 获取当前用户的所有课程信息
-        Map<Long, String> userCourses = authFunctionality.getUserCourses();
-        throw new UnsupportedOperationException();
+        long uid = authFunctionality.getUser().getId().longValue();  //获取自身用户
+        List<CourseInfoDto> courseInfoDtoList = courseService.getUserCourse(uid);
+        return Result.ok(courseInfoDtoList);
     }
 
 
@@ -130,7 +180,7 @@ public class CourseController {
         if (!valid) {
             return Result.err(ACCESS_COURSE_DENIED, "无法访问此课程");
         }
-        long uid = authFunctionality.getUser().getId();  //获取自身用户
+        long uid = authFunctionality.getUser().getId().longValue();  //获取自身用户
         courseService.quitCourse(courseId, uid);
         return Result.ok(null);
     }

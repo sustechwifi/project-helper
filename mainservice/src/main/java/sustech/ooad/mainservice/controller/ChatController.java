@@ -28,7 +28,7 @@ public class ChatController {
 
     @GetMapping("/users")
     public Result<?> getUserList() {
-        var curr = authFunctionality.getUser().getId();
+        var curr = authFunctionality.getUser().getId().longValue();
         List<ChatListRecord> records = chatService.findChatRecords(curr);
         return Result.ok(records);
 
@@ -49,7 +49,7 @@ public class ChatController {
     @PostMapping("/with")
     public Result<?> chatWith(@RequestParam("uid") long uid) {
         Map<String, Object> initData = new HashMap<>();
-        var curr = authFunctionality.getUser().getId();
+        var curr = authFunctionality.getUser().getId().longValue();
         var validPartner = chatService.beforeBegin(curr,uid);
         if (validPartner) {
             List<ChatContent> history = chatService.beginChat(curr, uid);
@@ -62,7 +62,7 @@ public class ChatController {
 
     @PostMapping("/invite")
     public Result<?> inviteUser(@RequestParam("uid") long uid) {
-        var curr = authFunctionality.getUser().getId();
+        var curr = authFunctionality.getUser().getId().longValue();
         boolean valid = chatService.addChatUser(curr, uid);
         if (valid) {
             return Result.ok(null);

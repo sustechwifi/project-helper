@@ -11,4 +11,5 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
 
     Project findByCourseAndName(Course course, String name);
 
+    Project findProjectById(Integer id);
 }

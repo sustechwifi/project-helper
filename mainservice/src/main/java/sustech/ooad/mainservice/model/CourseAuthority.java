@@ -1,5 +1,6 @@
 package sustech.ooad.mainservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -7,7 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
-
+@JsonIgnoreProperties(value = { "hibernateLazyInitializer"})
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

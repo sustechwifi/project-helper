@@ -49,7 +49,7 @@ public class AuthFunctionalityImpl implements AuthFunctionality {
 
     @Override
     public Map<Long,String> getUserCourses(){
-        long uid = getUser().getId();
+        long uid = getUser().getId().longValue();
         String key = USER_COURSES + uid;
         var data = redisTemplate.opsForValue().get(key);
         if (data != null) {

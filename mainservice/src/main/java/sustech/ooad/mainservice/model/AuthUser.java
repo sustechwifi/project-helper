@@ -1,10 +1,12 @@
 package sustech.ooad.mainservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer"})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -32,7 +35,8 @@ public class AuthUser implements OAuth2User, UserDetails {
 
     @Id
     @Column(name = "uuid")
-    long id;
+    BigDecimal id;
+
 
     String login;
     String name;
@@ -62,7 +66,9 @@ public class AuthUser implements OAuth2User, UserDetails {
         this.name = username;
         this.password = authUserPassEncoder.encode(password);
         this.avatar = defaultUser.avatar;
+
     }
+
 
     // 第三方免注册
     public AuthUser(String username, String name, String platform, String avatar) {
@@ -74,10 +80,10 @@ public class AuthUser implements OAuth2User, UserDetails {
     }
 
     public static PasswordEncoder authUserPassEncoder = new BCryptPasswordEncoder();
-
+    static BigDecimal a = new BigDecimal(-1);
     @Transient
     public static AuthUser defaultUser = new AuthUser(
-        -1,
+        a,
         "test",
         "test_user",
         "123456",

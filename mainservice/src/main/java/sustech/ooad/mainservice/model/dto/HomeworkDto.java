@@ -4,13 +4,12 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import sustech.ooad.mainservice.model.Project;
+import sustech.ooad.mainservice.model.Homework;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class exhibitProjectDto {
+public class HomeworkDto {
 
-    Project project;
-    String exhibit;
+    Homework homework;
     List<attachment> attachment;
 }

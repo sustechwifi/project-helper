@@ -11,6 +11,8 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
 
     Course findCourseById(Integer id);
 
+    Course findCourseByName(String name);
+
     @Transactional(rollbackFor = Exception.class)
     @Modifying
     @Query(value = "insert into project(name, course_id, time, time_state, description, attachment) values (?1,?2,?3,?4,?5,?6);", nativeQuery = true)
@@ -21,6 +23,16 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
     @Modifying
     @Query(value = "update project set name=?1,course_id=?2,time=?3,time_state=?4,description=?5,attachment=?6 where id=?7", nativeQuery = true)
     int modifyProject(String name, Integer courseId, String ddl, String state, String description,
-        String attachment,Integer projectId);
+        String attachment, Integer projectId);
+
+    @Transactional(rollbackFor = Exception.class)
+    @Modifying
+    @Query(value = "insert into course(name) VALUES (?1)", nativeQuery = true)
+    int addCourse(String name);
+
+    @Transactional(rollbackFor = Exception.class)
+    @Modifying
+    @Query(value = "update course set name=?1 where id=?2", nativeQuery = true)
+    int modifyCourse(String name, Integer id);
 
 }

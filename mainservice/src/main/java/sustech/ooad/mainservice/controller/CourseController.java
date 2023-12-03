@@ -34,6 +34,64 @@ public class CourseController {
         return str.toString();
     }
 
+    //修改课程信息
+    @PreAuthorize(ROLE_CHECK_TEACHER)
+    @PostMapping("/{courseId}/edit")
+    public Result<?> modifyCourse(@PathVariable("courseId") Integer courseId,
+        @RequestParam("courseName") String name,
+        @RequestParam("teacherID") Long teacherId,
+        @RequestParam("TAID") Long[] Ta) {
+        courseService.modifyCourse(name, courseId, teacherId, Ta);
+        return Result.ok("");
+    }
+
+    //添加课程
+    @PreAuthorize(ROLE_CHECK_TEACHER)
+    @PostMapping("/add")
+    public Result<?> addCourse(@RequestParam("courseName") String name,
+        @RequestParam("teacherID") Long teacherId) {
+        courseService.addCourse(name, teacherId);
+        return Result.ok("");
+    }
+
+    //修改课程小组
+    @PreAuthorize(ROLE_CHECK_TEACHER)
+    @PostMapping("/{courseId}/group/{groupId}/edit")
+    public Result<?> addCourseGroup(@PathVariable("courseId") long courseId,
+        @PathVariable("groupId") Integer groupId, @RequestParam("groupName") String name,
+        @RequestParam("groupMemberID") Long[] member) {
+        boolean valid = authFunctionality.inCourse(courseId);
+        if (!valid) {
+            return Result.err(ACCESS_COURSE_DENIED, "无法访问此课程");
+        }
+        courseService.modifyGroup(name, groupId, member);
+        return Result.ok("");
+    }
+
+    //获取课程小组
+    @PreAuthorize(ROLE_CHECK)
+    @GetMapping("/{courseId}/group/get")
+    public Result<?> getCourseGroup(@PathVariable("courseId") long courseId) {
+        boolean valid = authFunctionality.inCourse(courseId);
+        if (!valid) {
+            return Result.err(ACCESS_COURSE_DENIED, "无法访问此课程");
+        }
+        return Result.ok(courseService.getCourseGroup((int) courseId));
+    }
+
+    //添加课程小组
+    @PreAuthorize(ROLE_CHECK_TEACHER)
+    @GetMapping("/{courseId}/project/{projectId}/group/add")
+    public Result<?> addCourseGroup(@PathVariable("courseId") long courseId,
+        @PathVariable("projectId") Integer projectId, @RequestParam("groupName") String name) {
+        boolean valid = authFunctionality.inCourse(courseId);
+        if (!valid) {
+            return Result.err(ACCESS_COURSE_DENIED, "无法访问此课程");
+        }
+        courseService.addCourseGroup((int) courseId, name, projectId);
+        return Result.ok("");
+    }
+
     //获取某个作业
     @PreAuthorize(ROLE_CHECK)
     @GetMapping("/{courseId}/assignment/{assignmentId}")
@@ -116,13 +174,13 @@ public class CourseController {
     @PostMapping("/{courseId}/project/table/add")
     public Result<?> addProject(@PathVariable("courseId") long courseId,
         @RequestParam("projectName") String projectName, @RequestParam("deadline") String ddl,
-        @RequestParam("attachment") String[] attachments, @RequestParam("group") String[] group,
+        @RequestParam("attachment") String[] attachments,
         @RequestParam("description") String description, @RequestParam("state") String state) {
         boolean valid = authFunctionality.inCourse(courseId);
         if (!valid) {
             return Result.err(ACCESS_COURSE_DENIED, "无法访问此课程");
         }
-        courseService.addProject(projectName, ddl, description, merge(attachments), group,
+        courseService.addProject(projectName, ddl, description, merge(attachments),
             (int) courseId,
             state);
         return Result.ok("");

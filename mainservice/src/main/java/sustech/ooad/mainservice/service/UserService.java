@@ -12,6 +12,7 @@ import sustech.ooad.mainservice.model.Userproject;
 import sustech.ooad.mainservice.model.dto.exhibitProjectDto;
 import sustech.ooad.mainservice.util.auth.AuthFunctionality;
 import sustech.ooad.mainservice.util.auth.AuthFunctionalityImpl;
+import sustech.ooad.mainservice.model.dto.attachment;
 
 @Service
 public class UserService {
@@ -29,10 +30,8 @@ public class UserService {
             authFunctionality.getUser());
         List<exhibitProjectDto> exhibitProjectDtoList = new ArrayList<>();
         for (Userproject u : userprojectList) {
-            exhibitProjectDto temp = new exhibitProjectDto();
-            temp.setProject(u.getProject());
-            temp.setExhibit(u.getExhibit());
-            exhibitProjectDtoList.add(temp);
+            exhibitProjectDtoList.add(new exhibitProjectDto(u.getProject(), u.getExhibit(),
+                attachment.divide(u.getProject().getAttachment())));
         }
         return exhibitProjectDtoList;
     }

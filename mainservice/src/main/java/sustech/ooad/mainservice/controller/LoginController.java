@@ -38,7 +38,13 @@ public class LoginController {
 
     @GetMapping("/auth-info")
     public Result<?> info(Authentication authentication){
-        return Result.ok(authentication.getPrincipal());
+        if (authentication.getPrincipal() instanceof AuthUser){
+            return Result.ok(authentication.getPrincipal());
+        }else if(authentication.getDetails() instanceof AuthUser){
+            return Result.ok(authentication.getDetails());
+        }else {
+            return Result.ok(authentication);
+        }
     }
 
     @GetMapping("/generate/email/captcha")

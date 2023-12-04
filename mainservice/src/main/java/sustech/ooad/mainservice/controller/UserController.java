@@ -16,6 +16,8 @@ import sustech.ooad.mainservice.util.MailService;
 import sustech.ooad.mainservice.util.Result;
 import sustech.ooad.mainservice.util.auth.AuthFunctionality;
 
+import java.math.BigDecimal;
+
 import static sustech.ooad.mainservice.util.ConstantField.*;
 
 @Slf4j
@@ -111,11 +113,8 @@ public class UserController {
     @PostMapping("/edit/info")
     public Result<?> editInfo(@RequestBody AuthUser authUser) {
         long currId = authFunctionality.getUser().getId().longValue();
-        if (currId == authUser.getId().longValue()) {
-            authService.editInfo(authUser);
-            return Result.ok(null);
-        } else {
-            return Result.err(AUTH_SESSION_DENIED, "只能操作当前会话的用户！");
-        }
+        authUser.setId(BigDecimal.valueOf(currId));
+        authService.editInfo(authUser);
+        return Result.ok(null);
     }
 }

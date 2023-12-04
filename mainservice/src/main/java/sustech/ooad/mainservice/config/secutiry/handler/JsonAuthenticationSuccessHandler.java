@@ -32,8 +32,6 @@ public class JsonAuthenticationSuccessHandler implements AuthenticationSuccessHa
         result.put("msg", "登录成功");
         result.put("code", 200);
         result.put("data", authentication);
-
-        // 存 JWT
         response.getWriter().write(JSONUtil.toJsonStr(result));
     }
 }

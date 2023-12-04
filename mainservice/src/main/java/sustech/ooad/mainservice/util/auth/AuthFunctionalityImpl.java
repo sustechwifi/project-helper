@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import sustech.ooad.mainservice.mapper.CourseAuthorityMapper;
 import sustech.ooad.mainservice.model.AuthUser;
 import sustech.ooad.mainservice.model.CourseAuthority;
+import sustech.ooad.mainservice.util.Result;
 
 import java.net.DatagramPacket;
 import java.util.Arrays;
@@ -39,6 +40,12 @@ public class AuthFunctionalityImpl implements AuthFunctionality {
 
     @Override
     public AuthUser getUser() {
+        var auth = getAuthentication();
+        if (auth.getPrincipal() instanceof AuthUser user){
+            return user;
+        }else if(auth.getDetails() instanceof AuthUser user){
+            return user;
+        }
         return (AuthUser) getAuthentication().getPrincipal();
     }
 

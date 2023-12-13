@@ -4,13 +4,12 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import sustech.ooad.mainservice.model.Project;
+import sustech.ooad.mainservice.model.Group;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class exhibitProjectDto {
+public class GroupDto {
 
-    Project project;
-    String exhibit;
-    List<attachment> attachment;
+    Group group;
+    List<Long> member;
 }

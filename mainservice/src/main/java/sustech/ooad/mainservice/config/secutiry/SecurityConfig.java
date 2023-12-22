@@ -4,6 +4,7 @@ import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
@@ -38,11 +39,14 @@ public class SecurityConfig {
                         "/register/**",
                         "/generate/**",
                         "/content/download/**",
-                        "/ws/chat/**"
+                        "/ws/chat/**",
+                        "/callback/**"
                 ).permitAll()
+                .requestMatchers(HttpMethod.OPTIONS).permitAll()
                 // 基于路径的访问控制
                 //.requestMatchers("/user/**").hasRole("ROLE_User")
                 .anyRequest().authenticated();
+
 
         // 开启表单登录
         http.formLogin()
@@ -61,7 +65,7 @@ public class SecurityConfig {
 
         // 开启 oauth2 登录
         http.oauth2Login()
-                .successHandler(new JsonAuthenticationSuccessHandler())
+                .successHandler(new OauthAuthenticationSuccessHandler())
                 .failureHandler(new JsonAuthenticationFailureHandler());
 
         // 开启短信验证码登录  禁用写法：http.apply(smsLogin()).disable();

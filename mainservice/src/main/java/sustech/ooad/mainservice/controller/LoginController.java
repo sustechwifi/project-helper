@@ -3,19 +3,24 @@ package sustech.ooad.mainservice.controller;
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.LineCaptcha;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.json.JSONUtil;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.util.StringUtils;
 import sustech.ooad.mainservice.model.AuthUser;
 import sustech.ooad.mainservice.service.LoginUserService;
 import sustech.ooad.mainservice.util.Result;
 import sustech.ooad.mainservice.config.secutiry.captcha.CaptchaVO;
 
+import java.io.IOException;
 import java.util.Objects;
 import java.util.UUID;
 
+import static sustech.ooad.mainservice.config.secutiry.handler.OauthAuthenticationSuccessHandler.oauthCallBackData;
 import static sustech.ooad.mainservice.util.ConstantField.*;
 
 
@@ -34,6 +39,17 @@ public class LoginController {
     public String echo(@RequestParam String word){
         log.info("============ [echo] ============\n"+word);
         return word;
+    }
+
+    @GetMapping("/callback/oauth2")
+    public void oauth2Callback(HttpServletResponse response) throws IOException {
+        String s = oauthCallBackData;
+        if (s != null){
+            response.getWriter().write(s);
+            oauthCallBackData = null;
+        }else {
+            response.getWriter().write(JSONUtil.toJsonStr(Result.err(402,"用户未同意授权")));
+        }
     }
 
     @GetMapping("/auth-info")

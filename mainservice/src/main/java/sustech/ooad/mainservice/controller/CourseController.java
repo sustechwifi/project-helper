@@ -34,6 +34,51 @@ public class CourseController {
         return str.toString();
     }
 
+    @PreAuthorize(ROLE_CHECK)
+    @PostMapping("/project/{projectId}/group/{groupId}/task/edit/{taskId}")
+    public Result<?> modifyTask(@PathVariable("groupId") Integer groupId,
+        @PathVariable("projectId") Integer projectId, @PathVariable("taskId") Integer taskId,
+        @RequestParam("name") String name,
+        @RequestParam("member") List<Long> member, @RequestParam("deadline") String ddl,
+        @RequestParam("attachmentURL") String[] attachment,
+        @RequestParam("description") String description) {
+        long uid = authFunctionality.getUser().getId().longValue();
+        boolean valid = courseService.inGroup(uid, groupId);
+        if (!valid) {
+            return Result.err(ACCESS_COURSE_DENIED, "无法修改此小组任务");
+        }
+        courseService.modifyTask(name, ddl, merge(attachment), description, taskId, member);
+        return Result.ok("");
+    }
+
+    @PreAuthorize(ROLE_CHECK)
+    @PostMapping("/project/{projectId}/group/{groupId}/task/add")
+    public Result<?> addTask(@PathVariable("groupId") Integer groupId,
+        @PathVariable("projectId") Integer projectId, @RequestParam("name") String name,
+        @RequestParam("member") List<Long> member, @RequestParam("deadline") String ddl,
+        @RequestParam("attachmentURL") String[] attachment,
+        @RequestParam("description") String description) {
+        long uid = authFunctionality.getUser().getId().longValue();
+        boolean valid = courseService.inGroup(uid, groupId);
+        if (!valid) {
+            return Result.err(ACCESS_COURSE_DENIED, "无法添加此小组任务");
+        }
+        courseService.addTask(name, ddl, merge(attachment), description, projectId, groupId,
+            member);
+        return Result.ok("");
+    }
+
+    @PreAuthorize(ROLE_CHECK)
+    @GetMapping("/group/{groupId}/task/get")
+    public Result<?> getTask(@PathVariable("groupId") Integer groupId) {
+        long uid = authFunctionality.getUser().getId().longValue();
+        boolean valid = courseService.inGroup(uid, groupId);
+        if (!valid) {
+            return Result.err(ACCESS_COURSE_DENIED, "无法访问此小组任务");
+        }
+        return Result.ok(courseService.getTasks(groupId));
+    }
+
     //修改课程信息
     @PreAuthorize(ROLE_CHECK_TEACHER)
     @PostMapping("/{courseId}/edit")

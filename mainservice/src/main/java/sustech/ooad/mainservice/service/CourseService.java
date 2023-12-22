@@ -1,18 +1,23 @@
 package sustech.ooad.mainservice.service;
 
 import jakarta.annotation.Resource;
+import jakarta.persistence.criteria.CriteriaBuilder.In;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import sustech.ooad.mainservice.mapper.AuthUserMapper;
 import sustech.ooad.mainservice.mapper.CourseAuthorityMapper;
 import sustech.ooad.mainservice.mapper.CourseAuthorityRepository;
 import sustech.ooad.mainservice.mapper.CourseRepository;
 import sustech.ooad.mainservice.mapper.GroupMemberListRepository;
 import sustech.ooad.mainservice.mapper.GroupRepository;
 import sustech.ooad.mainservice.mapper.HomeworkRepository;
+import sustech.ooad.mainservice.mapper.TaskMemRepository;
+import sustech.ooad.mainservice.mapper.TaskRepository;
 import sustech.ooad.mainservice.mapper.submitRepository;
 import sustech.ooad.mainservice.mapper.ProjectRepository;
 import sustech.ooad.mainservice.model.Course;
@@ -20,11 +25,14 @@ import sustech.ooad.mainservice.model.CourseAuthority;
 import sustech.ooad.mainservice.model.Group;
 import sustech.ooad.mainservice.model.GroupMemberList;
 import sustech.ooad.mainservice.model.Homework;
+import sustech.ooad.mainservice.model.Task;
+import sustech.ooad.mainservice.model.TaskMem;
 import sustech.ooad.mainservice.model.dto.CourseInfoDto;
 import sustech.ooad.mainservice.model.dto.GroupDto;
 import sustech.ooad.mainservice.model.dto.HomeworkDto;
 import sustech.ooad.mainservice.model.dto.ProjectDto;
 import sustech.ooad.mainservice.model.dto.attachment;
+import sustech.ooad.mainservice.model.dto.taskDto;
 import sustech.ooad.mainservice.model.submit;
 import sustech.ooad.mainservice.model.Project;
 import sustech.ooad.mainservice.util.auth.AuthFunctionality;
@@ -38,13 +46,15 @@ public class CourseService {
 
     @Resource
     CourseAuthorityMapper courseAuthorityMapper;
-
+    @Autowired
+    AuthUserMapper authUserMapper;
     @Resource
     StringRedisTemplate stringRedisTemplate;
 
     @Resource
     AuthFunctionality authFunctionality;
-
+    @Autowired
+    TaskRepository taskRepository;
     @Autowired
     CourseRepository courseRepository;
     @Autowired
@@ -61,6 +71,8 @@ public class CourseService {
     CourseAuthorityRepository courseAuthorityRepository;
     @Autowired
     GroupMemberListRepository groupMemberListRepository;
+    @Autowired
+    TaskMemRepository taskMemRepository;
 
     private void deleteCache(long uid) {
         // 清除缓存
@@ -201,5 +213,48 @@ public class CourseService {
         for (Long i : ta) {
             courseAuthorityRepository.addCourseMember(courseId, i, "student assistant");
         }
+    }
+
+    public List<taskDto> getTasks(Integer groupId) {
+        List<taskDto> taskDtoList = new ArrayList<>();
+        List<Task> taskList = taskRepository.findTasksByGroupid(
+            groupRepository.findGroupById(groupId));
+        taskList.forEach(a -> {
+            Integer id = a.getId();
+            List<TaskMem> taskMemList = taskMemRepository.findTaskMemsByTaskid(
+                taskRepository.findTaskById(id));
+            List<Long> memberList = new ArrayList<>();
+            taskMemList.forEach(b -> {
+                memberList.add(b.getUuid().getId().longValue());
+            });
+            taskDtoList.add(new taskDto(a, memberList));
+        });
+        return taskDtoList;
+    }
+
+    public boolean inGroup(Long uuid, Integer groupId) {
+        return Objects.equals(groupId, groupMemberListRepository.findGroupMemberListByUserUuid(
+                authUserMapper.selectOneById(uuid)).getGroup()
+            .getId());
+    }
+
+    public void addTask(String name, String ddl, String attachment, String description,
+        Integer projectId,
+        Integer groupId, List<Long> member) {
+        taskRepository.addTask(name, ddl, attachment, description, projectId, groupId);
+        Task task = taskRepository.findTaskByGroupidAndName(groupRepository.findGroupById(groupId),
+            name);
+        member.forEach(a -> {
+            taskMemRepository.addTaskMem(task.getId(), a);
+        });
+    }
+
+    public void modifyTask(String name, String ddl, String attachment, String description,
+        Integer taskId, List<Long> member) {
+        taskRepository.modifyTask(name, ddl, attachment, description, taskId);
+        taskMemRepository.deleteTaskMemsByTaskid(taskRepository.findTaskById(taskId));
+        member.forEach(a -> {
+            taskMemRepository.addTaskMem(taskId, a);
+        });
     }
 }

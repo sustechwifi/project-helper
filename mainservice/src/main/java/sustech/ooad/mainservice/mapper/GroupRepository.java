@@ -23,4 +23,5 @@ public interface GroupRepository extends JpaRepository<Group, Integer> {
     int modifyGroup(String name, Integer groupId);
 
     Group findGroupById(Integer id);
+
 }

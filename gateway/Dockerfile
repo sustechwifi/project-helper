@@ -14,5 +14,5 @@ EXPOSE $PORT
 # 启动应用
 CMD ["java", "-jar", "app.jar"]
 
-# docker build -t project-helper-gateway .
-# docker run -d -p 8080:8080 --name ooad-gateway-1 project-helper-gateway
+# docker build -t project-helper-gateway-local .
+# docker run -d -p 8080:8080 --name ooad-gateway-local-1 project-helper-gateway-local

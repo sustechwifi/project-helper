@@ -48,6 +48,7 @@
         function connectWebSocket() {
             socket = new WebSocket("ws://localhost:8080/ws/chat");
             socket.onopen = function (event) {
+                console.log("WebSocket 连接！",event);
                 // 自定义处理连接成功的操作
                 document.getElementById('board').value += "WebSocket 连接成功！"
             };
@@ -68,6 +69,7 @@
                 socket.send("uid=" + uid);
             };
         }
+        connectWebSocket()
     </script>
 </head>
 <body>

@@ -4,9 +4,9 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 
-<mapper namespace="sustech.ooad.mainservice.mapper.AuthUserMapper">
+<mapper namespace="sustech.ooad.websocketserver.mapper.AuthUserMapper">
 
-  <resultMap id="userRM" type="sustech.ooad.mainservice.model.AuthUser">
+  <resultMap id="userRM" type="sustech.ooad.websocketserver.model.AuthUser">
     <!--
     id 只对主键进行映射
     result 对一般字段的映射
@@ -18,6 +18,17 @@
 
   </resultMap>
 
+
+  <resultMap id="chatUserRM" type="sustech.ooad.websocketserver.model.ChatUserDto">
+    <!--
+    id 只对主键进行映射
+    result 对一般字段的映射
+    -->
+
+    <result column="uuid" property="id"/>
+    <result column="avatar_url" property="avatar"/>
+
+  </resultMap>
 
   <select id="selectOne" resultMap="userRM">
 
@@ -46,6 +57,16 @@
   <select id="selectByEmail"  resultMap="userRM">
     select * from ooad_project_helper.public.oauth_user u
     where email = #{email}
+  </select>
+
+  <select id="getChatUserByPatten" resultMap="chatUserRM">
+    select u.uuid,u.name,u.avatar_url from ooad_project_helper.public.oauth_user u
+    where name like #{patten}
+  </select>
+
+  <select id="getChatUserDtoById" resultMap="chatUserRM">
+    select u.uuid,u.name,u.avatar_url from ooad_project_helper.public.oauth_user u
+    where u.uuid = #{id}
   </select>
 
 

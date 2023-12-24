@@ -1,4 +1,4 @@
-package sustech.ooad.mainservice.model.dto;
+package sustech.ooad.websocketserver.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChatUserDto{
+public class ChatUserDto {
     long id;
     String name;
     String avatar;

@@ -39,7 +39,7 @@ public class SecurityConfig {
                         "/register/**",
                         "/generate/**",
                         "/content/download/**",
-                        "/ws/chat/**",
+                        "/ws/**",
                         "/callback/**"
                 ).permitAll()
                 .requestMatchers(HttpMethod.OPTIONS).permitAll()

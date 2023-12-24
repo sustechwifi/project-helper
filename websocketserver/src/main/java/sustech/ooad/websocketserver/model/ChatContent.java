@@ -1,13 +1,9 @@
-package sustech.ooad.mainservice.util.ws;
+package sustech.ooad.websocketserver.model;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import sustech.ooad.mainservice.model.dto.ChatUserDto;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -17,10 +13,11 @@ import java.util.List;
 public class ChatContent{
     /**
      * type | 类型解释 | content内容 | 字段情况
+     * -2：发送者自己发的信息      与发出的消息相同，仅用于发送方确认是否发送成功
+     * -1：聊天列表信息           content = null; from = server; figure = null
      * 0: 系统消息,系统消息内容,   from = null; figure = null; records = null
      * 1: 正文，聊天文本,         figure = null;   records = null
      * 2: 正文，图片,            content = null;  records = null
-     * 3：聊天列表, 列表信息       content = null; from = null; figure = null
      */
     int type;
     long to;
@@ -29,5 +26,4 @@ public class ChatContent{
     String figure;
     List<ChatListRecord> records;
     long time;
-
 }

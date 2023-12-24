@@ -1,4 +1,4 @@
-package sustech.ooad.mainservice.util.ws;
+package sustech.ooad.websocketserver.model;
 
 
 public record ChatListRecord(
@@ -6,6 +6,7 @@ public record ChatListRecord(
         String name,
         String avatar,
         long messageCnt,
-        String lastMessage
+        String lastMessage,
+        long lastMessageTime
 ) {
 }

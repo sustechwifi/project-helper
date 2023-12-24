@@ -1,4 +1,4 @@
-package sustech.ooad.mainservice.mapper;
+package sustech.ooad.websocketserver.mapper;
 
 
 import org.apache.ibatis.annotations.Insert;
@@ -6,7 +6,9 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
-import sustech.ooad.mainservice.model.AuthUser;
+import sustech.ooad.websocketserver.model.AuthUser;
+import sustech.ooad.websocketserver.model.ChatUserDto;
+
 
 import java.util.List;
 
@@ -52,4 +54,8 @@ public interface AuthUserMapper {
     @Select("select (select count(u.uuid) from ooad_project_helper.public.oauth_user u where u.name like #{patten}) < 10")
     boolean checkPatten(@Param("patten") String patten);
 
+    List<ChatUserDto> getChatUserByPatten(@Param("patten") String patten);
+
+
+    ChatUserDto getChatUserDtoById(@Param("id") long id);
 }

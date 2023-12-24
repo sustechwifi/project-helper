@@ -1,25 +1,25 @@
-package sustech.ooad.mainservice.service;
+package sustech.ooad.websocketserver.service;
 
-import com.alibaba.druid.sql.visitor.functions.If;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
-import sustech.ooad.mainservice.mapper.AuthUserMapper;
-import sustech.ooad.mainservice.model.dto.ChatUserDto;
-import sustech.ooad.mainservice.util.auth.AuthFunctionality;
-import sustech.ooad.mainservice.util.ws.ChatContent;
-import sustech.ooad.mainservice.util.ws.ChatListRecord;
+import sustech.ooad.websocketserver.mapper.AuthUserMapper;
+import sustech.ooad.websocketserver.model.ChatContent;
+import sustech.ooad.websocketserver.model.ChatListRecord;
+import sustech.ooad.websocketserver.model.ChatUserDto;
 
-import java.time.LocalTime;
+
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static sustech.ooad.mainservice.util.ConstantField.*;
+import static sustech.ooad.websocketserver.util.ConstantField.*;
+
 
 @Slf4j
 @Service
@@ -101,10 +101,12 @@ public class ChatService {
     private void addMessage(ChatContent content, String prefix) {
         String key = String.format("%s:%d->%d", prefix, content.getFrom().getId(), content.getTo());
         chatRedisTemplate.opsForList().leftPush(key, content);
+        stringRedisTemplate.expire(key,Duration.ofHours(1));
 
         // 检查收信人的聊天列表中是否有发信人，若没有则添加
         var key2 = String.format("%s:%d", PREFIX_CHAT_USER_RECORD, content.getTo());
         var t = stringRedisTemplate.opsForList().indexOf(key2, String.valueOf(content.getFrom().getId()));
+        stringRedisTemplate.expire(key2,Duration.ofHours(1));
         if (t == null) {
             addChatUser(content.getTo(), content.getFrom().getId());
         }
@@ -119,15 +121,14 @@ public class ChatService {
     }
 
     // 获取最新的一条消息
-    private String latestMessage(long uid, long withUser) {
+    private ChatContent latestMessage(long uid, long withUser) {
         List<ChatContent> tmp = new ArrayList<>();
         getLatestMessage(tmp, uid, withUser, PREFIX_CHAT_NEW_MESSAGE);
         getLatestMessage(tmp, withUser, uid, PREFIX_CHAT_OLD_MESSAGE);
         getLatestMessage(tmp, uid, withUser, PREFIX_CHAT_NEW_MESSAGE);
         getLatestMessage(tmp, withUser, uid, PREFIX_CHAT_OLD_MESSAGE);
         var res = tmp.stream().max(Comparator.comparingLong(ChatContent::getTime));
-        var t = res.orElse(null);
-        return t == null ? null : t.getContent();
+        return res.orElse(null);
     }
 
     // 获取聊天列表
@@ -152,17 +153,23 @@ public class ChatService {
                     continue;
                 }
                 var msg = latestMessage(uid, withUid);
+                if (msg == null){
+                    continue;
+                }
                 var cnt = getNewContentCnt(uid, withUid);
                 res.add(new ChatListRecord(
                         withUser.getId(),
                         withUser.getName(),
                         withUser.getAvatar(),
                         cnt,
-                        msg)
+                        msg.getContent(),
+                        msg.getTime())
                 );
+
             } catch (NumberFormatException ignored) {
             }
         }
+        System.out.println(res);
         return res;
     }
 
@@ -184,20 +191,10 @@ public class ChatService {
         return res;
     }
 
-    public boolean beforeBegin(long uid,long withUser){
-        var key = String.format("%s:%d", PREFIX_CHAT_USER_RECORD, uid);
-        var t = stringRedisTemplate.hasKey(key);
-        if (t == null || !t){
-            return false;
-        } else if (stringRedisTemplate.opsForList().indexOf(key, String.valueOf(withUser)) == null) {
-            return false;
-        }
-        return true;
-    }
 
     public List<ChatContent> beginChat(long uid, long withUser) {
         String key = String.format("%s:%d", PREFIX_CHAT_MAPPING, uid);
-        stringRedisTemplate.opsForValue().set(key, String.valueOf(withUser));
+        stringRedisTemplate.opsForValue().set(key, String.valueOf(withUser), Duration.ofHours(1));
         var res = getHistory(uid, withUser, DEFAULT_SIZE);
         age(uid,withUser);
         return res;
@@ -207,9 +204,11 @@ public class ChatService {
         var key = String.format("%s:%d", PREFIX_CHAT_USER_RECORD, uid);
         var t = stringRedisTemplate.hasKey(key);
         if (t == null || !t){
+            stringRedisTemplate.expire(key,Duration.ofHours(1));
             stringRedisTemplate.opsForList().leftPush(key, String.valueOf(with));
             return true;
         } else if (stringRedisTemplate.opsForList().indexOf(key, String.valueOf(with)) == null) {
+            stringRedisTemplate.expire(key,Duration.ofHours(1));
             stringRedisTemplate.opsForList().leftPush(key, String.valueOf(with));
             return true;
         } else {

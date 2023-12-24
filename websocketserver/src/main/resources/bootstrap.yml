@@ -1,0 +1,31 @@
+server:
+  port: 8000
+
+
+spring:
+  application:
+    name: websocket-server
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${remote-ip}:8848
+        namespace: ooad
+        group: DEFAULT_GROUP
+      config:
+        server-addr: ${remote-ip}:8848
+        namespace: ooad
+        group: DEFAULT_GROUP
+        file-extension: yaml
+        refreshEnabled: true
+        extension-configs:
+          - data-id: ${spring.application.name}-${spring.profiles.active}.yaml
+            group: WEBSOCKET
+            refresh: true
+
+
+
+# 以下是自定义变量
+remote-ip: 139.199.172.27
+

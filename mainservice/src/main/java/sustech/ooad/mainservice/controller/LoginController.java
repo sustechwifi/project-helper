@@ -7,8 +7,11 @@ import cn.hutool.json.JSONUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.util.StringUtils;
 import sustech.ooad.mainservice.model.AuthUser;
@@ -20,6 +23,7 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.UUID;
 
+import static sustech.ooad.mainservice.config.secutiry.handler.OauthAuthenticationSuccessHandler.oauthCallBackAuthentication;
 import static sustech.ooad.mainservice.config.secutiry.handler.OauthAuthenticationSuccessHandler.oauthCallBackData;
 import static sustech.ooad.mainservice.util.ConstantField.*;
 
@@ -35,6 +39,8 @@ public class LoginController {
     @Resource
     LoginUserService loginUserService;
 
+
+
     @GetMapping("/generate/echo")
     public String echo(@RequestParam String word){
         log.info("============ [echo] ============\n"+word);
@@ -45,6 +51,7 @@ public class LoginController {
     public void oauth2Callback(HttpServletResponse response) throws IOException {
         String s = oauthCallBackData;
         if (s != null){
+            SecurityContextHolder.getContext().setAuthentication(oauthCallBackAuthentication);
             response.getWriter().write(s);
             oauthCallBackData = null;
         }else {

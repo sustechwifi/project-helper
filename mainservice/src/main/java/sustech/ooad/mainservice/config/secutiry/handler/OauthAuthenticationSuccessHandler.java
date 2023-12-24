@@ -23,6 +23,8 @@ public class OauthAuthenticationSuccessHandler implements AuthenticationSuccessH
 
     public static String oauthCallBackData;
 
+    public static Authentication oauthCallBackAuthentication;
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
@@ -34,6 +36,7 @@ public class OauthAuthenticationSuccessHandler implements AuthenticationSuccessH
         result.put("code", 0);
         result.put("data", authentication);
         oauthCallBackData = JSONUtil.toJsonStr(result);
+        oauthCallBackAuthentication = authentication;
         response.getWriter().write("<h1>授权登录成功，请关闭当前窗口</h1>");
     }
 }

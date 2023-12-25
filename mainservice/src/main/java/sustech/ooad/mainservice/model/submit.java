@@ -45,11 +45,11 @@ public class submit {
     @JoinColumn(name = "groupid")
     private Group groupid;
 
-    @Column(name = "name", length = Integer.MAX_VALUE)
-    private String name;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "homework")
     private Homework homework;
+
+    @Column(name = "description", length = Integer.MAX_VALUE)
+    private String description;
 
 }

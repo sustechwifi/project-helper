@@ -49,6 +49,7 @@ import sustech.ooad.mainservice.util.auth.AuthFunctionality;
 
 import static sustech.ooad.mainservice.util.ConstantField.AUTHORITY_SA;
 import static sustech.ooad.mainservice.util.ConstantField.AUTHORITY_TEACHER;
+import static sustech.ooad.mainservice.util.ConstantField.FIFTEEN_MINUTES;
 import static sustech.ooad.mainservice.util.ConstantField.USER_COURSES;
 
 @Service
@@ -331,5 +332,20 @@ public class CourseService {
         groupProjectRepository.deleteGroupProjectByGroupid(group);
         groupMemberListRepository.deleteGroupMemberListsByGroup(group);
         groupRepository.deleteGroupById(groupId);
+    }
+
+    public boolean addUserSubmit(Long uuid, Long courseId, String attachment, String description,
+        Integer homeworkId) {
+        boolean inCourse = authFunctionality.inCourse(courseId);
+        if (!inCourse) {
+            return false;
+        }
+        submitRepository.addUserSubmit(uuid, courseId, attachment, description, homeworkId);
+        return true;
+    }
+
+    public void addGroupSubmit(Long courseId, String attachment, String description,
+        Integer groupId, Integer homeworkId) {
+        submitRepository.addGroupSubmit(courseId, attachment, description, groupId, homeworkId);
     }
 }

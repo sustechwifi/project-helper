@@ -25,11 +25,43 @@ public class CourseController {
 
     public String merge(String[] array) {
         StringBuilder str = new StringBuilder();
-        for (int i = 0; i < array.length; i++) {
-            str.append(array[i]);
+        for (String s : array) {
+            str.append(s);
             str.append(";");
         }
         return str.toString();
+    }
+
+    //上交个人作业
+    @PreAuthorize(ROLE_CHECK)
+    @PostMapping("/{courseId}/assignment/{assignmentId}/submit")
+    public Result<?> addUserSubmit(@PathVariable("courseId") Long courseId,
+        @PathVariable("assignmentId") Integer assignmentId,
+        @RequestParam("url") String[] attachment, @RequestParam("description") String description) {
+        long uuid = authFunctionality.getUser().getId().longValue();
+        boolean add = courseService.addUserSubmit(uuid, courseId, merge(attachment), description,
+            assignmentId);
+        if (!add) {
+            return Result.err(ACCESS_DENIED, "你不能提交其他课程的作业");
+        }
+        return Result.ok("");
+    }
+
+    //上交小组作业
+    @PreAuthorize(ROLE_CHECK)
+    @PostMapping("/{courseId}/assignment/{assignmentId}/group/{groupId}/submit")
+    public Result<?> addGroupSubmit(@PathVariable("courseId") Long courseId,
+        @PathVariable("assignmentId") Integer assignmentId,
+        @RequestParam("url") String[] attachment, @RequestParam("description") String description,
+        @PathVariable("groupId") Integer groupId) {
+        long uuid = authFunctionality.getUser().getId().longValue();
+        boolean valid = courseService.inGroup(uuid, groupId);
+        if (!valid) {
+            return Result.err(ACCESS_DENIED, "你不是当前小组的成员");
+        }
+        courseService.addGroupSubmit(courseId, merge(attachment), description, groupId,
+            assignmentId);
+        return Result.ok("");
     }
 
     //学生退出小组

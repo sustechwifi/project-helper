@@ -1,30 +1,40 @@
 package sustech.ooad.mainservice.service;
 
+import cn.hutool.core.collection.CollectionUtil;
 import jakarta.annotation.Resource;
 import jakarta.persistence.criteria.CriteriaBuilder.In;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import sustech.ooad.mainservice.mapper.AuthUserMapper;
+import sustech.ooad.mainservice.mapper.AuthUserRepository;
 import sustech.ooad.mainservice.mapper.CourseAuthorityMapper;
 import sustech.ooad.mainservice.mapper.CourseAuthorityRepository;
 import sustech.ooad.mainservice.mapper.CourseRepository;
 import sustech.ooad.mainservice.mapper.GroupMemberListRepository;
+import sustech.ooad.mainservice.mapper.GroupProjectRepository;
 import sustech.ooad.mainservice.mapper.GroupRepository;
 import sustech.ooad.mainservice.mapper.HomeworkRepository;
+import sustech.ooad.mainservice.mapper.ShareRepository;
 import sustech.ooad.mainservice.mapper.TaskMemRepository;
 import sustech.ooad.mainservice.mapper.TaskRepository;
 import sustech.ooad.mainservice.mapper.submitRepository;
 import sustech.ooad.mainservice.mapper.ProjectRepository;
+import sustech.ooad.mainservice.model.AuthUser;
 import sustech.ooad.mainservice.model.Course;
 import sustech.ooad.mainservice.model.CourseAuthority;
 import sustech.ooad.mainservice.model.Group;
 import sustech.ooad.mainservice.model.GroupMemberList;
+import sustech.ooad.mainservice.model.GroupProject;
 import sustech.ooad.mainservice.model.Homework;
+import sustech.ooad.mainservice.model.Share;
 import sustech.ooad.mainservice.model.Task;
 import sustech.ooad.mainservice.model.TaskMem;
 import sustech.ooad.mainservice.model.dto.CourseInfoDto;
@@ -73,6 +83,12 @@ public class CourseService {
     GroupMemberListRepository groupMemberListRepository;
     @Autowired
     TaskMemRepository taskMemRepository;
+    @Autowired
+    ShareRepository shareRepository;
+    @Autowired
+    GroupProjectRepository groupProjectRepository;
+    @Autowired
+    private AuthUserRepository authUserRepository;
 
     private void deleteCache(long uid) {
         // 清除缓存
@@ -172,8 +188,12 @@ public class CourseService {
         return courseInfoDto;
     }
 
-    public void addCourseGroup(Integer courseId, String name, Integer projectId) {
-        groupRepository.addGroup(name, courseId, projectId);
+    public void addCourseGroup(Integer courseId, String name, Integer projectId, Long teacherId,
+        String preTime, Integer capacity) {
+        groupRepository.addGroup(name, courseId, teacherId, preTime, capacity);
+        Integer groupId = groupRepository.findGroupByNameAndCourse(name,
+            courseRepository.findCourseById(courseId)).getId();
+        groupProjectRepository.add(groupId, projectId);
     }
 
     public List<GroupDto> getCourseGroup(Integer courseId) {
@@ -190,8 +210,9 @@ public class CourseService {
         return dtoList;
     }
 
-    public void modifyGroup(String name, Integer groupId, Long[] member) {
-        groupRepository.modifyGroup(name, groupId);
+    public void modifyGroup(String name, Integer groupId, Long[] member, Long teacherId,
+        String preTime, Integer capacity) {
+        groupRepository.modifyGroup(name, teacherId, preTime, capacity, groupId);
         groupMemberListRepository.deleteGroupMemberListsByGroup(
             groupRepository.findGroupById(groupId));
         for (Long i : member) {
@@ -256,5 +277,59 @@ public class CourseService {
         member.forEach(a -> {
             taskMemRepository.addTaskMem(taskId, a);
         });
+    }
+
+    public List<Share> getShare(Integer projectId) {
+        return shareRepository.findSharesByProject(projectRepository.findProjectById(projectId));
+    }
+
+    public Integer getOwnGroup(Integer projectId, Long uuid) {
+        Integer courseId = projectRepository.findProjectById(projectId).getCourse().getId();
+        List<Group> groupList = groupRepository.findGroupsByCourse(
+            courseRepository.findCourseById(courseId));
+        List<GroupMemberList> OwnGroupList = groupMemberListRepository.findGroupMemberListsByUserUuid(
+            authUserRepository.findAuthUserById(new BigDecimal(uuid)));
+        List<Integer> groupId1 = OwnGroupList.stream().map(a -> a.getGroup().getId()).collect(
+            Collectors.toList());
+        List<Integer> groupId2 = groupList.stream().map(Group::getId).toList();
+        groupId1.retainAll(groupId2);
+        return groupId1.get(0);
+    }
+
+    public int joinGroup(Long uuid, Integer groupId) {
+        Group group = groupRepository.findGroupById(groupId);
+        Integer courseId = group.getCourse().getId();
+        Integer capacity = group.getCapacity();
+        List<GroupMemberList> groupMemberListList = groupMemberListRepository.findGroupMemberListsByGroup(
+            group);
+        List<Group> userGroupList = groupMemberListRepository.findGroupMemberListsByUserUuid(
+                authUserRepository.findAuthUserById(new BigDecimal(uuid))).stream()
+            .map(a -> groupRepository.findGroupById(a.getGroup().getId()))
+            .toList();
+        List<Integer> courseId2 = userGroupList.stream().map(a -> a.getCourse().getId()).toList();
+        if (!courseId2.contains(courseId)) {
+            int now = groupMemberListList.size();
+            if (now < capacity) {
+                groupMemberListRepository.addGroupMember(groupId, uuid);
+                return 0;
+            } else {
+                return 1;
+            }
+        } else {
+            return 2;
+        }
+    }
+
+    public void exitGroup(Long uuid, Integer groupId) {
+        Group group = groupRepository.findGroupById(groupId);
+        AuthUser user = authUserRepository.findAuthUserById(new BigDecimal(uuid));
+        groupMemberListRepository.deleteGroupMemberListByGroupAndUserUuid(group, user);
+    }
+
+    public void deleteGroup(Integer groupId) {
+        Group group = groupRepository.findGroupById(groupId);
+        groupProjectRepository.deleteGroupProjectByGroupid(group);
+        groupMemberListRepository.deleteGroupMemberListsByGroup(group);
+        groupRepository.deleteGroupById(groupId);
     }
 }

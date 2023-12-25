@@ -14,6 +14,7 @@ public interface GroupMemberListRepository extends
     JpaRepository<GroupMemberList, GroupMemberListId> {
 
     List<GroupMemberList> findGroupMemberListsByGroup(Group group);
+
     @Transactional(rollbackFor = Exception.class)
     @Modifying
     void deleteGroupMemberListsByGroup(Group group);
@@ -24,4 +25,10 @@ public interface GroupMemberListRepository extends
     int addGroupMember(Integer groupId, Long uuid);
 
     GroupMemberList findGroupMemberListByUserUuid(AuthUser user);
+
+    List<GroupMemberList> findGroupMemberListsByUserUuid(AuthUser user);
+
+    @Transactional(rollbackFor = Exception.class)
+    @Modifying
+    void deleteGroupMemberListByGroupAndUserUuid(Group group, AuthUser user);
 }

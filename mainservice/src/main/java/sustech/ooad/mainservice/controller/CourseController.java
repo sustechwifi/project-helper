@@ -1,6 +1,7 @@
 package sustech.ooad.mainservice.controller;
 
 import jakarta.annotation.Resource;
+import java.lang.annotation.Retention;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,60 @@ public class CourseController {
             str.append(";");
         }
         return str.toString();
+    }
+
+    //查询作业所有提交
+    @PreAuthorize(ROLE_CHECK_TEACHER)
+    @GetMapping("/{courseId}/homework/{homeworkId}/allSubmit")
+    public Result<?> getSubmit(@PathVariable("courseId") long courseId,
+        @PathVariable("homeworkId") Integer homeworkId) {
+        boolean inCourse = authFunctionality.inCourse(courseId);
+        if (!inCourse) {
+            return Result.err(ACCESS_COURSE_DENIED, "无法进入课程");
+        }
+        return Result.ok(courseService.getSubmit(homeworkId));
+    }
+
+    //上传小组共享资源
+    @PreAuthorize(ROLE_CHECK)
+    @PostMapping("/project/{projectId}/group/{groupId}/sharedsource/post")
+    public Result<?> addShare(@PathVariable("projectId") Integer projectId,
+        @PathVariable("groupId") Integer groupId, @RequestParam("url") String[] url) {
+        long uuid = authFunctionality.getUser().getId().longValue();
+        boolean inGroup = courseService.inGroup(uuid, groupId);
+        if (!inGroup) {
+            return Result.err(ACCESS_DENIED, "你不是该小组的成员");
+        }
+        courseService.addShare(groupId, merge(url), projectId);
+        return Result.ok("");
+    }
+
+    //删除小组共享资源
+    @PreAuthorize(ROLE_CHECK)
+    @PostMapping("/group/{groupId}/sharedsource/{shareId}/delete")
+    public Result<?> deleteShare(@PathVariable("groupId") Integer groupId,
+        @PathVariable("shareId") Integer shareId) {
+        long uuid = authFunctionality.getUser().getId().longValue();
+        boolean inGroup = courseService.inGroup(uuid, groupId);
+        if (!inGroup) {
+            return Result.err(ACCESS_DENIED, "你不是该小组的成员");
+        }
+        courseService.deleteShare(shareId);
+        return Result.ok("");
+    }
+
+    //批改作业
+    @PreAuthorize(ROLE_CHECK_TEACHER)
+    @PostMapping("{courseId}/submit/{submitId}/marking")
+    public Result<?> markSubmit(@PathVariable("submitId") Integer submitId,
+        @PathVariable("courseId") long courseId, @RequestParam("score") Integer score,
+        @RequestParam("comment") String feedback) {
+        boolean valid = authFunctionality.inCourse(courseId);
+        if (!valid) {
+            return Result.err(ACCESS_COURSE_DENIED, "无法进入当前课程");
+        }
+        courseService.markSubmit(feedback, score, submitId);
+        return Result.ok("");
     }
 
     //上交个人作业

@@ -34,6 +34,6 @@ public class CourseAnnouncement {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "attachment")
-    private submit attachment;
+    private Submit attachment;
 
 }

@@ -1,15 +1,11 @@
 package sustech.ooad.mainservice.service;
 
-import cn.hutool.core.collection.CollectionUtil;
 import jakarta.annotation.Resource;
-import jakarta.persistence.criteria.CriteriaBuilder.In;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -32,9 +28,9 @@ import sustech.ooad.mainservice.model.Course;
 import sustech.ooad.mainservice.model.CourseAuthority;
 import sustech.ooad.mainservice.model.Group;
 import sustech.ooad.mainservice.model.GroupMemberList;
-import sustech.ooad.mainservice.model.GroupProject;
 import sustech.ooad.mainservice.model.Homework;
 import sustech.ooad.mainservice.model.Share;
+import sustech.ooad.mainservice.model.Submit;
 import sustech.ooad.mainservice.model.Task;
 import sustech.ooad.mainservice.model.TaskMem;
 import sustech.ooad.mainservice.model.dto.CourseInfoDto;
@@ -43,13 +39,11 @@ import sustech.ooad.mainservice.model.dto.HomeworkDto;
 import sustech.ooad.mainservice.model.dto.ProjectDto;
 import sustech.ooad.mainservice.model.dto.attachment;
 import sustech.ooad.mainservice.model.dto.taskDto;
-import sustech.ooad.mainservice.model.submit;
 import sustech.ooad.mainservice.model.Project;
 import sustech.ooad.mainservice.util.auth.AuthFunctionality;
 
 import static sustech.ooad.mainservice.util.ConstantField.AUTHORITY_SA;
 import static sustech.ooad.mainservice.util.ConstantField.AUTHORITY_TEACHER;
-import static sustech.ooad.mainservice.util.ConstantField.FIFTEEN_MINUTES;
 import static sustech.ooad.mainservice.util.ConstantField.USER_COURSES;
 
 @Service
@@ -347,5 +341,22 @@ public class CourseService {
     public void addGroupSubmit(Long courseId, String attachment, String description,
         Integer groupId, Integer homeworkId) {
         submitRepository.addGroupSubmit(courseId, attachment, description, groupId, homeworkId);
+    }
+
+    public void markSubmit(String feedback, Integer score, Integer homeworkId) {
+        submitRepository.modifySubmit(feedback, score, homeworkId);
+    }
+
+    public void addShare(Integer groupId, String attachment, Integer projectId) {
+        shareRepository.addShare(groupId, attachment, projectId);
+    }
+
+    public void deleteShare(Integer shareId) {
+        shareRepository.deleteShare(shareId);
+    }
+
+    public List<Submit> getSubmit(Integer homeworkId) {
+        return submitRepository.findSubmitsByHomework(
+            homeworkRepository.findHomeworkById(homeworkId));
     }
 }

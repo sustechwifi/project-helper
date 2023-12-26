@@ -15,7 +15,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "submit")
-public class submit {
+public class Submit {
 
     @Id
     @Column(name = "id", nullable = false)

@@ -4,9 +4,11 @@ import jakarta.annotation.Resource;
 import java.lang.annotation.Retention;
 import java.util.ArrayList;
 import java.util.List;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import sustech.ooad.mainservice.mapper.CourseAnnouncementRepository;
 import sustech.ooad.mainservice.model.dto.CourseInfoDto;
 import sustech.ooad.mainservice.service.CourseService;
 import sustech.ooad.mainservice.util.Result;
@@ -23,6 +25,11 @@ public class CourseController {
 
     @Resource
     CourseService courseService;
+    private final CourseAnnouncementRepository courseAnnouncementRepository;
+
+    public CourseController(CourseAnnouncementRepository courseAnnouncementRepository) {
+        this.courseAnnouncementRepository = courseAnnouncementRepository;
+    }
 
     public String merge(String[] array) {
         StringBuilder str = new StringBuilder();
@@ -31,6 +38,31 @@ public class CourseController {
             str.append(";");
         }
         return str.toString();
+    }
+
+    //获得课程通知
+    @PreAuthorize(ROLE_CHECK)
+    @GetMapping("/{courseId}/announcement/get")
+    public Result<?> getAnnouncement(@PathVariable("courseId") Integer courseId) {
+        boolean inCourse = authFunctionality.inCourse(courseId);
+        if (!inCourse) {
+            return Result.err(ACCESS_COURSE_DENIED, "无法进入课程");
+        }
+        return Result.ok(courseService.getAnnouncement(courseId));
+    }
+
+    //新增课程通知
+    @PreAuthorize(ROLE_CHECK)
+    @PostMapping("/{courseId}/announcement/post")
+    public Result<?> addAnnouncement(@PathVariable("courseId") Integer courseId,
+        @RequestParam("description") String description) {
+        boolean inCourse = authFunctionality.inCourse(courseId);
+        if (!inCourse) {
+            return Result.err(ACCESS_COURSE_DENIED, "无法进入课程");
+        }
+        long uuid = authFunctionality.getUser().getId().longValue();
+        courseService.addAnnouncement(courseId, uuid, description);
+        return Result.ok("");
     }
 
     //查询作业所有提交

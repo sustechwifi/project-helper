@@ -29,11 +29,8 @@ public class CourseAnnouncement {
     @JoinColumn(name = "user_uuid")
     private AuthUser userUuid;
 
-    @Column(name = "type", length = Integer.MAX_VALUE)
-    private String type;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "attachment")
-    private Submit attachment;
+    @Column(name = "description", length = Integer.MAX_VALUE)
+    private String description;
 
 }

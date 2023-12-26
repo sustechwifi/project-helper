@@ -11,6 +11,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import sustech.ooad.mainservice.mapper.AuthUserMapper;
 import sustech.ooad.mainservice.mapper.AuthUserRepository;
+import sustech.ooad.mainservice.mapper.CourseAnnouncementRepository;
 import sustech.ooad.mainservice.mapper.CourseAuthorityMapper;
 import sustech.ooad.mainservice.mapper.CourseAuthorityRepository;
 import sustech.ooad.mainservice.mapper.CourseRepository;
@@ -25,6 +26,7 @@ import sustech.ooad.mainservice.mapper.submitRepository;
 import sustech.ooad.mainservice.mapper.ProjectRepository;
 import sustech.ooad.mainservice.model.AuthUser;
 import sustech.ooad.mainservice.model.Course;
+import sustech.ooad.mainservice.model.CourseAnnouncement;
 import sustech.ooad.mainservice.model.CourseAuthority;
 import sustech.ooad.mainservice.model.Group;
 import sustech.ooad.mainservice.model.GroupMemberList;
@@ -84,6 +86,8 @@ public class CourseService {
     GroupProjectRepository groupProjectRepository;
     @Autowired
     private AuthUserRepository authUserRepository;
+    @Autowired
+    private CourseAnnouncementRepository courseAnnouncementRepository;
 
     private void deleteCache(long uid) {
         // 清除缓存
@@ -358,5 +362,14 @@ public class CourseService {
     public List<Submit> getSubmit(Integer homeworkId) {
         return submitRepository.findSubmitsByHomework(
             homeworkRepository.findHomeworkById(homeworkId));
+    }
+
+    public List<CourseAnnouncement> getAnnouncement(Integer courseId) {
+        return courseAnnouncementRepository.findCourseAnnouncementsByCourse(
+            courseRepository.findCourseById(courseId));
+    }
+
+    public void addAnnouncement(Integer courseId, Long uuid, String description) {
+        courseAnnouncementRepository.addAnnouncement(courseId, uuid, description);
     }
 }

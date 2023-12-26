@@ -106,7 +106,7 @@ public class CourseController {
     }
 
     //批改作业
-    @PreAuthorize(ROLE_CHECK_TEACHER)
+    @PreAuthorize(ROLE_CHECK)
     @PostMapping("{courseId}/submit/{submitId}/marking")
     public Result<?> markSubmit(@PathVariable("submitId") Integer submitId,
         @PathVariable("courseId") long courseId, @RequestParam("score") Integer score,
@@ -114,9 +114,14 @@ public class CourseController {
         boolean valid = authFunctionality.inCourse(courseId);
         if (!valid) {
             return Result.err(ACCESS_COURSE_DENIED, "无法进入当前课程");
+        } else {
+            String role = authFunctionality.getCourseAuthority(courseId);
+            if (role.equals(AUTHORITY_TEACHER) || role.equals(AUTHORITY_SA)) {
+                courseService.markSubmit(feedback, score, submitId);
+                return Result.ok("");
+            }
+            return Result.err(ACCESS_COURSE_DENIED, "助教或老师才能批改作业");
         }
-        courseService.markSubmit(feedback, score, submitId);
-        return Result.ok("");
     }
 
     //上交个人作业

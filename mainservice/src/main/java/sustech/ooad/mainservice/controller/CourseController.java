@@ -1,17 +1,18 @@
 package sustech.ooad.mainservice.controller;
 
 import jakarta.annotation.Resource;
+import java.lang.annotation.Retention;
 import java.util.ArrayList;
 import java.util.List;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import sustech.ooad.mainservice.mapper.CourseAnnouncementRepository;
 import sustech.ooad.mainservice.model.dto.CourseInfoDto;
 import sustech.ooad.mainservice.service.CourseService;
 import sustech.ooad.mainservice.util.Result;
 import sustech.ooad.mainservice.util.auth.AuthFunctionality;
-
-import java.util.Map;
 
 import static sustech.ooad.mainservice.util.ConstantField.*;
 
@@ -24,14 +25,220 @@ public class CourseController {
 
     @Resource
     CourseService courseService;
+    private final CourseAnnouncementRepository courseAnnouncementRepository;
+
+    public CourseController(CourseAnnouncementRepository courseAnnouncementRepository) {
+        this.courseAnnouncementRepository = courseAnnouncementRepository;
+    }
 
     public String merge(String[] array) {
         StringBuilder str = new StringBuilder();
-        for (int i = 0; i < array.length; i++) {
-            str.append(array[i]);
+        for (String s : array) {
+            str.append(s);
             str.append(";");
         }
         return str.toString();
+    }
+
+    //获得课程通知
+    @PreAuthorize(ROLE_CHECK)
+    @GetMapping("/{courseId}/announcement/get")
+    public Result<?> getAnnouncement(@PathVariable("courseId") Integer courseId) {
+        boolean inCourse = authFunctionality.inCourse(courseId);
+        if (!inCourse) {
+            return Result.err(ACCESS_COURSE_DENIED, "无法进入课程");
+        }
+        return Result.ok(courseService.getAnnouncement(courseId));
+    }
+
+    //新增课程通知
+    @PreAuthorize(ROLE_CHECK)
+    @PostMapping("/{courseId}/announcement/post")
+    public Result<?> addAnnouncement(@PathVariable("courseId") Integer courseId,
+        @RequestParam("description") String description) {
+        boolean inCourse = authFunctionality.inCourse(courseId);
+        if (!inCourse) {
+            return Result.err(ACCESS_COURSE_DENIED, "无法进入课程");
+        }
+        long uuid = authFunctionality.getUser().getId().longValue();
+        courseService.addAnnouncement(courseId, uuid, description);
+        return Result.ok("");
+    }
+
+    //查询作业所有提交
+    @PreAuthorize(ROLE_CHECK_TEACHER)
+    @GetMapping("/{courseId}/homework/{homeworkId}/allSubmit")
+    public Result<?> getSubmit(@PathVariable("courseId") long courseId,
+        @PathVariable("homeworkId") Integer homeworkId) {
+        boolean inCourse = authFunctionality.inCourse(courseId);
+        if (!inCourse) {
+            return Result.err(ACCESS_COURSE_DENIED, "无法进入课程");
+        }
+        return Result.ok(courseService.getSubmit(homeworkId));
+    }
+
+    //上传小组共享资源
+    @PreAuthorize(ROLE_CHECK)
+    @PostMapping("/project/{projectId}/group/{groupId}/sharedsource/post")
+    public Result<?> addShare(@PathVariable("projectId") Integer projectId,
+        @PathVariable("groupId") Integer groupId, @RequestParam("url") String[] url) {
+        long uuid = authFunctionality.getUser().getId().longValue();
+        boolean inGroup = courseService.inGroup(uuid, groupId);
+        if (!inGroup) {
+            return Result.err(ACCESS_DENIED, "你不是该小组的成员");
+        }
+        courseService.addShare(groupId, merge(url), projectId);
+        return Result.ok("");
+    }
+
+    //删除小组共享资源
+    @PreAuthorize(ROLE_CHECK)
+    @PostMapping("/group/{groupId}/sharedsource/{shareId}/delete")
+    public Result<?> deleteShare(@PathVariable("groupId") Integer groupId,
+        @PathVariable("shareId") Integer shareId) {
+        long uuid = authFunctionality.getUser().getId().longValue();
+        boolean inGroup = courseService.inGroup(uuid, groupId);
+        if (!inGroup) {
+            return Result.err(ACCESS_DENIED, "你不是该小组的成员");
+        }
+        courseService.deleteShare(shareId);
+        return Result.ok("");
+    }
+
+    //批改作业
+    @PreAuthorize(ROLE_CHECK)
+    @PostMapping("{courseId}/submit/{submitId}/marking")
+    public Result<?> markSubmit(@PathVariable("submitId") Integer submitId,
+        @PathVariable("courseId") long courseId, @RequestParam("score") Integer score,
+        @RequestParam("comment") String feedback) {
+        boolean valid = authFunctionality.inCourse(courseId);
+        if (!valid) {
+            return Result.err(ACCESS_COURSE_DENIED, "无法进入当前课程");
+        } else {
+            String role = authFunctionality.getCourseAuthority(courseId);
+            if (role.equals(AUTHORITY_TEACHER) || role.equals(AUTHORITY_SA)) {
+                courseService.markSubmit(feedback, score, submitId);
+                return Result.ok("");
+            }
+            return Result.err(ACCESS_COURSE_DENIED, "助教或老师才能批改作业");
+        }
+    }
+
+    //上交个人作业
+    @PreAuthorize(ROLE_CHECK)
+    @PostMapping("/{courseId}/assignment/{assignmentId}/submit")
+    public Result<?> addUserSubmit(@PathVariable("courseId") Long courseId,
+        @PathVariable("assignmentId") Integer assignmentId,
+        @RequestParam("url") String[] attachment, @RequestParam("description") String description) {
+        long uuid = authFunctionality.getUser().getId().longValue();
+        boolean add = courseService.addUserSubmit(uuid, courseId, merge(attachment), description,
+            assignmentId);
+        if (!add) {
+            return Result.err(ACCESS_DENIED, "你不能提交其他课程的作业");
+        }
+        return Result.ok("");
+    }
+
+    //上交小组作业
+    @PreAuthorize(ROLE_CHECK)
+    @PostMapping("/{courseId}/assignment/{assignmentId}/group/{groupId}/submit")
+    public Result<?> addGroupSubmit(@PathVariable("courseId") Long courseId,
+        @PathVariable("assignmentId") Integer assignmentId,
+        @RequestParam("url") String[] attachment, @RequestParam("description") String description,
+        @PathVariable("groupId") Integer groupId) {
+        long uuid = authFunctionality.getUser().getId().longValue();
+        boolean valid = courseService.inGroup(uuid, groupId);
+        if (!valid) {
+            return Result.err(ACCESS_DENIED, "你不是当前小组的成员");
+        }
+        courseService.addGroupSubmit(courseId, merge(attachment), description, groupId,
+            assignmentId);
+        return Result.ok("");
+    }
+
+    //学生退出小组
+    @PreAuthorize(ROLE_CHECK)
+    @PostMapping("/group/{groupId}/exit")
+    public Result<?> exitGroup(@PathVariable("groupId") Integer groupId) {
+        long uuid = authFunctionality.getUser().getId().longValue();
+        courseService.exitGroup(uuid, groupId);
+        return Result.ok("");
+    }
+
+    //学生加入小组
+    @PreAuthorize(ROLE_CHECK)
+    @PostMapping("/group/{groupId}/join")
+    public Result<?> joinGroup(@PathVariable("groupId") Integer groupId) {
+        long uuid = authFunctionality.getUser().getId().longValue();
+        int join = courseService.joinGroup(uuid, groupId);
+        if (join == 0) {
+            return Result.ok("");
+        } else if (join == 1) {
+            return Result.err(ACCESS_DENIED, "小组容量已满");
+        } else {
+            return Result.err(ACCESS_DENIED, "你在同一课程只能加入一个小组");
+        }
+    }
+
+    //获得共享资源
+    @PreAuthorize(ROLE_CHECK)
+    @GetMapping("/project/{projectId}/sharedsource/get")
+    public Result<?> getShare(@PathVariable("projectId") Integer projectId) {
+        long uid = authFunctionality.getUser().getId().longValue();
+        Integer groupId = courseService.getOwnGroup(projectId, uid);
+        boolean valid = courseService.inGroup(uid, groupId);
+        if (!valid) {
+            return Result.err(ACCESS_DENIED, "无法查看此小组共享资源");
+        }
+        return Result.ok(courseService.getShare(projectId));
+    }
+
+    //修改小组任务
+    @PreAuthorize(ROLE_CHECK)
+    @PostMapping("/project/{projectId}/group/{groupId}/task/edit/{taskId}")
+    public Result<?> modifyTask(@PathVariable("groupId") Integer groupId,
+        @PathVariable("projectId") Integer projectId, @PathVariable("taskId") Integer taskId,
+        @RequestParam("name") String name,
+        @RequestParam("member") List<Long> member, @RequestParam("deadline") String ddl,
+        @RequestParam("attachmentURL") String[] attachment,
+        @RequestParam("description") String description) {
+        long uid = authFunctionality.getUser().getId().longValue();
+        boolean valid = courseService.inGroup(uid, groupId);
+        if (!valid) {
+            return Result.err(ACCESS_DENIED, "无法修改此小组任务");
+        }
+        courseService.modifyTask(name, ddl, merge(attachment), description, taskId, member);
+        return Result.ok("");
+    }
+
+    //添加小组任务
+    @PreAuthorize(ROLE_CHECK)
+    @PostMapping("/project/{projectId}/group/{groupId}/task/add")
+    public Result<?> addTask(@PathVariable("groupId") Integer groupId,
+        @PathVariable("projectId") Integer projectId, @RequestParam("name") String name,
+        @RequestParam("member") List<Long> member, @RequestParam("deadline") String ddl,
+        @RequestParam("attachmentURL") String[] attachment,
+        @RequestParam("description") String description) {
+        long uid = authFunctionality.getUser().getId().longValue();
+        boolean valid = courseService.inGroup(uid, groupId);
+        if (!valid) {
+            return Result.err(ACCESS_DENIED, "无法添加此小组任务");
+        }
+        courseService.addTask(name, ddl, merge(attachment), description, projectId, groupId,
+            member);
+        return Result.ok("");
+    }
+
+    //获得小组任务
+    @PreAuthorize(ROLE_CHECK)
+    @GetMapping("/group/{groupId}/task/get")
+    public Result<?> getTask(@PathVariable("groupId") Integer groupId) {
+        long uid = authFunctionality.getUser().getId().longValue();
+        boolean valid = courseService.inGroup(uid, groupId);
+        if (!valid) {
+            return Result.err(ACCESS_DENIED, "无法访问此小组任务");
+        }
+        return Result.ok(courseService.getTasks(groupId));
     }
 
     //修改课程信息
@@ -54,17 +261,32 @@ public class CourseController {
         return Result.ok("");
     }
 
+    //删除课程小组
+    @PreAuthorize(ROLE_CHECK_TEACHER)
+    @PostMapping("/{courseId}/group/{groupId}/delete")
+    public Result<?> deleteCourseGroup(@PathVariable("courseId") long courseId,
+        @PathVariable("groupId") Integer groupId) {
+        boolean valid = authFunctionality.inCourse(courseId);
+        if (!valid) {
+            return Result.err(ACCESS_COURSE_DENIED, "无法访问此课程");
+        }
+        courseService.deleteGroup(groupId);
+        return Result.ok("");
+    }
+
     //修改课程小组
     @PreAuthorize(ROLE_CHECK_TEACHER)
     @PostMapping("/{courseId}/group/{groupId}/edit")
     public Result<?> addCourseGroup(@PathVariable("courseId") long courseId,
         @PathVariable("groupId") Integer groupId, @RequestParam("groupName") String name,
-        @RequestParam("groupMemberID") Long[] member) {
+        @RequestParam("groupMemberID") Long[] member,
+        @RequestParam("inspectorID") Long teacherId, @RequestParam("preTime") String preTime,
+        @RequestParam("groupSize") Integer capacity) {
         boolean valid = authFunctionality.inCourse(courseId);
         if (!valid) {
             return Result.err(ACCESS_COURSE_DENIED, "无法访问此课程");
         }
-        courseService.modifyGroup(name, groupId, member);
+        courseService.modifyGroup(name, groupId, member, teacherId, preTime, capacity);
         return Result.ok("");
     }
 
@@ -83,12 +305,14 @@ public class CourseController {
     @PreAuthorize(ROLE_CHECK_TEACHER)
     @GetMapping("/{courseId}/project/{projectId}/group/add")
     public Result<?> addCourseGroup(@PathVariable("courseId") long courseId,
-        @PathVariable("projectId") Integer projectId, @RequestParam("groupName") String name) {
+        @PathVariable("projectId") Integer projectId, @RequestParam("groupName") String name,
+        @RequestParam("inspectorID") Long teacherId, @RequestParam("preTime") String preTime,
+        @RequestParam("groupSize") Integer capacity) {
         boolean valid = authFunctionality.inCourse(courseId);
         if (!valid) {
             return Result.err(ACCESS_COURSE_DENIED, "无法访问此课程");
         }
-        courseService.addCourseGroup((int) courseId, name, projectId);
+        courseService.addCourseGroup((int) courseId, name, projectId, teacherId, preTime, capacity);
         return Result.ok("");
     }
 

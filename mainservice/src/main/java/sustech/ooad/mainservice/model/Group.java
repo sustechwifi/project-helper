@@ -28,8 +28,15 @@ public class Group {
     @JoinColumn(name = "course_id")
     private Course course;
 
+
+    @Column(name = "capacity")
+    private Integer capacity;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id")
-    private Project project;
+    @JoinColumn(name = "teacher_uuid")
+    private AuthUser teacherUuid;
+
+    @Column(name = "pre_time", length = Integer.MAX_VALUE)
+    private String preTime;
 
 }

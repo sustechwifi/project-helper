@@ -3,12 +3,20 @@ package sustech.ooad.mainservice.controller;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import jakarta.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import sustech.ooad.mainservice.model.AuthUser;
+import sustech.ooad.mainservice.model.Course;
+import sustech.ooad.mainservice.model.Homework;
+import sustech.ooad.mainservice.model.dto.CourseInfoDto;
+import sustech.ooad.mainservice.model.dto.HomeworkDto;
+import sustech.ooad.mainservice.model.dto.ProjectDto;
+import sustech.ooad.mainservice.model.dto.teacherDto;
 import sustech.ooad.mainservice.service.AuthService;
 import sustech.ooad.mainservice.service.CourseService;
 import sustech.ooad.mainservice.service.UserService;
@@ -37,9 +45,27 @@ public class UserController {
 
     @Autowired
     UserService userService;
+    @Autowired
+    CourseService courseService;
 
     @GetMapping("/project/brief")
     public Result<?> getUserProject() {
+        if (authFunctionality.hasRole(ROLE_TEACHER)) {
+            long uuid = authFunctionality.getUser().getId().longValue();
+            List<CourseInfoDto> courseList = courseService.getUserCourse(uuid);
+            List<HomeworkDto> homeworkDtoList0 = new ArrayList<>();
+            List<ProjectDto> projectDtoList0 = new ArrayList<>();
+            teacherDto teacherDto = new teacherDto(homeworkDtoList0, projectDtoList0);
+            courseList.forEach(a -> {
+                List<HomeworkDto> homeworkList = courseService.getHomeworkTable(
+                    a.getCourse().intValue());
+                List<ProjectDto> projectDtoList = courseService.getProjectInfo(
+                    a.getCourse().intValue());
+                teacherDto.getHomework().addAll(homeworkList);
+                teacherDto.getProject().addAll(projectDtoList);
+            });
+            return Result.ok(teacherDto);
+        }
         return Result.ok(userService.getUserProject());
     }
 

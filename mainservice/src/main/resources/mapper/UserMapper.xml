@@ -30,7 +30,7 @@
 
   <select id="selectFormUser"  resultMap="userRM">
     select * from ooad_project_helper.public.oauth_user u
-    where u.platform = 'local' and u.login = #{username}
+    where u.login = #{username}
   </select>
 
   <select id="selectOneById" resultMap="userRM">

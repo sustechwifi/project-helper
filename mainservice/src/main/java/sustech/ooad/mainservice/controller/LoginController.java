@@ -23,8 +23,7 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.UUID;
 
-import static sustech.ooad.mainservice.config.secutiry.handler.OauthAuthenticationSuccessHandler.oauthCallBackAuthentication;
-import static sustech.ooad.mainservice.config.secutiry.handler.OauthAuthenticationSuccessHandler.oauthCallBackData;
+import static sustech.ooad.mainservice.config.secutiry.handler.OauthAuthenticationSuccessHandler.*;
 import static sustech.ooad.mainservice.util.ConstantField.*;
 
 
@@ -48,16 +47,17 @@ public class LoginController {
     }
 
     @GetMapping("/callback/oauth2")
-    public void oauth2Callback(HttpServletResponse response) throws IOException {
-        String s = oauthCallBackData;
-        if (s != null){
-            SecurityContextHolder.getContext().setAuthentication(oauthCallBackAuthentication);
-            response.getWriter().write(s);
-            oauthCallBackData = null;
+    public Result<?> oauth2Callback() throws IOException {
+        if (!oauthAuthenticationStack.isEmpty()){
+            var auth = oauthAuthenticationStack.pollLast();
+            AuthUser authUser = (AuthUser) auth.getPrincipal();
+            return Result.ok(JSONUtil.toJsonStr(authUser));
         }else {
-            response.getWriter().write(JSONUtil.toJsonStr(Result.err(402,"用户未同意授权")));
+            return Result.err(402,"用户未同意授权");
         }
     }
+
+
 
     @GetMapping("/auth-info")
     public Result<?> info(Authentication authentication){

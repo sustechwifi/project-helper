@@ -67,7 +67,7 @@ public class ConstantField {
 
     // 工具方法
     public static String randomPassword(){
-        return new BCryptPasswordEncoder().encode("123456").substring(0,12);
+        return new BCryptPasswordEncoder().encode("123456");
     }
 
 }

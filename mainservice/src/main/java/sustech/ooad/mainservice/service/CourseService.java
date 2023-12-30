@@ -22,6 +22,7 @@ import sustech.ooad.mainservice.mapper.HomeworkRepository;
 import sustech.ooad.mainservice.mapper.ShareRepository;
 import sustech.ooad.mainservice.mapper.TaskMemRepository;
 import sustech.ooad.mainservice.mapper.TaskRepository;
+import sustech.ooad.mainservice.mapper.UserprojectRepository;
 import sustech.ooad.mainservice.mapper.submitRepository;
 import sustech.ooad.mainservice.mapper.ProjectRepository;
 import sustech.ooad.mainservice.model.AuthUser;
@@ -30,11 +31,13 @@ import sustech.ooad.mainservice.model.CourseAnnouncement;
 import sustech.ooad.mainservice.model.CourseAuthority;
 import sustech.ooad.mainservice.model.Group;
 import sustech.ooad.mainservice.model.GroupMemberList;
+import sustech.ooad.mainservice.model.GroupProject;
 import sustech.ooad.mainservice.model.Homework;
 import sustech.ooad.mainservice.model.Share;
 import sustech.ooad.mainservice.model.Submit;
 import sustech.ooad.mainservice.model.Task;
 import sustech.ooad.mainservice.model.TaskMem;
+import sustech.ooad.mainservice.model.Userproject;
 import sustech.ooad.mainservice.model.dto.CourseInfoDto;
 import sustech.ooad.mainservice.model.dto.GroupDto;
 import sustech.ooad.mainservice.model.dto.HomeworkDto;
@@ -88,6 +91,8 @@ public class CourseService {
     private AuthUserRepository authUserRepository;
     @Autowired
     private CourseAnnouncementRepository courseAnnouncementRepository;
+    @Autowired
+    private UserprojectRepository userprojectRepository;
 
     private void deleteCache(long uid) {
         // 清除缓存
@@ -299,6 +304,8 @@ public class CourseService {
         Group group = groupRepository.findGroupById(groupId);
         Integer courseId = group.getCourse().getId();
         Integer capacity = group.getCapacity();
+        List<GroupProject> groupProjectList = groupProjectRepository.findGroupProjectsByGroupid(
+            group);
         List<GroupMemberList> groupMemberListList = groupMemberListRepository.findGroupMemberListsByGroup(
             group);
         List<Group> userGroupList = groupMemberListRepository.findGroupMemberListsByUserUuid(
@@ -310,6 +317,7 @@ public class CourseService {
             int now = groupMemberListList.size();
             if (now < capacity) {
                 groupMemberListRepository.addGroupMember(groupId, uuid);
+                groupProjectList.forEach(a -> userprojectRepository.addUserProject(uuid, a.getProjectid().getId()));
                 return 0;
             } else {
                 return 1;

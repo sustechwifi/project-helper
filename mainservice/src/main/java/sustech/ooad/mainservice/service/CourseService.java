@@ -120,6 +120,7 @@ public class CourseService {
     public CourseInfoDto getCourseInfo(Integer id) {
         CourseInfoDto courseInfoDto = new CourseInfoDto();
         courseInfoDto.setCourse(courseRepository.findCourseById(id).getName());
+        courseInfoDto.setId(id);
         List<String> ta = courseAuthorityRepository.findCourseAuthoritiesByCourseIdAndCourseAuthority(
                 id, AUTHORITY_SA).stream().map(CourseAuthority::getUserId)
             .map(a -> authUserRepository.findAuthUserById(new BigDecimal(a)).getName())
@@ -199,6 +200,7 @@ public class CourseService {
         List<CourseInfoDto> courseInfoDto = new ArrayList<>();
         for (CourseAuthority c : courseAuthorityList) {
             CourseInfoDto temp = new CourseInfoDto();
+            temp.setId((int) c.getCourseId());
             temp.setCourse(courseRepository.findCourseById((int) c.getCourseId()).getName());
             temp.setAuth(c.getCourseAuthority());
             List<String> ta = courseAuthorityRepository.findCourseAuthoritiesByCourseIdAndCourseAuthority(

@@ -11,7 +11,7 @@ import sustech.ooad.mainservice.model.Course;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CourseInfoDto {
-
+    Integer id;
     String Course;
     String auth;
     List<String> ta;

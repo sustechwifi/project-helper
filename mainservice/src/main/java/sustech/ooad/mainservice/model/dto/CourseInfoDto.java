@@ -14,6 +14,6 @@ public class CourseInfoDto {
 
     Long Course;
     String auth;
-    List<Long> ta;
-    Long teacher;
+    List<String> ta;
+    String teacher;
 }

@@ -450,7 +450,6 @@ public class CourseController {
         if (!valid) {
             return Result.err(ACCESS_COURSE_DENIED, "无法访问此课程");
         }
-        // TODO 获取此课程的详细信息
         return Result.ok(courseService.getCourseInfo((int) courseId));
     }
 

@@ -38,6 +38,6 @@ public class OauthAuthenticationSuccessHandler implements AuthenticationSuccessH
         result.put("code", 0);
         result.put("data", authentication);
         oauthAuthenticationStack.add(authentication);
-        response.getWriter().write("<h1>授权登录成功，请关闭当前窗口</h1>");
+        response.getWriter().write("<h1>授权登录成功，请关闭当前窗口，点击 NEXT 完成登录</h1>");
     }
 }

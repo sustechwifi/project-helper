@@ -43,6 +43,7 @@ import sustech.ooad.mainservice.model.dto.GroupDto;
 import sustech.ooad.mainservice.model.dto.HomeworkDto;
 import sustech.ooad.mainservice.model.dto.ProjectDto;
 import sustech.ooad.mainservice.model.dto.attachment;
+import sustech.ooad.mainservice.model.dto.noticeDto;
 import sustech.ooad.mainservice.model.dto.taskDto;
 import sustech.ooad.mainservice.model.Project;
 import sustech.ooad.mainservice.util.auth.AuthFunctionality;
@@ -118,7 +119,7 @@ public class CourseService {
 
     public CourseInfoDto getCourseInfo(Integer id) {
         CourseInfoDto courseInfoDto = new CourseInfoDto();
-        courseInfoDto.setCourse(Long.valueOf(id));
+        courseInfoDto.setCourse(courseRepository.findCourseById(id).getName());
         List<String> ta = courseAuthorityRepository.findCourseAuthoritiesByCourseIdAndCourseAuthority(
                 id, AUTHORITY_SA).stream().map(CourseAuthority::getUserId)
             .map(a -> authUserRepository.findAuthUserById(new BigDecimal(a)).getName())
@@ -153,8 +154,16 @@ public class CourseService {
     }
 
     public void addProject(String projectName, String ddl, String description, String attachment,
-        Integer courseId, String state) {
+        Integer courseId, String state, long uuid) {
         courseRepository.addProject(projectName, courseId, ddl, state, description, attachment);
+        homeworkRepository.addHomework(projectName + " final submit", null,
+            "This is " + projectName + " final submit", null, courseId, 1, uuid);
+        Integer homeworkId = homeworkRepository.findHomeworkByName(projectName + " finalsubmit")
+            .getId();
+        Integer projectId = projectRepository.findByCourseAndName(
+            courseRepository.findCourseById(courseId), projectName).getId();
+        courseRepository.modifyProject(projectName, courseId, ddl, state, description, attachment,
+            projectId, homeworkId);
     }
 
     public void addHomework(String name, String ddl, String description, String attachment,
@@ -166,7 +175,7 @@ public class CourseService {
     public void modifyProject(String projectName, String ddl, String description, String attachment,
         Integer courseId, String state, Integer projectId) {
         courseRepository.modifyProject(projectName, courseId, ddl, state, description, attachment,
-            projectId);
+            projectId, null);
     }
 
     public void modifyHomework(String name, String ddl, String description, String attachment,
@@ -190,7 +199,7 @@ public class CourseService {
         List<CourseInfoDto> courseInfoDto = new ArrayList<>();
         for (CourseAuthority c : courseAuthorityList) {
             CourseInfoDto temp = new CourseInfoDto();
-            temp.setCourse(c.getCourseId());
+            temp.setCourse(courseRepository.findCourseById((int) c.getCourseId()).getName());
             temp.setAuth(c.getCourseAuthority());
             List<String> ta = courseAuthorityRepository.findCourseAuthoritiesByCourseIdAndCourseAuthority(
                     c.getCourseId(), AUTHORITY_SA).stream().map(CourseAuthority::getUserId)
@@ -393,9 +402,15 @@ public class CourseService {
             homeworkRepository.findHomeworkById(homeworkId));
     }
 
-    public List<CourseAnnouncement> getAnnouncement(Integer courseId) {
-        return courseAnnouncementRepository.findCourseAnnouncementsByCourse(
+    public List<noticeDto> getAnnouncement(Integer courseId) {
+        List<CourseAnnouncement> courseAnnouncementList = courseAnnouncementRepository.findCourseAnnouncementsByCourse(
             courseRepository.findCourseById(courseId));
+        List<noticeDto> noticeDtoList = new ArrayList<>();
+        courseAnnouncementList.forEach(a -> {
+            noticeDtoList.add(new noticeDto(a.getDescription(), a.getId(), a.getCourse(),
+                a.getUserUuid().getId().longValue(), a.getUserUuid().getName()));
+        });
+        return noticeDtoList;
     }
 
     public void addAnnouncement(Integer courseId, Long uuid, String description) {

@@ -55,7 +55,7 @@ public class CourseController {
     @PreAuthorize(ROLE_CHECK)
     @PostMapping("/{courseId}/announcement/post")
     public Result<?> addAnnouncement(@PathVariable("courseId") Integer courseId,
-        @RequestParam("description") String description) {
+        @RequestParam("content") String description) {
         boolean inCourse = authFunctionality.inCourse(courseId);
         if (!inCourse) {
             return Result.err(ACCESS_COURSE_DENIED, "无法进入课程");
@@ -303,7 +303,7 @@ public class CourseController {
 
     //添加课程小组
     @PreAuthorize(ROLE_CHECK_TEACHER)
-    @GetMapping("/{courseId}/project/{projectId}/group/add")
+    @PostMapping("/{courseId}/project/{projectId}/group/add")
     public Result<?> addCourseGroup(@PathVariable("courseId") long courseId,
         @PathVariable("projectId") Integer projectId, @RequestParam("groupName") String name,
         @RequestParam("inspectorID") Long teacherId, @RequestParam("preTime") String preTime,
@@ -450,7 +450,6 @@ public class CourseController {
         if (!valid) {
             return Result.err(ACCESS_COURSE_DENIED, "无法访问此课程");
         }
-        // TODO 获取此课程的详细信息
         return Result.ok(courseService.getCourseInfo((int) courseId));
     }
 

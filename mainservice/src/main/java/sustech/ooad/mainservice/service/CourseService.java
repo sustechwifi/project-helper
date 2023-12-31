@@ -22,6 +22,7 @@ import sustech.ooad.mainservice.mapper.HomeworkRepository;
 import sustech.ooad.mainservice.mapper.ShareRepository;
 import sustech.ooad.mainservice.mapper.TaskMemRepository;
 import sustech.ooad.mainservice.mapper.TaskRepository;
+import sustech.ooad.mainservice.mapper.UserprojectRepository;
 import sustech.ooad.mainservice.mapper.submitRepository;
 import sustech.ooad.mainservice.mapper.ProjectRepository;
 import sustech.ooad.mainservice.model.AuthUser;
@@ -30,11 +31,13 @@ import sustech.ooad.mainservice.model.CourseAnnouncement;
 import sustech.ooad.mainservice.model.CourseAuthority;
 import sustech.ooad.mainservice.model.Group;
 import sustech.ooad.mainservice.model.GroupMemberList;
+import sustech.ooad.mainservice.model.GroupProject;
 import sustech.ooad.mainservice.model.Homework;
 import sustech.ooad.mainservice.model.Share;
 import sustech.ooad.mainservice.model.Submit;
 import sustech.ooad.mainservice.model.Task;
 import sustech.ooad.mainservice.model.TaskMem;
+import sustech.ooad.mainservice.model.Userproject;
 import sustech.ooad.mainservice.model.dto.CourseInfoDto;
 import sustech.ooad.mainservice.model.dto.GroupDto;
 import sustech.ooad.mainservice.model.dto.HomeworkDto;
@@ -88,6 +91,8 @@ public class CourseService {
     private AuthUserRepository authUserRepository;
     @Autowired
     private CourseAnnouncementRepository courseAnnouncementRepository;
+    @Autowired
+    private UserprojectRepository userprojectRepository;
 
     private void deleteCache(long uid) {
         // 清除缓存
@@ -111,8 +116,20 @@ public class CourseService {
         deleteCache(sid);
     }
 
-    public Course getCourseInfo(Integer id) {
-        return courseRepository.findCourseById(id);
+    public CourseInfoDto getCourseInfo(Integer id) {
+        CourseInfoDto courseInfoDto = new CourseInfoDto();
+        courseInfoDto.setCourse(Long.valueOf(id));
+        List<String> ta = courseAuthorityRepository.findCourseAuthoritiesByCourseIdAndCourseAuthority(
+                id, AUTHORITY_SA).stream().map(CourseAuthority::getUserId)
+            .map(a -> authUserRepository.findAuthUserById(new BigDecimal(a)).getName())
+            .collect(Collectors.toList());
+        courseInfoDto.setTa(ta);
+        long teacher = courseAuthorityRepository.findCourseAuthoritiesByCourseIdAndCourseAuthority(
+            id, AUTHORITY_TEACHER).get(0).getUserId();
+        String teacher_name = authUserRepository.findAuthUserById(new BigDecimal(teacher))
+            .getName();
+        courseInfoDto.setTeacher(teacher_name);
+        return courseInfoDto;
     }
 
     public List<ProjectDto> getProjectInfo(Integer courseId) {
@@ -175,13 +192,16 @@ public class CourseService {
             CourseInfoDto temp = new CourseInfoDto();
             temp.setCourse(c.getCourseId());
             temp.setAuth(c.getCourseAuthority());
-            List<Long> ta = courseAuthorityRepository.findCourseAuthoritiesByCourseIdAndCourseAuthority(
+            List<String> ta = courseAuthorityRepository.findCourseAuthoritiesByCourseIdAndCourseAuthority(
                     c.getCourseId(), AUTHORITY_SA).stream().map(CourseAuthority::getUserId)
+                .map(a -> authUserRepository.findAuthUserById(new BigDecimal(a)).getName())
                 .collect(Collectors.toList());
             temp.setTa(ta);
             Long teacher = courseAuthorityRepository.findCourseAuthoritiesByCourseIdAndCourseAuthority(
                 c.getCourseId(), AUTHORITY_TEACHER).get(0).getUserId();
-            temp.setTeacher(teacher);
+            String teacher_name = authUserRepository.findAuthUserById(new BigDecimal(teacher))
+                .getName();
+            temp.setTeacher(teacher_name);
             courseInfoDto.add(temp);
         }
         return courseInfoDto;
@@ -299,6 +319,8 @@ public class CourseService {
         Group group = groupRepository.findGroupById(groupId);
         Integer courseId = group.getCourse().getId();
         Integer capacity = group.getCapacity();
+        List<GroupProject> groupProjectList = groupProjectRepository.findGroupProjectsByGroupid(
+            group);
         List<GroupMemberList> groupMemberListList = groupMemberListRepository.findGroupMemberListsByGroup(
             group);
         List<Group> userGroupList = groupMemberListRepository.findGroupMemberListsByUserUuid(
@@ -310,6 +332,8 @@ public class CourseService {
             int now = groupMemberListList.size();
             if (now < capacity) {
                 groupMemberListRepository.addGroupMember(groupId, uuid);
+                groupProjectList.forEach(
+                    a -> userprojectRepository.addUserProject(uuid, a.getProjectid().getId()));
                 return 0;
             } else {
                 return 1;
@@ -323,6 +347,11 @@ public class CourseService {
         Group group = groupRepository.findGroupById(groupId);
         AuthUser user = authUserRepository.findAuthUserById(new BigDecimal(uuid));
         groupMemberListRepository.deleteGroupMemberListByGroupAndUserUuid(group, user);
+        List<GroupProject> groupProjectList = groupProjectRepository.findGroupProjectsByGroupid(
+            group);
+        groupProjectList.forEach(a -> {
+            userprojectRepository.deleteUserprojectsByUserAndProject(user, a.getProjectid());
+        });
     }
 
     public void deleteGroup(Integer groupId) {

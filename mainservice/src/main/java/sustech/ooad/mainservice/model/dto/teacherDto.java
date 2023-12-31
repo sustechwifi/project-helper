@@ -1,19 +1,17 @@
 package sustech.ooad.mainservice.model.dto;
 
 import java.util.List;
-import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import sustech.ooad.mainservice.model.Course;
+import sustech.ooad.mainservice.model.Homework;
+import sustech.ooad.mainservice.model.Project;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CourseInfoDto {
+public class teacherDto {
 
-    Long Course;
-    String auth;
-    List<String> ta;
-    String teacher;
+    List<HomeworkDto> homework;
+    List<ProjectDto> project;
 }

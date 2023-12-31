@@ -26,4 +26,6 @@ public interface HomeworkRepository extends JpaRepository<Homework, Integer> {
     List<Homework> findAllByCourseid(Course course);
 
     Homework findHomeworkById(Integer id);
+
+    Homework findHomeworkByName(String name);
 }

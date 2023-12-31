@@ -401,12 +401,13 @@ public class CourseController {
         @RequestParam("attachment") String[] attachments,
         @RequestParam("description") String description, @RequestParam("state") String state) {
         boolean valid = authFunctionality.inCourse(courseId);
+        long uuid = authFunctionality.getUser().getId().longValue();
         if (!valid) {
             return Result.err(ACCESS_COURSE_DENIED, "无法访问此课程");
         }
         courseService.addProject(projectName, ddl, description, merge(attachments),
             (int) courseId,
-            state);
+            state, uuid);
         return Result.ok("");
 
     }

@@ -1,5 +1,6 @@
 package sustech.ooad.mainservice.mapper;
 
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -18,4 +19,6 @@ public interface GroupProjectRepository extends JpaRepository<GroupProject, Grou
     @Transactional(rollbackFor = Exception.class)
     @Modifying
     void deleteGroupProjectByGroupid(Group group);
+
+    List<GroupProject> findGroupProjectsByGroupid(Group group);
 }

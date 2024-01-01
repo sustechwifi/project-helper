@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import sustech.ooad.mainservice.mapper.CourseRepository;
 import sustech.ooad.mainservice.model.AuthUser;
 import sustech.ooad.mainservice.model.Course;
 import sustech.ooad.mainservice.model.Homework;
@@ -50,6 +51,9 @@ public class UserController {
     @Autowired
     CourseService courseService;
 
+    @Autowired
+    CourseRepository courseRepository;
+
     @GetMapping("/project/brief")
     public Result<?> getUserProject() {
         if (authFunctionality.hasRole(ROLE_TEACHER)) {
@@ -60,9 +64,10 @@ public class UserController {
             teacherDto teacherDto = new teacherDto(homeworkDtoList0, projectDtoList0);
             courseList.forEach(a -> {
                 List<HomeworkDto> homeworkList = courseService.getHomeworkTable(
-                    a.getCourse().intValue());
+                    courseRepository.findCourseByName(a.getCourse()).getId()
+                );
                 List<ProjectDto> projectDtoList = courseService.getProjectInfo(
-                    a.getCourse().intValue());
+                    courseRepository.findCourseByName(a.getCourse()).getId());
                 teacherDto.getHomework().addAll(homeworkList);
                 teacherDto.getProject().addAll(projectDtoList);
             });

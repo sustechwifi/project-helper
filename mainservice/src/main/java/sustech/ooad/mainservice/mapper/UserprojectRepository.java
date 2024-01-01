@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 import sustech.ooad.mainservice.model.AuthUser;
+import sustech.ooad.mainservice.model.Project;
 import sustech.ooad.mainservice.model.Userproject;
 import sustech.ooad.mainservice.model.UserprojectId;
 
@@ -22,4 +23,8 @@ public interface UserprojectRepository extends JpaRepository<Userproject, Userpr
     @Modifying
     @Query(nativeQuery = true, value = "update userproject set exhibit='exhibit' where uuid=?1 and projectid=?2")
     int modifyUserProject(long uuid, Integer projectId);
+
+    @Transactional(rollbackFor = Exception.class)
+    @Modifying
+    void deleteUserprojectsByUserAndProject(AuthUser user, Project project);
 }

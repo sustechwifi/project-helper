@@ -45,4 +45,8 @@ public class Project {
     @Column(name = "attachment", length = Integer.MAX_VALUE)
     private String attachment;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "homeworkid")
+    private Homework homeworkid;
+
 }

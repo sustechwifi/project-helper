@@ -44,6 +44,7 @@ import sustech.ooad.mainservice.model.dto.HomeworkDto;
 import sustech.ooad.mainservice.model.dto.ProjectDto;
 import sustech.ooad.mainservice.model.dto.attachment;
 import sustech.ooad.mainservice.model.dto.noticeDto;
+import sustech.ooad.mainservice.model.dto.submitDto;
 import sustech.ooad.mainservice.model.dto.taskDto;
 import sustech.ooad.mainservice.model.Project;
 import sustech.ooad.mainservice.util.auth.AuthFunctionality;
@@ -399,9 +400,14 @@ public class CourseService {
         shareRepository.deleteShare(shareId);
     }
 
-    public List<Submit> getSubmit(Integer homeworkId) {
-        return submitRepository.findSubmitsByHomework(
+    public List<submitDto> getSubmit(Integer homeworkId) {
+        List<Submit> submitList = submitRepository.findSubmitsByHomework(
             homeworkRepository.findHomeworkById(homeworkId));
+        List<submitDto> submitDtoList = new ArrayList<>();
+        submitList.forEach(a -> {
+            submitDtoList.add(new submitDto(a, attachment.divide(a.getAttachment())));
+        });
+        return submitDtoList;
     }
 
     public List<noticeDto> getAnnouncement(Integer courseId) {

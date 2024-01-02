@@ -248,8 +248,8 @@ public class CourseService {
     }
 
     public void modifyGroup(String name, Integer groupId, Long[] member, Long teacherId,
-        String preTime, Integer capacity) {
-        groupRepository.modifyGroup(name, teacherId, preTime, capacity, groupId);
+        String preTime, Integer capacity, String ddl) {
+        groupRepository.modifyGroup(name, teacherId, preTime, capacity, groupId, ddl);
         groupMemberListRepository.deleteGroupMemberListsByGroup(
             groupRepository.findGroupById(groupId));
         for (Long i : member) {

@@ -323,12 +323,12 @@ public class CourseController {
         @PathVariable("groupId") Integer groupId, @RequestParam("groupName") String name,
         @RequestParam("groupMemberID") Long[] member,
         @RequestParam("inspectorID") Long teacherId, @RequestParam("preTime") String preTime,
-        @RequestParam("groupSize") Integer capacity) {
+        @RequestParam("groupSize") Integer capacity, @RequestParam("ddl") String ddl) {
         boolean valid = authFunctionality.inCourse(courseId);
         if (!valid) {
             return Result.err(ACCESS_COURSE_DENIED, "无法访问此课程");
         }
-        courseService.modifyGroup(name, groupId, member, teacherId, preTime, capacity);
+        courseService.modifyGroup(name, groupId, member, teacherId, preTime, capacity,ddl);
         return Result.ok("");
     }
 

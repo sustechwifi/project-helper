@@ -40,6 +40,31 @@ public class CourseController {
         return str.toString();
     }
 
+    //添加成绩册
+    @PreAuthorize(ROLE_CHECK_TEACHER)
+    @PostMapping("/{courseId}/assignment/{assignmentId}/grade/add")
+    public Result<?> addGrade(@PathVariable("courseId") Integer courseId,
+        @PathVariable("assignmentId") Integer homeworkId, @RequestParam("url") String[] url) {
+        boolean valid = authFunctionality.inCourse(courseId);
+        if (!valid) {
+            return Result.err(ACCESS_COURSE_DENIED, "无法进入课程");
+        }
+        courseService.addGrade(merge(url), homeworkId);
+        return Result.ok("");
+    }
+
+    //获得某个作业的成绩册
+    @PreAuthorize(ROLE_CHECK_TEACHER)
+    @GetMapping("/{courseId}/assignment/{assignmentId}/grade/get")
+    public Result<?> getGrade(@PathVariable("courseId") Integer courseId,
+        @PathVariable("assignmentId") Integer homeworkId) {
+        boolean valid = authFunctionality.inCourse(courseId);
+        if (!valid) {
+            return Result.err(ACCESS_COURSE_DENIED, "无法进入课程");
+        }
+        return Result.ok(courseService.getGrade(homeworkId));
+    }
+
     //删除课程作业
     @PreAuthorize(ROLE_CHECK_TEACHER)
     @PostMapping("/{courseId}/assignment/{assignmentId}/delete")
@@ -328,7 +353,7 @@ public class CourseController {
         if (!valid) {
             return Result.err(ACCESS_COURSE_DENIED, "无法访问此课程");
         }
-        courseService.modifyGroup(name, groupId, member, teacherId, preTime, capacity,ddl);
+        courseService.modifyGroup(name, groupId, member, teacherId, preTime, capacity, ddl);
         return Result.ok("");
     }
 

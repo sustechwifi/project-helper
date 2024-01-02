@@ -15,6 +15,7 @@ import sustech.ooad.mainservice.mapper.CourseAnnouncementRepository;
 import sustech.ooad.mainservice.mapper.CourseAuthorityMapper;
 import sustech.ooad.mainservice.mapper.CourseAuthorityRepository;
 import sustech.ooad.mainservice.mapper.CourseRepository;
+import sustech.ooad.mainservice.mapper.GradeRepository;
 import sustech.ooad.mainservice.mapper.GroupMemberListRepository;
 import sustech.ooad.mainservice.mapper.GroupProjectRepository;
 import sustech.ooad.mainservice.mapper.GroupRepository;
@@ -29,6 +30,7 @@ import sustech.ooad.mainservice.model.AuthUser;
 import sustech.ooad.mainservice.model.Course;
 import sustech.ooad.mainservice.model.CourseAnnouncement;
 import sustech.ooad.mainservice.model.CourseAuthority;
+import sustech.ooad.mainservice.model.Grade;
 import sustech.ooad.mainservice.model.Group;
 import sustech.ooad.mainservice.model.GroupMemberList;
 import sustech.ooad.mainservice.model.GroupProject;
@@ -43,6 +45,7 @@ import sustech.ooad.mainservice.model.dto.GroupDto;
 import sustech.ooad.mainservice.model.dto.HomeworkDto;
 import sustech.ooad.mainservice.model.dto.ProjectDto;
 import sustech.ooad.mainservice.model.dto.attachment;
+import sustech.ooad.mainservice.model.dto.gradeDto;
 import sustech.ooad.mainservice.model.dto.noticeDto;
 import sustech.ooad.mainservice.model.dto.submitDto;
 import sustech.ooad.mainservice.model.dto.taskDto;
@@ -95,6 +98,8 @@ public class CourseService {
     private CourseAnnouncementRepository courseAnnouncementRepository;
     @Autowired
     private UserprojectRepository userprojectRepository;
+    @Autowired
+    private GradeRepository gradeRepository;
 
     private void deleteCache(long uid) {
         // 清除缓存
@@ -462,5 +467,15 @@ public class CourseService {
 
     public void deleteProject(Integer id) {
         projectRepository.deleteProjectById(id);
+    }
+
+    public gradeDto getGrade(Integer homeworkId) {
+        Grade grade = gradeRepository.findGradeByHomeworkid(
+            homeworkRepository.findHomeworkById(homeworkId));
+        return new gradeDto(grade, attachment.divide(grade.getId().getUrl()));
+    }
+
+    public void addGrade(String url, Integer homeworkId) {
+        gradeRepository.addGrade(homeworkId, url);
     }
 }

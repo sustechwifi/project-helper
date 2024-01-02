@@ -24,6 +24,9 @@ public class MinioOssImpl implements OssClient {
     @Value("${minio.endpoint}")
     String endpoint;
 
+    @Value("${minio.gateway}")
+    String gateway;
+
     @Value("${minio.bucket.image-bucket}")
     private String imageBucket;
 
@@ -48,7 +51,7 @@ public class MinioOssImpl implements OssClient {
                 .object(path)
                 .stream(new ByteArrayInputStream(content), content.length, -1) // 文件内容
                 .build());
-        return String.format("%s/download/%s/%s",endpoint,bucketName,path);
+        return String.format("%s/content/download/%s/%s",gateway,bucketName,path);
     }
 
 

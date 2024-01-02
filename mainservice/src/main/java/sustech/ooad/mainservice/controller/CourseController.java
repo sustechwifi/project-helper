@@ -40,6 +40,19 @@ public class CourseController {
         return str.toString();
     }
 
+    //删除课程作业
+    @PreAuthorize(ROLE_CHECK_TEACHER)
+    @PostMapping("/{courseId}/assignment/{assignmentId}/delete")
+    public Result<?> deleteHomework(@PathVariable("courseId") Integer courseId,
+        @PathVariable("assignmentId") Integer homeworkId) {
+        boolean valid = authFunctionality.inCourse(courseId);
+        if (!valid) {
+            return Result.err(ACCESS_COURSE_DENIED, "无法进入课程");
+        }
+        courseService.deleteHomework(homeworkId);
+        return Result.ok("");
+    }
+
     //获得用户某个课程的小组
     @PreAuthorize(ROLE_CHECK)
     @GetMapping("/{courseId}/user/group")
@@ -55,19 +68,7 @@ public class CourseController {
         submitRepository.deleteSubmitById(submitId);
         return Result.ok("");
     }
-//    //删除作业
-//    @PreAuthorize(ROLE_CHECK_TEACHER)
-//    @PostMapping("/{courseId}/assignment/{assignmentId}}")
-//    public Result<?> deleteHomework(@PathVariable("assignmentId") Integer homeworkId,
-//        @PathVariable("courseId") Integer courseId) {
-//        boolean inCourse = authFunctionality.inCourse(courseId);
-//        if (!inCourse) {
-//            return Result.err(ACCESS_COURSE_DENIED, "无法进入课程");
-//        }
-//        courseService.deleteHomework(homeworkId);
-//        return Result.ok("");
-//    }
-//
+
 //    //删除项目
 //    @PreAuthorize(ROLE_CHECK_TEACHER)
 //    @PostMapping("/{courseId}/project/{projectId}")

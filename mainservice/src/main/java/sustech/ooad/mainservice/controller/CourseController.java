@@ -40,9 +40,17 @@ public class CourseController {
         return str.toString();
     }
 
+    //获得用户某个课程的小组
+    @PreAuthorize(ROLE_CHECK)
+    @GetMapping("/{courseId}/user/group")
+    public Result<?> getUserGroup(@PathVariable("courseId") Integer courseId) {
+        long uuid = authFunctionality.getUser().getId().longValue();
+        return Result.ok(courseService.userCourseGroup(courseId, uuid));
+    }
+
     //删除提交
     @PreAuthorize(ROLE_CHECK)
-    @GetMapping("/submit/{submitId}")
+    @PostMapping("/submit/{submitId}")
     public Result<?> deleteSubmit(@PathVariable("submitId") Integer submitId) {
         submitRepository.deleteSubmitById(submitId);
         return Result.ok("");

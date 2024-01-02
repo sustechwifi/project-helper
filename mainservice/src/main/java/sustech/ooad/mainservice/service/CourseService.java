@@ -361,6 +361,20 @@ public class CourseService {
         }
     }
 
+    public Group userCourseGroup(Integer courseId, long uuid) {
+        Group group = new Group();
+        List<Group> userGroupList = groupMemberListRepository.findGroupMemberListsByUserUuid(
+                authUserRepository.findAuthUserById(new BigDecimal(uuid))).stream()
+            .map(a -> groupRepository.findGroupById(a.getGroup().getId()))
+            .toList();
+        for (Group g : userGroupList) {
+            if (Objects.equals(g.getCourse().getId(), courseId)) {
+                group = g;
+            }
+        }
+        return group;
+    }
+
     public void exitGroup(Long uuid, Integer groupId) {
         Group group = groupRepository.findGroupById(groupId);
         AuthUser user = authUserRepository.findAuthUserById(new BigDecimal(uuid));

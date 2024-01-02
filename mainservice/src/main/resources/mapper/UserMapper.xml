@@ -48,5 +48,9 @@
     where email = #{email}
   </select>
 
+    <select id="getAllUser" resultMap="userRM">
+      select * from ooad_project_helper.public.oauth_user u
+    </select>
+
 
 </mapper>

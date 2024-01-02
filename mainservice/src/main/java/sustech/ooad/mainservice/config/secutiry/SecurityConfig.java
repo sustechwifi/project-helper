@@ -47,6 +47,7 @@ public class SecurityConfig {
                 //.requestMatchers("/user/**").hasRole("ROLE_User")
                 .anyRequest().authenticated();
 
+        http.headers().frameOptions().disable();
 
         // 开启表单登录
         http.formLogin()

@@ -48,6 +48,7 @@ public class UserController {
 
     @Autowired
     UserService userService;
+
     @Autowired
     CourseService courseService;
 
@@ -74,6 +75,26 @@ public class UserController {
             return Result.ok(teacherDto);
         }
         return Result.ok(userService.getUserProject());
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/admin/users")
+    public Result<?> getAllUsers(){
+        if (!authFunctionality.getUser().getRole().equals(ROLE_ADMIN)){
+            return Result.err(ACCESS_DENIED,"admin only");
+        }else {
+            return Result.ok(userService.getAllUsers());
+        }
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/admin/edit")
+    public Result<?> editUserInfo(@RequestBody AuthUser authUser){
+        if (!authFunctionality.getUser().getRole().equals(ROLE_ADMIN)){
+            return Result.err(ACCESS_DENIED,"admin only");
+        }else {
+            return Result.ok(userService.editUserInfo(authUser));
+        }
     }
 
     @GetMapping("/auth/role")

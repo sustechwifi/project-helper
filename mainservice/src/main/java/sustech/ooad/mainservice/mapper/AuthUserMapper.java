@@ -21,6 +21,8 @@ public interface AuthUserMapper {
 
     AuthUser selectByEmail(@Param("email") String email);
 
+    List<AuthUser> getAllUser();
+
     @Update("update ooad_project_helper.public.oauth_user  set authority = #{role} where uuid = #{uid}")
     void updateRole(@Param("role") String role,@Param("uid") Long uid);
 
@@ -42,6 +44,24 @@ public interface AuthUserMapper {
             "introduction = #{user.introduction}," +
             "grade = #{user.grade},major = #{user.major},college = #{user.college} where uuid = #{user.id}")
     void updateInfo(@Param("user") AuthUser user);
+
+
+    @Update("update ooad_project_helper.public.oauth_user " +
+            "set name = #{user.name}, " +
+            "login = #{user.login}," +
+            "platform = #{user.platform}," +
+            "email = #{user.email}, " +
+            "authority = #{user.role}," +
+            "avatar_url = #{user.avatar}," +
+            "sex = #{user.sex}," +
+            "introduction = #{user.introduction}," +
+            "grade = #{user.grade}," +
+            "major = #{user.major}," +
+            "enabled = #{user.enabled}," +
+            "create_time = #{user.createTime}," +
+            "password = #{user.password}," +
+            "college = #{user.college} where uuid = #{user.id}")
+    void updateUserByAdmin(@Param("user") AuthUser user);
 
     @Select("select count(*) from ooad_project_helper.public.oauth_user u where u.email = #{email}")
     long checkEmailHasBound(@Param("email") String email);

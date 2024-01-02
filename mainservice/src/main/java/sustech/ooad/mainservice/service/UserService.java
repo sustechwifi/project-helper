@@ -4,7 +4,9 @@ import jakarta.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import sustech.ooad.mainservice.mapper.AuthUserMapper;
 import sustech.ooad.mainservice.mapper.AuthUserRepository;
 import sustech.ooad.mainservice.mapper.UserprojectRepository;
 import sustech.ooad.mainservice.model.AuthUser;
@@ -25,6 +27,9 @@ public class UserService {
     @Resource
     AuthFunctionalityImpl authFunctionality;
 
+    @Resource
+    AuthUserMapper authUserMapper;
+
     public List<exhibitProjectDto> getUserProject() {
         List<Userproject> userprojectList = userprojectRepository.findUserprojectsByUser(
             authFunctionality.getUser());
@@ -34,5 +39,26 @@ public class UserService {
                 attachment.divide(u.getProject().getAttachment())));
         }
         return exhibitProjectDtoList;
+    }
+
+
+    public List<AuthUser> getAllUsers(){
+        return authUserMapper.getAllUser();
+    }
+
+
+    @Resource
+    BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    public boolean editUserInfo(AuthUser user){
+        try {
+            System.out.println(user);
+            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+            authUserMapper.updateUserByAdmin(user);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

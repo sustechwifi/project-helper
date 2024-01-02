@@ -1,6 +1,7 @@
 package sustech.ooad.mainservice.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -16,6 +17,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import sustech.ooad.mainservice.util.ConstantField;
+import sustech.ooad.mainservice.util.LocalDateDeserializer;
+
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -58,6 +61,7 @@ public class AuthUser implements OAuth2User, UserDetails {
     String introduction;
     boolean enabled;
     @Column(name = "create_time")
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     LocalDate createTime;
 
     // 表单注册

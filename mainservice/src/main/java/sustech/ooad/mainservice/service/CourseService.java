@@ -176,17 +176,16 @@ public class CourseService {
 
     public void modifyProject(String projectName, String ddl, String description, String attachment,
         Integer courseId, String state, Integer projectId) {
-        Integer homeworkId = homeworkRepository.findHomeworkByName(projectName + " final submit")
-            .getId();
-        if (homeworkId == null) {
+        Homework homework = homeworkRepository.findHomeworkByName(projectName + " final submit");
+        if (homework == null) {
             courseRepository.modifyProject(projectName, courseId, ddl, state, description,
                 attachment,
                 projectId, null);
-        }else {
+        } else {
             courseRepository.modifyProject(projectName, courseId, ddl, state, description,
                 attachment,
-                projectId, homeworkId);
-            homeworkRepository.modifyddl(ddl, homeworkId);
+                projectId, homework.getId());
+            homeworkRepository.modifyddl(ddl, homework.getId());
         }
 
     }

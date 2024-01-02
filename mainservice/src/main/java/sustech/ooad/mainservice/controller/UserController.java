@@ -96,9 +96,6 @@ public class UserController {
         String email = authFunctionality.getUser().getEmail();
         String key = EMAIL_AUTH_ROLE + email;
         String s = stringRedisTemplate.opsForValue().get(key);
-        if (StrUtil.isEmpty(s) || !s.equals(code)) {
-            return Result.err(CAPTCHA_ERR, "invalid check code");
-        }
         if (authService.authRole(email, role)) {
             return Result.ok(role);
         } else {

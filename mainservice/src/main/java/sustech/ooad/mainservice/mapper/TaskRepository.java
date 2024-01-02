@@ -26,4 +26,8 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
     @Modifying
     @Query(value = "update task set name=?1,ddl=?2,attachment=?3,description=?4 where id=?5", nativeQuery = true)
     int modifyTask(String name, String ddl, String attachment, String description, Integer id);
+
+    @Transactional(rollbackFor = Exception.class)
+    @Modifying
+    void deleteTasksByGroupid(Group group);
 }

@@ -390,6 +390,10 @@ public class CourseService {
         Group group = groupRepository.findGroupById(groupId);
         groupProjectRepository.deleteGroupProjectByGroupid(group);
         groupMemberListRepository.deleteGroupMemberListsByGroup(group);
+        List<Task> taskList = taskRepository.findTasksByGroupid(group);
+        taskList.forEach(a -> taskMemRepository.deleteTaskMemsByTaskid(a));
+        taskRepository.deleteTasksByGroupid(group);
+        shareRepository.deleteSharesByGroup(group);
         groupRepository.deleteGroupById(groupId);
     }
 

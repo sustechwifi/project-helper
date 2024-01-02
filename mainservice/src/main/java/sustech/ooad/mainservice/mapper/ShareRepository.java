@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
+import sustech.ooad.mainservice.model.Group;
 import sustech.ooad.mainservice.model.Project;
 import sustech.ooad.mainservice.model.Share;
 
@@ -22,4 +23,7 @@ public interface ShareRepository extends JpaRepository<Share, Integer> {
     @Query(value = "delete from Share where id=?1", nativeQuery = true)
     void deleteShare(Integer shareId);
 
+    @Transactional(rollbackFor = Exception.class)
+    @Modifying
+    void deleteSharesByGroup(Group group);
 }

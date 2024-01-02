@@ -39,4 +39,7 @@ public class Group {
     @Column(name = "pre_time", length = Integer.MAX_VALUE)
     private String preTime;
 
+    @Column(name = "ddl", length = Integer.MAX_VALUE)
+    private String ddl;
+
 }

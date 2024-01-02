@@ -23,5 +23,4 @@ public interface TaskMemRepository extends JpaRepository<TaskMem, TaskMemId> {
     @Modifying
     void deleteTaskMemsByTaskid(Task task);
 
-
 }

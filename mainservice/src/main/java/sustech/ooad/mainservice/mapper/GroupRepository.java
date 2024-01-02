@@ -20,8 +20,8 @@ public interface GroupRepository extends JpaRepository<Group, Integer> {
 
     @Transactional(rollbackFor = Exception.class)
     @Modifying
-    @Query(value = "update \"group\" set name=?1,teacher_uuid=?2,pre_time=?3,capacity=?4 where id=?5", nativeQuery = true)
-    int modifyGroup(String name, Long uuid, String preTime, Integer capacity, Integer groupId);
+    @Query(value = "update \"group\" set name=?1,teacher_uuid=?2,pre_time=?3,capacity=?4,ddl=?6 where id=?5", nativeQuery = true)
+    int modifyGroup(String name, Long uuid, String preTime, Integer capacity, Integer groupId,String ddl);
 
     Group findGroupById(Integer id);
 

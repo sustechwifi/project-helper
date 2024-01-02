@@ -176,13 +176,19 @@ public class CourseService {
 
     public void modifyProject(String projectName, String ddl, String description, String attachment,
         Integer courseId, String state, Integer projectId) {
+        Integer homeworkId = homeworkRepository.findHomeworkByName(projectName + " final submit")
+            .getId();
         courseRepository.modifyProject(projectName, courseId, ddl, state, description, attachment,
-            projectId, null);
+            projectId, homeworkId);
+        homeworkRepository.modifyddl(ddl, homeworkId);
     }
 
     public void modifyHomework(String name, String ddl, String description, String attachment,
         Integer homeworkId) {
         homeworkRepository.modifyHomework(name, attachment, description, ddl, homeworkId);
+        Project project = projectRepository.findProjectByHomeworkid(
+            homeworkRepository.findHomeworkById(homeworkId));
+        projectRepository.modifyddl(ddl, project.getId());
     }
 
     public ProjectDto getProject(Integer id) {
@@ -242,8 +248,8 @@ public class CourseService {
     }
 
     public void modifyGroup(String name, Integer groupId, Long[] member, Long teacherId,
-        String preTime, Integer capacity) {
-        groupRepository.modifyGroup(name, teacherId, preTime, capacity, groupId);
+        String preTime, Integer capacity, String ddl) {
+        groupRepository.modifyGroup(name, teacherId, preTime, capacity, groupId, ddl);
         groupMemberListRepository.deleteGroupMemberListsByGroup(
             groupRepository.findGroupById(groupId));
         for (Long i : member) {
@@ -355,6 +361,20 @@ public class CourseService {
         }
     }
 
+    public Group userCourseGroup(Integer courseId, long uuid) {
+        Group group = new Group();
+        List<Group> userGroupList = groupMemberListRepository.findGroupMemberListsByUserUuid(
+                authUserRepository.findAuthUserById(new BigDecimal(uuid))).stream()
+            .map(a -> groupRepository.findGroupById(a.getGroup().getId()))
+            .toList();
+        for (Group g : userGroupList) {
+            if (Objects.equals(g.getCourse().getId(), courseId)) {
+                group = g;
+            }
+        }
+        return group;
+    }
+
     public void exitGroup(Long uuid, Integer groupId) {
         Group group = groupRepository.findGroupById(groupId);
         AuthUser user = authUserRepository.findAuthUserById(new BigDecimal(uuid));
@@ -370,6 +390,10 @@ public class CourseService {
         Group group = groupRepository.findGroupById(groupId);
         groupProjectRepository.deleteGroupProjectByGroupid(group);
         groupMemberListRepository.deleteGroupMemberListsByGroup(group);
+        List<Task> taskList = taskRepository.findTasksByGroupid(group);
+        taskList.forEach(a -> taskMemRepository.deleteTaskMemsByTaskid(a));
+        taskRepository.deleteTasksByGroupid(group);
+        shareRepository.deleteSharesByGroup(group);
         groupRepository.deleteGroupById(groupId);
     }
 
@@ -423,5 +447,13 @@ public class CourseService {
 
     public void addAnnouncement(Integer courseId, Long uuid, String description) {
         courseAnnouncementRepository.addAnnouncement(courseId, uuid, description);
+    }
+
+    public void deleteHomework(Integer id) {
+        homeworkRepository.deleteHomeworkById(id);
+    }
+
+    public void deleteProject(Integer id) {
+        projectRepository.deleteProjectById(id);
     }
 }

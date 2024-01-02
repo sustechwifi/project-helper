@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import sustech.ooad.mainservice.mapper.CourseAnnouncementRepository;
+import sustech.ooad.mainservice.mapper.submitRepository;
 import sustech.ooad.mainservice.model.dto.CourseInfoDto;
 import sustech.ooad.mainservice.service.CourseService;
 import sustech.ooad.mainservice.util.Result;
@@ -25,11 +26,10 @@ public class CourseController {
 
     @Resource
     CourseService courseService;
-    private final CourseAnnouncementRepository courseAnnouncementRepository;
-
-    public CourseController(CourseAnnouncementRepository courseAnnouncementRepository) {
-        this.courseAnnouncementRepository = courseAnnouncementRepository;
-    }
+    @Autowired
+    CourseAnnouncementRepository courseAnnouncementRepository;
+    @Autowired
+    submitRepository submitRepository;
 
     public String merge(String[] array) {
         StringBuilder str = new StringBuilder();
@@ -39,6 +39,48 @@ public class CourseController {
         }
         return str.toString();
     }
+
+    //删除课程作业
+    @PreAuthorize(ROLE_CHECK_TEACHER)
+    @PostMapping("/{courseId}/assignment/{assignmentId}/delete")
+    public Result<?> deleteHomework(@PathVariable("courseId") Integer courseId,
+        @PathVariable("assignmentId") Integer homeworkId) {
+        boolean valid = authFunctionality.inCourse(courseId);
+        if (!valid) {
+            return Result.err(ACCESS_COURSE_DENIED, "无法进入课程");
+        }
+        courseService.deleteHomework(homeworkId);
+        return Result.ok("");
+    }
+
+    //获得用户某个课程的小组
+    @PreAuthorize(ROLE_CHECK)
+    @GetMapping("/{courseId}/user/group")
+    public Result<?> getUserGroup(@PathVariable("courseId") Integer courseId) {
+        long uuid = authFunctionality.getUser().getId().longValue();
+        return Result.ok(courseService.userCourseGroup(courseId, uuid));
+    }
+
+    //删除提交
+    @PreAuthorize(ROLE_CHECK)
+    @PostMapping("/submit/{submitId}")
+    public Result<?> deleteSubmit(@PathVariable("submitId") Integer submitId) {
+        submitRepository.deleteSubmitById(submitId);
+        return Result.ok("");
+    }
+
+//    //删除项目
+//    @PreAuthorize(ROLE_CHECK_TEACHER)
+//    @PostMapping("/{courseId}/project/{projectId}")
+//    public Result<?> deleteProject(@PathVariable("projectId") Integer projectId,
+//        @PathVariable("courseId") Integer courseId) {
+//        boolean inCourse = authFunctionality.inCourse(courseId);
+//        if (!inCourse) {
+//            return Result.err(ACCESS_COURSE_DENIED, "无法进入课程");
+//        }
+//        courseService.deleteProject(projectId);
+//        return Result.ok("");
+//    }
 
     //获得课程通知
     @PreAuthorize(ROLE_CHECK)
@@ -196,7 +238,7 @@ public class CourseController {
     //修改小组任务
     @PreAuthorize(ROLE_CHECK)
     @PostMapping("/project/{projectId}/group/{groupId}/task/edit/{taskId}")
-    public Result<?> modifyTask(@PathVariable("groupId") Integer groupId,
+    public Result<?> Task(@PathVariable("groupId") Integer groupId,
         @PathVariable("projectId") Integer projectId, @PathVariable("taskId") Integer taskId,
         @RequestParam("name") String name,
         @RequestParam("member") List<Long> member, @RequestParam("deadline") String ddl,
@@ -281,12 +323,12 @@ public class CourseController {
         @PathVariable("groupId") Integer groupId, @RequestParam("groupName") String name,
         @RequestParam("groupMemberID") Long[] member,
         @RequestParam("inspectorID") Long teacherId, @RequestParam("preTime") String preTime,
-        @RequestParam("groupSize") Integer capacity) {
+        @RequestParam("groupSize") Integer capacity, @RequestParam("ddl") String ddl) {
         boolean valid = authFunctionality.inCourse(courseId);
         if (!valid) {
             return Result.err(ACCESS_COURSE_DENIED, "无法访问此课程");
         }
-        courseService.modifyGroup(name, groupId, member, teacherId, preTime, capacity);
+        courseService.modifyGroup(name, groupId, member, teacherId, preTime, capacity,ddl);
         return Result.ok("");
     }
 

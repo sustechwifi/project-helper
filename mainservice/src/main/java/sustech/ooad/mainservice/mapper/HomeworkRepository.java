@@ -33,4 +33,8 @@ public interface HomeworkRepository extends JpaRepository<Homework, Integer> {
     Homework findHomeworkById(Integer id);
 
     Homework findHomeworkByName(String name);
+
+    @Transactional(rollbackFor = Exception.class)
+    @Modifying
+    void deleteHomeworkById(Integer id);
 }

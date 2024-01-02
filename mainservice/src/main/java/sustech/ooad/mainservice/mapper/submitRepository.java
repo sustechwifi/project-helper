@@ -28,4 +28,8 @@ public interface submitRepository extends JpaRepository<Submit, Integer> {
     int modifySubmit(String feedback, Integer score, Integer submitId);
 
     List<Submit> findSubmitsByHomework(Homework homework);
+
+    @Transactional(rollbackFor = Exception.class)
+    @Modifying
+    void deleteSubmitById(Integer id);
 }

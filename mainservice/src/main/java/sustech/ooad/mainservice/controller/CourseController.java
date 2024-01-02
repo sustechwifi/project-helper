@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import sustech.ooad.mainservice.mapper.CourseAnnouncementRepository;
+import sustech.ooad.mainservice.mapper.submitRepository;
 import sustech.ooad.mainservice.model.dto.CourseInfoDto;
 import sustech.ooad.mainservice.service.CourseService;
 import sustech.ooad.mainservice.util.Result;
@@ -25,11 +26,10 @@ public class CourseController {
 
     @Resource
     CourseService courseService;
-    private final CourseAnnouncementRepository courseAnnouncementRepository;
-
-    public CourseController(CourseAnnouncementRepository courseAnnouncementRepository) {
-        this.courseAnnouncementRepository = courseAnnouncementRepository;
-    }
+    @Autowired
+    CourseAnnouncementRepository courseAnnouncementRepository;
+    @Autowired
+    submitRepository submitRepository;
 
     public String merge(String[] array) {
         StringBuilder str = new StringBuilder();
@@ -39,6 +39,39 @@ public class CourseController {
         }
         return str.toString();
     }
+
+    //删除提交
+    @PreAuthorize(ROLE_CHECK)
+    @GetMapping("/submit/{submitId}")
+    public Result<?> deleteSubmit(@PathVariable("submitId") Integer submitId) {
+        submitRepository.deleteSubmitById(submitId);
+        return Result.ok("");
+    }
+//    //删除作业
+//    @PreAuthorize(ROLE_CHECK_TEACHER)
+//    @PostMapping("/{courseId}/assignment/{assignmentId}}")
+//    public Result<?> deleteHomework(@PathVariable("assignmentId") Integer homeworkId,
+//        @PathVariable("courseId") Integer courseId) {
+//        boolean inCourse = authFunctionality.inCourse(courseId);
+//        if (!inCourse) {
+//            return Result.err(ACCESS_COURSE_DENIED, "无法进入课程");
+//        }
+//        courseService.deleteHomework(homeworkId);
+//        return Result.ok("");
+//    }
+//
+//    //删除项目
+//    @PreAuthorize(ROLE_CHECK_TEACHER)
+//    @PostMapping("/{courseId}/project/{projectId}")
+//    public Result<?> deleteProject(@PathVariable("projectId") Integer projectId,
+//        @PathVariable("courseId") Integer courseId) {
+//        boolean inCourse = authFunctionality.inCourse(courseId);
+//        if (!inCourse) {
+//            return Result.err(ACCESS_COURSE_DENIED, "无法进入课程");
+//        }
+//        courseService.deleteProject(projectId);
+//        return Result.ok("");
+//    }
 
     //获得课程通知
     @PreAuthorize(ROLE_CHECK)

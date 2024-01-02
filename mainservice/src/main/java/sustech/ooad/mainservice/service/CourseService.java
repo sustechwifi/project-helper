@@ -430,4 +430,18 @@ public class CourseService {
     public void addAnnouncement(Integer courseId, Long uuid, String description) {
         courseAnnouncementRepository.addAnnouncement(courseId, uuid, description);
     }
+
+    public void deleteHomework(Integer id) {
+        Project project = projectRepository.findProjectByHomeworkid(
+            homeworkRepository.findHomeworkById(id));
+        projectRepository.modifyHomework(null, project.getId());
+        homeworkRepository.deleteHomeworkById(id);
+    }
+
+    public void deleteProject(Integer id) {
+        Project project = projectRepository.findProjectById(id);
+        Homework homework = homeworkRepository.findHomeworkById(project.getHomeworkid().getId());
+        projectRepository.deleteProjectById(project.getId());
+        homeworkRepository.deleteHomeworkById(homework.getId());
+    }
 }

@@ -23,4 +23,13 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
     int modifyddl(String time, Integer id);
 
     Project findProjectByHomeworkid(Homework homework);
+
+    @Transactional(rollbackFor = Exception.class)
+    @Modifying
+    @Query(value = "update project set homeworkid=?1 where id=?2 ", nativeQuery = true)
+    int modifyHomework(Integer homeworkId, Integer id);
+
+    @Transactional(rollbackFor = Exception.class)
+    @Modifying
+    void deleteProjectById(Integer id);
 }

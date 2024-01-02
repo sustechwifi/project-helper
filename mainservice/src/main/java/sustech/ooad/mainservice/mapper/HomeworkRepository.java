@@ -23,6 +23,11 @@ public interface HomeworkRepository extends JpaRepository<Homework, Integer> {
     int modifyHomework(String name, String attachment, String description, String ddl,
         Integer homeworkId);
 
+    @Transactional(rollbackFor = Exception.class)
+    @Modifying
+    @Query(value = "update homework set ddl=?1 where id=?2", nativeQuery = true)
+    int modifyddl(String ddl, Integer id);
+
     List<Homework> findAllByCourseid(Course course);
 
     Homework findHomeworkById(Integer id);

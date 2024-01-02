@@ -196,7 +196,7 @@ public class CourseController {
     //修改小组任务
     @PreAuthorize(ROLE_CHECK)
     @PostMapping("/project/{projectId}/group/{groupId}/task/edit/{taskId}")
-    public Result<?> modifyTask(@PathVariable("groupId") Integer groupId,
+    public Result<?> Task(@PathVariable("groupId") Integer groupId,
         @PathVariable("projectId") Integer projectId, @PathVariable("taskId") Integer taskId,
         @RequestParam("name") String name,
         @RequestParam("member") List<Long> member, @RequestParam("deadline") String ddl,

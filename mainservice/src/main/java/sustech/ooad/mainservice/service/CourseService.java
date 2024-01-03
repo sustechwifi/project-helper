@@ -311,9 +311,9 @@ public class CourseService {
     }
 
     public boolean inGroup(Long uuid, Integer groupId) {
-        return Objects.equals(groupId, groupMemberListRepository.findGroupMemberListByUserUuid(
-                authUserMapper.selectOneById(uuid)).getGroup()
-            .getId());
+        return groupMemberListRepository.findGroupMemberListsByUserUuid(
+                authUserMapper.selectOneById(uuid)).stream().map(GroupMemberList::getGroup).toList()
+            .contains(groupRepository.findGroupById(groupId));
     }
 
     public void addTask(String name, String ddl, String attachment, String description,

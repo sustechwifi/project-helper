@@ -24,7 +24,6 @@ public interface GroupMemberListRepository extends
     @Query(value = "insert into group_member_list(group_id, user_uuid) VALUES (?1,?2)", nativeQuery = true)
     int addGroupMember(Integer groupId, Long uuid);
 
-    GroupMemberList findGroupMemberListByUserUuid(AuthUser user);
 
     List<GroupMemberList> findGroupMemberListsByUserUuid(AuthUser user);
 

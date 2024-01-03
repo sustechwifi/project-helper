@@ -453,17 +453,28 @@ public class CourseService {
     }
 
     public List<noticeDto> getAnnouncement(Integer courseId) {
-        List<CourseAnnouncement> courseAnnouncementList = courseAnnouncementRepository.findCourseAnnouncementsByCourse(
-            courseRepository.findCourseById(courseId));
-        List<CourseAnnouncement> courseAnnouncementList1 = announcementUserRepository.findAnnouncementUsersByUuid(
-            authFunctionality.getUser()).stream().map(AnnouncementUser::getAnnouncementid).toList();
+        if(authFunctionality.getCourseAuthority(courseId).equals(AUTHORITY_TEACHER)){
+            List<CourseAnnouncement> courseAnnouncementList = courseAnnouncementRepository.findCourseAnnouncementsByCourse(
+                courseRepository.findCourseById(courseId));
+            List<noticeDto> noticeDtoList = new ArrayList<>();
+            courseAnnouncementList.forEach(a -> {
+                noticeDtoList.add(new noticeDto(a.getDescription(), a.getId(), a.getCourse(),
+                    a.getUserUuid().getId().longValue(), a.getUserUuid().getName()));
+            });
+            return noticeDtoList;
+        }else {
+            List<CourseAnnouncement> courseAnnouncementList = courseAnnouncementRepository.findCourseAnnouncementsByCourse(
+                courseRepository.findCourseById(courseId));
+            List<CourseAnnouncement> courseAnnouncementList1 = announcementUserRepository.findAnnouncementUsersByUuid(
+                authFunctionality.getUser()).stream().map(AnnouncementUser::getAnnouncementid).toList();
 
-        List<noticeDto> noticeDtoList = new ArrayList<>();
-        courseAnnouncementList.retainAll(courseAnnouncementList1);
-        courseAnnouncementList.forEach(
-            a -> noticeDtoList.add(new noticeDto(a.getDescription(), a.getId(), a.getCourse(),
-                a.getUserUuid().getId().longValue(), a.getUserUuid().getName())));
-        return noticeDtoList;
+            List<noticeDto> noticeDtoList = new ArrayList<>();
+            courseAnnouncementList.retainAll(courseAnnouncementList1);
+            courseAnnouncementList.forEach(
+                a -> noticeDtoList.add(new noticeDto(a.getDescription(), a.getId(), a.getCourse(),
+                    a.getUserUuid().getId().longValue(), a.getUserUuid().getName())));
+            return noticeDtoList;
+        }
     }
 
     public void addAnnouncement(Integer courseId, Long uuid, String description, Long[] user) {

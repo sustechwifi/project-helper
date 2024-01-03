@@ -40,10 +40,19 @@ public class CourseController {
         return str.toString();
     }
 
+    //修改通知
+    @PreAuthorize(ROLE_CHECK_TEACHER)
+    @PostMapping("/announcement/{id}/edit")
+    public Result<?> getGroup(@PathVariable("id") Integer id,
+        @RequestParam("description") String description) {
+        courseService.modifyAnnouncement(description, id);
+        return Result.ok("");
+    }
+
     //获取某个小组
     @PreAuthorize(ROLE_CHECK)
     @GetMapping("/group/{groupId}")
-    public Result<?> getGroup(@RequestParam("groupId") Integer groupId) {
+    public Result<?> getGroup(@PathVariable("groupId") Integer groupId) {
         return Result.ok(courseService.getGroup(groupId));
     }
 

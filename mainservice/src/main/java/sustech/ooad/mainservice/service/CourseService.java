@@ -495,4 +495,8 @@ public class CourseService {
             .map(a -> a.getUserUuid().getId().longValue()).toList();
         return new GroupDto(group, member);
     }
+
+    public void modifyAnnouncement(String description, Integer id) {
+        courseAnnouncementRepository.modifyAnnouncement(description, id);
+    }
 }

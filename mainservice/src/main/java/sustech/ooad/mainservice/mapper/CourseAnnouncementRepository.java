@@ -16,4 +16,9 @@ public interface CourseAnnouncementRepository extends JpaRepository<CourseAnnoun
     @Modifying
     @Query(value = "insert into course_announcement(course_id, user_uuid, description) VALUES (?1,?2,?3)", nativeQuery = true)
     void addAnnouncement(long courseId, long uuid, String description);
+
+    @Transactional(rollbackFor = Exception.class)
+    @Modifying
+    @Query(value = "update course_announcement set description=?1 where id=?2", nativeQuery = true)
+    void modifyAnnouncement(String description, Integer id);
 }

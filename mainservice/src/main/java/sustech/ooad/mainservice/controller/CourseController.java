@@ -2,12 +2,14 @@ package sustech.ooad.mainservice.controller;
 
 import jakarta.annotation.Resource;
 import java.lang.annotation.Retention;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import sustech.ooad.mainservice.mapper.AuthUserRepository;
 import sustech.ooad.mainservice.mapper.CourseAnnouncementRepository;
 import sustech.ooad.mainservice.mapper.submitRepository;
 import sustech.ooad.mainservice.model.dto.CourseInfoDto;
@@ -30,6 +32,8 @@ public class CourseController {
     CourseAnnouncementRepository courseAnnouncementRepository;
     @Autowired
     submitRepository submitRepository;
+    @Autowired
+    private AuthUserRepository authUserRepository;
 
     public String merge(String[] array) {
         StringBuilder str = new StringBuilder();
@@ -38,6 +42,13 @@ public class CourseController {
             str.append(";");
         }
         return str.toString();
+    }
+
+    //获取某个用户的信息
+    @PreAuthorize(ROLE_CHECK_TEACHER)
+    @GetMapping("/user/{uuid}/info")
+    public Result<?> getUser(@PathVariable("uuid") long uuid) {
+        return Result.ok(authUserRepository.findAuthUserById(new BigDecimal(uuid)));
     }
 
     //获取课程所有学生和sa
@@ -158,7 +169,7 @@ public class CourseController {
             return Result.err(ACCESS_COURSE_DENIED, "无法进入课程");
         }
         long uuid = authFunctionality.getUser().getId().longValue();
-        courseService.addAnnouncement(courseId, uuid, description,user);
+        courseService.addAnnouncement(courseId, uuid, description, user);
         return Result.ok("");
     }
 

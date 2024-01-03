@@ -170,7 +170,7 @@ public class CourseService {
         Integer courseId, String state, long uuid) {
         courseRepository.addProject(projectName, courseId, ddl, state, description, attachment);
         homeworkRepository.addHomework(projectName + " final submit", ";",
-            "This is " + projectName + " final submit", null, courseId, 1, uuid);
+            "This is " + projectName + " final submit", ddl, courseId, 1, uuid);
         Integer homeworkId = homeworkRepository.findHomeworkByName(projectName + " final submit")
             .getId();
         Integer projectId = projectRepository.findByCourseAndName(

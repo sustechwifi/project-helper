@@ -17,4 +17,8 @@ public interface GradeRepository extends JpaRepository<Grade, GradeId> {
 
     Grade findGradeByHomeworkid(Homework homework);
 
+    @Transactional(rollbackFor = Exception.class)
+    @Modifying
+    @Query(value = "update grade set url=?1 where homeworkid=?2", nativeQuery = true)
+    void modifyGrade(String url, Integer homeworkId);
 }

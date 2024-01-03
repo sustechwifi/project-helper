@@ -506,7 +506,13 @@ public class CourseService {
     }
 
     public void addGrade(String url, Integer homeworkId) {
-        gradeRepository.addGrade(homeworkId, url);
+        Grade grade=gradeRepository.findGradeByHomeworkid(homeworkRepository.findHomeworkById(homeworkId));
+        if(grade==null){
+            gradeRepository.addGrade(homeworkId, url);
+        }else {
+            gradeRepository.modifyGrade(url, homeworkId);
+        }
+
     }
 
     public List<submitDto> getOwnSubmit() {

@@ -40,6 +40,13 @@ public class CourseController {
         return str.toString();
     }
 
+    //获取课程所有学生和sa
+    @PreAuthorize(ROLE_CHECK_TEACHER)
+    @GetMapping("/{courseId}/member")
+    public Result<?> getCourseUser(@PathVariable("courseId") Integer id) {
+        return Result.ok(courseService.getCourseUser(id));
+    }
+
     //修改通知
     @PreAuthorize(ROLE_CHECK_TEACHER)
     @PostMapping("/announcement/{id}/edit")
@@ -145,13 +152,13 @@ public class CourseController {
     @PreAuthorize(ROLE_CHECK)
     @PostMapping("/{courseId}/announcement/post")
     public Result<?> addAnnouncement(@PathVariable("courseId") Integer courseId,
-        @RequestParam("content") String description) {
+        @RequestParam("content") String description, @RequestParam("user") Long[] user) {
         boolean inCourse = authFunctionality.inCourse(courseId);
         if (!inCourse) {
             return Result.err(ACCESS_COURSE_DENIED, "无法进入课程");
         }
         long uuid = authFunctionality.getUser().getId().longValue();
-        courseService.addAnnouncement(courseId, uuid, description);
+        courseService.addAnnouncement(courseId, uuid, description,user);
         return Result.ok("");
     }
 

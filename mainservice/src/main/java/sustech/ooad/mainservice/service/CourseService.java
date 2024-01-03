@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import sustech.ooad.mainservice.mapper.AnnouncementUserRepository;
 import sustech.ooad.mainservice.mapper.AuthUserMapper;
 import sustech.ooad.mainservice.mapper.AuthUserRepository;
 import sustech.ooad.mainservice.mapper.CourseAnnouncementRepository;
@@ -26,6 +27,7 @@ import sustech.ooad.mainservice.mapper.TaskRepository;
 import sustech.ooad.mainservice.mapper.UserprojectRepository;
 import sustech.ooad.mainservice.mapper.submitRepository;
 import sustech.ooad.mainservice.mapper.ProjectRepository;
+import sustech.ooad.mainservice.model.AnnouncementUser;
 import sustech.ooad.mainservice.model.AuthUser;
 import sustech.ooad.mainservice.model.Course;
 import sustech.ooad.mainservice.model.CourseAnnouncement;
@@ -50,9 +52,11 @@ import sustech.ooad.mainservice.model.dto.noticeDto;
 import sustech.ooad.mainservice.model.dto.submitDto;
 import sustech.ooad.mainservice.model.dto.taskDto;
 import sustech.ooad.mainservice.model.Project;
+import sustech.ooad.mainservice.model.dto.userDto;
 import sustech.ooad.mainservice.util.auth.AuthFunctionality;
 
 import static sustech.ooad.mainservice.util.ConstantField.AUTHORITY_SA;
+import static sustech.ooad.mainservice.util.ConstantField.AUTHORITY_STUDENT;
 import static sustech.ooad.mainservice.util.ConstantField.AUTHORITY_TEACHER;
 import static sustech.ooad.mainservice.util.ConstantField.USER_COURSES;
 
@@ -100,6 +104,8 @@ public class CourseService {
     private UserprojectRepository userprojectRepository;
     @Autowired
     private GradeRepository gradeRepository;
+    @Autowired
+    private AnnouncementUserRepository announcementUserRepository;
 
     private void deleteCache(long uid) {
         // 清除缓存
@@ -449,16 +455,23 @@ public class CourseService {
     public List<noticeDto> getAnnouncement(Integer courseId) {
         List<CourseAnnouncement> courseAnnouncementList = courseAnnouncementRepository.findCourseAnnouncementsByCourse(
             courseRepository.findCourseById(courseId));
+        List<CourseAnnouncement> courseAnnouncementList1 = announcementUserRepository.findAnnouncementUsersByUuid(
+            authFunctionality.getUser()).stream().map(AnnouncementUser::getAnnouncementid).toList();
+
         List<noticeDto> noticeDtoList = new ArrayList<>();
-        courseAnnouncementList.forEach(a -> {
-            noticeDtoList.add(new noticeDto(a.getDescription(), a.getId(), a.getCourse(),
-                a.getUserUuid().getId().longValue(), a.getUserUuid().getName()));
-        });
+        courseAnnouncementList.retainAll(courseAnnouncementList1);
+        courseAnnouncementList.forEach(
+            a -> noticeDtoList.add(new noticeDto(a.getDescription(), a.getId(), a.getCourse(),
+                a.getUserUuid().getId().longValue(), a.getUserUuid().getName())));
         return noticeDtoList;
     }
 
-    public void addAnnouncement(Integer courseId, Long uuid, String description) {
+    public void addAnnouncement(Integer courseId, Long uuid, String description, Long[] user) {
         courseAnnouncementRepository.addAnnouncement(courseId, uuid, description);
+        CourseAnnouncement latest = courseAnnouncementRepository.findLatestAnnouncement();
+        for (Long i : user) {
+            announcementUserRepository.addAnnouncementUser(latest.getId(), i);
+        }
     }
 
     public void deleteHomework(Integer id) {
@@ -498,5 +511,20 @@ public class CourseService {
 
     public void modifyAnnouncement(String description, Integer id) {
         courseAnnouncementRepository.modifyAnnouncement(description, id);
+    }
+
+    public List<userDto> getCourseUser(Integer courseId) {
+        List<userDto> userDtoList = new ArrayList<>();
+        courseAuthorityRepository.findCourseAuthoritiesByCourseIdAndCourseAuthority(courseId,
+            AUTHORITY_STUDENT).forEach(a -> {
+            userDtoList.add(new userDto(a.getUserId(),
+                authUserRepository.findAuthUserById(new BigDecimal(a.getUserId())).getName()));
+        });
+        courseAuthorityRepository.findCourseAuthoritiesByCourseIdAndCourseAuthority(courseId,
+            AUTHORITY_SA).forEach(a -> {
+            userDtoList.add(new userDto(a.getUserId(),
+                authUserRepository.findAuthUserById(new BigDecimal(a.getUserId())).getName()));
+        });
+        return userDtoList;
     }
 }

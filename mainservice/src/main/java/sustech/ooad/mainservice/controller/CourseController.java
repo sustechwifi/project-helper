@@ -2,12 +2,14 @@ package sustech.ooad.mainservice.controller;
 
 import jakarta.annotation.Resource;
 import java.lang.annotation.Retention;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import sustech.ooad.mainservice.mapper.AuthUserRepository;
 import sustech.ooad.mainservice.mapper.CourseAnnouncementRepository;
 import sustech.ooad.mainservice.mapper.submitRepository;
 import sustech.ooad.mainservice.model.dto.CourseInfoDto;
@@ -30,6 +32,8 @@ public class CourseController {
     CourseAnnouncementRepository courseAnnouncementRepository;
     @Autowired
     submitRepository submitRepository;
+    @Autowired
+    private AuthUserRepository authUserRepository;
 
     public String merge(String[] array) {
         StringBuilder str = new StringBuilder();
@@ -38,6 +42,75 @@ public class CourseController {
             str.append(";");
         }
         return str.toString();
+    }
+
+    //获取课程所有老师
+    @PreAuthorize(ROLE_CHECK)
+    @GetMapping("/{courseId}/teacher")
+    public Result<?> getCourseTeacher(@PathVariable("courseId") Integer courseId) {
+        return Result.ok(courseService.getCourseTeacher(courseId));
+    }
+
+    //获取某个用户的信息
+    @PreAuthorize(ROLE_CHECK)
+    @GetMapping("/user/{uuid}/info")
+    public Result<?> getUser(@PathVariable("uuid") long uuid) {
+        return Result.ok(authUserRepository.findAuthUserById(new BigDecimal(uuid)));
+    }
+
+    //获取课程所有学生和sa
+    @PreAuthorize(ROLE_CHECK_TEACHER)
+    @GetMapping("/{courseId}/member")
+    public Result<?> getCourseUser(@PathVariable("courseId") Integer id) {
+        return Result.ok(courseService.getCourseUser(id));
+    }
+
+    //修改通知
+    @PreAuthorize(ROLE_CHECK_TEACHER)
+    @PostMapping("/announcement/{id}/edit")
+    public Result<?> getGroup(@PathVariable("id") Integer id,
+        @RequestParam("description") String description) {
+        courseService.modifyAnnouncement(description, id);
+        return Result.ok("");
+    }
+
+    //获取某个小组
+    @PreAuthorize(ROLE_CHECK)
+    @GetMapping("/group/{groupId}")
+    public Result<?> getGroup(@PathVariable("groupId") Integer groupId) {
+        return Result.ok(courseService.getGroup(groupId));
+    }
+
+    //获取学生的提交
+    @PreAuthorize(ROLE_CHECK)
+    @GetMapping("/user/submit")
+    public Result<?> getOwnSubmit() {
+        return Result.ok(courseService.getOwnSubmit());
+    }
+
+    //添加成绩册
+    @PreAuthorize(ROLE_CHECK_TEACHER)
+    @PostMapping("/{courseId}/assignment/{assignmentId}/grade/add")
+    public Result<?> addGrade(@PathVariable("courseId") Integer courseId,
+        @PathVariable("assignmentId") Integer homeworkId, @RequestParam("url") String[] url) {
+        boolean valid = authFunctionality.inCourse(courseId);
+        if (!valid) {
+            return Result.err(ACCESS_COURSE_DENIED, "无法进入课程");
+        }
+        courseService.addGrade(merge(url), homeworkId);
+        return Result.ok("");
+    }
+
+    //获得某个作业的成绩册
+    @PreAuthorize(ROLE_CHECK_TEACHER)
+    @GetMapping("/{courseId}/assignment/{assignmentId}/grade/get")
+    public Result<?> getGrade(@PathVariable("courseId") Integer courseId,
+        @PathVariable("assignmentId") Integer homeworkId) {
+        boolean valid = authFunctionality.inCourse(courseId);
+        if (!valid) {
+            return Result.err(ACCESS_COURSE_DENIED, "无法进入课程");
+        }
+        return Result.ok(courseService.getGrade(homeworkId));
     }
 
     //删除课程作业
@@ -97,13 +170,13 @@ public class CourseController {
     @PreAuthorize(ROLE_CHECK)
     @PostMapping("/{courseId}/announcement/post")
     public Result<?> addAnnouncement(@PathVariable("courseId") Integer courseId,
-        @RequestParam("content") String description) {
+        @RequestParam("content") String description, @RequestParam("user") Long[] user) {
         boolean inCourse = authFunctionality.inCourse(courseId);
         if (!inCourse) {
             return Result.err(ACCESS_COURSE_DENIED, "无法进入课程");
         }
         long uuid = authFunctionality.getUser().getId().longValue();
-        courseService.addAnnouncement(courseId, uuid, description);
+        courseService.addAnnouncement(courseId, uuid, description, user);
         return Result.ok("");
     }
 
@@ -323,12 +396,14 @@ public class CourseController {
         @PathVariable("groupId") Integer groupId, @RequestParam("groupName") String name,
         @RequestParam("groupMemberID") Long[] member,
         @RequestParam("inspectorID") Long teacherId, @RequestParam("preTime") String preTime,
-        @RequestParam("groupSize") Integer capacity, @RequestParam("ddl") String ddl) {
+        @RequestParam("groupSize") Integer capacity, @RequestParam("ddl") String ddl,
+        @RequestParam("introduction") String introduction) {
         boolean valid = authFunctionality.inCourse(courseId);
         if (!valid) {
             return Result.err(ACCESS_COURSE_DENIED, "无法访问此课程");
         }
-        courseService.modifyGroup(name, groupId, member, teacherId, preTime, capacity,ddl);
+        courseService.modifyGroup(name, groupId, member, teacherId, preTime, capacity, ddl,
+            introduction);
         return Result.ok("");
     }
 
@@ -349,12 +424,14 @@ public class CourseController {
     public Result<?> addCourseGroup(@PathVariable("courseId") long courseId,
         @PathVariable("projectId") Integer projectId, @RequestParam("groupName") String name,
         @RequestParam("inspectorID") Long teacherId, @RequestParam("preTime") String preTime,
-        @RequestParam("groupSize") Integer capacity) {
+        @RequestParam("groupSize") Integer capacity,
+        @RequestParam("introduction") String introduction) {
         boolean valid = authFunctionality.inCourse(courseId);
         if (!valid) {
             return Result.err(ACCESS_COURSE_DENIED, "无法访问此课程");
         }
-        courseService.addCourseGroup((int) courseId, name, projectId, teacherId, preTime, capacity);
+        courseService.addCourseGroup((int) courseId, name, projectId, teacherId, preTime, capacity,
+            introduction);
         return Result.ok("");
     }
 

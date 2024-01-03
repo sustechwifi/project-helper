@@ -9,12 +9,14 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import sustech.ooad.mainservice.mapper.AnnouncementUserRepository;
 import sustech.ooad.mainservice.mapper.AuthUserMapper;
 import sustech.ooad.mainservice.mapper.AuthUserRepository;
 import sustech.ooad.mainservice.mapper.CourseAnnouncementRepository;
 import sustech.ooad.mainservice.mapper.CourseAuthorityMapper;
 import sustech.ooad.mainservice.mapper.CourseAuthorityRepository;
 import sustech.ooad.mainservice.mapper.CourseRepository;
+import sustech.ooad.mainservice.mapper.GradeRepository;
 import sustech.ooad.mainservice.mapper.GroupMemberListRepository;
 import sustech.ooad.mainservice.mapper.GroupProjectRepository;
 import sustech.ooad.mainservice.mapper.GroupRepository;
@@ -25,10 +27,12 @@ import sustech.ooad.mainservice.mapper.TaskRepository;
 import sustech.ooad.mainservice.mapper.UserprojectRepository;
 import sustech.ooad.mainservice.mapper.submitRepository;
 import sustech.ooad.mainservice.mapper.ProjectRepository;
+import sustech.ooad.mainservice.model.AnnouncementUser;
 import sustech.ooad.mainservice.model.AuthUser;
 import sustech.ooad.mainservice.model.Course;
 import sustech.ooad.mainservice.model.CourseAnnouncement;
 import sustech.ooad.mainservice.model.CourseAuthority;
+import sustech.ooad.mainservice.model.Grade;
 import sustech.ooad.mainservice.model.Group;
 import sustech.ooad.mainservice.model.GroupMemberList;
 import sustech.ooad.mainservice.model.GroupProject;
@@ -43,13 +47,16 @@ import sustech.ooad.mainservice.model.dto.GroupDto;
 import sustech.ooad.mainservice.model.dto.HomeworkDto;
 import sustech.ooad.mainservice.model.dto.ProjectDto;
 import sustech.ooad.mainservice.model.dto.attachment;
+import sustech.ooad.mainservice.model.dto.gradeDto;
 import sustech.ooad.mainservice.model.dto.noticeDto;
 import sustech.ooad.mainservice.model.dto.submitDto;
 import sustech.ooad.mainservice.model.dto.taskDto;
 import sustech.ooad.mainservice.model.Project;
+import sustech.ooad.mainservice.model.dto.userDto;
 import sustech.ooad.mainservice.util.auth.AuthFunctionality;
 
 import static sustech.ooad.mainservice.util.ConstantField.AUTHORITY_SA;
+import static sustech.ooad.mainservice.util.ConstantField.AUTHORITY_STUDENT;
 import static sustech.ooad.mainservice.util.ConstantField.AUTHORITY_TEACHER;
 import static sustech.ooad.mainservice.util.ConstantField.USER_COURSES;
 
@@ -95,6 +102,10 @@ public class CourseService {
     private CourseAnnouncementRepository courseAnnouncementRepository;
     @Autowired
     private UserprojectRepository userprojectRepository;
+    @Autowired
+    private GradeRepository gradeRepository;
+    @Autowired
+    private AnnouncementUserRepository announcementUserRepository;
 
     private void deleteCache(long uid) {
         // 清除缓存
@@ -195,7 +206,9 @@ public class CourseService {
         homeworkRepository.modifyHomework(name, attachment, description, ddl, homeworkId);
         Project project = projectRepository.findProjectByHomeworkid(
             homeworkRepository.findHomeworkById(homeworkId));
-        projectRepository.modifyddl(ddl, project.getId());
+        if (project != null) {
+            projectRepository.modifyddl(ddl, project.getId());
+        }
     }
 
     public ProjectDto getProject(Integer id) {
@@ -233,8 +246,8 @@ public class CourseService {
     }
 
     public void addCourseGroup(Integer courseId, String name, Integer projectId, Long teacherId,
-        String preTime, Integer capacity) {
-        groupRepository.addGroup(name, courseId, teacherId, preTime, capacity);
+        String preTime, Integer capacity,String introduction) {
+        groupRepository.addGroup(name, courseId, teacherId, preTime, capacity,introduction);
         Integer groupId = groupRepository.findGroupByNameAndCourse(name,
             courseRepository.findCourseById(courseId)).getId();
         groupProjectRepository.add(groupId, projectId);
@@ -255,8 +268,8 @@ public class CourseService {
     }
 
     public void modifyGroup(String name, Integer groupId, Long[] member, Long teacherId,
-        String preTime, Integer capacity, String ddl) {
-        groupRepository.modifyGroup(name, teacherId, preTime, capacity, groupId, ddl);
+        String preTime, Integer capacity, String ddl,String introduction) {
+        groupRepository.modifyGroup(name, teacherId, preTime, capacity, groupId, ddl,introduction);
         groupMemberListRepository.deleteGroupMemberListsByGroup(
             groupRepository.findGroupById(groupId));
         for (Long i : member) {
@@ -442,18 +455,37 @@ public class CourseService {
     }
 
     public List<noticeDto> getAnnouncement(Integer courseId) {
-        List<CourseAnnouncement> courseAnnouncementList = courseAnnouncementRepository.findCourseAnnouncementsByCourse(
-            courseRepository.findCourseById(courseId));
-        List<noticeDto> noticeDtoList = new ArrayList<>();
-        courseAnnouncementList.forEach(a -> {
-            noticeDtoList.add(new noticeDto(a.getDescription(), a.getId(), a.getCourse(),
-                a.getUserUuid().getId().longValue(), a.getUserUuid().getName()));
-        });
-        return noticeDtoList;
+        if (authFunctionality.getCourseAuthority(courseId).equals(AUTHORITY_TEACHER)) {
+            List<CourseAnnouncement> courseAnnouncementList = courseAnnouncementRepository.findCourseAnnouncementsByCourse(
+                courseRepository.findCourseById(courseId));
+            List<noticeDto> noticeDtoList = new ArrayList<>();
+            courseAnnouncementList.forEach(a -> {
+                noticeDtoList.add(new noticeDto(a.getDescription(), a.getId(), a.getCourse(),
+                    a.getUserUuid().getId().longValue(), a.getUserUuid().getName()));
+            });
+            return noticeDtoList;
+        } else {
+            List<CourseAnnouncement> courseAnnouncementList = courseAnnouncementRepository.findCourseAnnouncementsByCourse(
+                courseRepository.findCourseById(courseId));
+            List<CourseAnnouncement> courseAnnouncementList1 = announcementUserRepository.findAnnouncementUsersByUuid(
+                    authFunctionality.getUser()).stream().map(AnnouncementUser::getAnnouncementid)
+                .toList();
+
+            List<noticeDto> noticeDtoList = new ArrayList<>();
+            courseAnnouncementList.retainAll(courseAnnouncementList1);
+            courseAnnouncementList.forEach(
+                a -> noticeDtoList.add(new noticeDto(a.getDescription(), a.getId(), a.getCourse(),
+                    a.getUserUuid().getId().longValue(), a.getUserUuid().getName())));
+            return noticeDtoList;
+        }
     }
 
-    public void addAnnouncement(Integer courseId, Long uuid, String description) {
+    public void addAnnouncement(Integer courseId, Long uuid, String description, Long[] user) {
         courseAnnouncementRepository.addAnnouncement(courseId, uuid, description);
+        CourseAnnouncement latest = courseAnnouncementRepository.findLatestAnnouncement();
+        for (Long i : user) {
+            announcementUserRepository.addAnnouncementUser(latest.getId(), i);
+        }
     }
 
     public void deleteHomework(Integer id) {
@@ -462,5 +494,60 @@ public class CourseService {
 
     public void deleteProject(Integer id) {
         projectRepository.deleteProjectById(id);
+    }
+
+    public gradeDto getGrade(Integer homeworkId) {
+        Grade grade = gradeRepository.findGradeByHomeworkid(
+            homeworkRepository.findHomeworkById(homeworkId));
+        return new gradeDto(grade, attachment.divide(grade.getId().getUrl()));
+    }
+
+    public void addGrade(String url, Integer homeworkId) {
+        gradeRepository.addGrade(homeworkId, url);
+    }
+
+    public List<submitDto> getOwnSubmit() {
+        List<submitDto> submitDtoList = new ArrayList<>();
+        submitRepository.findSubmitsByUserUuid(authFunctionality.getUser()).forEach(a -> {
+            submitDtoList.add(new submitDto(a, attachment.divide(a.getAttachment())));
+        });
+        return submitDtoList;
+    }
+
+    public GroupDto getGroup(Integer id) {
+        Group group = groupRepository.findGroupById(id);
+        List<GroupMemberList> groupMemberList = groupMemberListRepository.findGroupMemberListsByGroup(
+            group);
+        List<Long> member = groupMemberList.stream()
+            .map(a -> a.getUserUuid().getId().longValue()).toList();
+        return new GroupDto(group, member);
+    }
+
+    public void modifyAnnouncement(String description, Integer id) {
+        courseAnnouncementRepository.modifyAnnouncement(description, id);
+    }
+
+    public List<userDto> getCourseUser(Integer courseId) {
+        List<userDto> userDtoList = new ArrayList<>();
+        courseAuthorityRepository.findCourseAuthoritiesByCourseIdAndCourseAuthority(courseId,
+            AUTHORITY_STUDENT).forEach(a -> {
+            userDtoList.add(new userDto(a.getUserId(),
+                authUserRepository.findAuthUserById(new BigDecimal(a.getUserId())).getName()));
+        });
+        courseAuthorityRepository.findCourseAuthoritiesByCourseIdAndCourseAuthority(courseId,
+            AUTHORITY_SA).forEach(a -> {
+            userDtoList.add(new userDto(a.getUserId(),
+                authUserRepository.findAuthUserById(new BigDecimal(a.getUserId())).getName()));
+        });
+        return userDtoList;
+    }
+    public List<userDto> getCourseTeacher(Integer courseId){
+        List<userDto> userDtoList = new ArrayList<>();
+        courseAuthorityRepository.findCourseAuthoritiesByCourseIdAndCourseAuthority(courseId,
+            AUTHORITY_TEACHER).forEach(a -> {
+            userDtoList.add(new userDto(a.getUserId(),
+                authUserRepository.findAuthUserById(new BigDecimal(a.getUserId())).getName()));
+        });
+        return userDtoList;
     }
 }

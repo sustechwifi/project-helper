@@ -541,4 +541,13 @@ public class CourseService {
         });
         return userDtoList;
     }
+    public List<userDto> getCourseTeacher(Integer courseId){
+        List<userDto> userDtoList = new ArrayList<>();
+        courseAuthorityRepository.findCourseAuthoritiesByCourseIdAndCourseAuthority(courseId,
+            AUTHORITY_TEACHER).forEach(a -> {
+            userDtoList.add(new userDto(a.getUserId(),
+                authUserRepository.findAuthUserById(new BigDecimal(a.getUserId())).getName()));
+        });
+        return userDtoList;
+    }
 }

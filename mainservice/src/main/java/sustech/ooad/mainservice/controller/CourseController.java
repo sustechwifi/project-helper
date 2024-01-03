@@ -44,6 +44,13 @@ public class CourseController {
         return str.toString();
     }
 
+    //获取课程所有老师
+    @PreAuthorize(ROLE_CHECK)
+    @GetMapping("/{courseId}/teacher}")
+    public Result<?> getCourseTeacher(@PathVariable("courseId") Integer courseId) {
+        return Result.ok(courseService.getCourseTeacher(courseId));
+    }
+
     //获取某个用户的信息
     @PreAuthorize(ROLE_CHECK)
     @GetMapping("/user/{uuid}/info")
@@ -395,7 +402,8 @@ public class CourseController {
         if (!valid) {
             return Result.err(ACCESS_COURSE_DENIED, "无法访问此课程");
         }
-        courseService.modifyGroup(name, groupId, member, teacherId, preTime, capacity, ddl,introduction);
+        courseService.modifyGroup(name, groupId, member, teacherId, preTime, capacity, ddl,
+            introduction);
         return Result.ok("");
     }
 
@@ -422,7 +430,8 @@ public class CourseController {
         if (!valid) {
             return Result.err(ACCESS_COURSE_DENIED, "无法访问此课程");
         }
-        courseService.addCourseGroup((int) courseId, name, projectId, teacherId, preTime, capacity,introduction);
+        courseService.addCourseGroup((int) courseId, name, projectId, teacherId, preTime, capacity,
+            introduction);
         return Result.ok("");
     }
 

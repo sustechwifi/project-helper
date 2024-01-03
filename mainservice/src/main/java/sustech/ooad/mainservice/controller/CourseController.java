@@ -44,6 +44,26 @@ public class CourseController {
         return str.toString();
     }
 
+    //获取当前用户在某个作业的提交
+    @PreAuthorize(ROLE_CHECK)
+    @GetMapping("/assignment/{assignmentId}/submit")
+    public Result<?> getOwnHomeworkSubmit(@PathVariable("assignmentId") Integer homeworkId) {
+        return Result.ok(courseService.getOwnHomeworkSubmit(homeworkId));
+    }
+
+    //获取小组在某个作业的提交
+    @PreAuthorize(ROLE_CHECK)
+    @GetMapping("/assignment/{assignmentId}/group/{groupId}/submit")
+    public Result<?> getGroupHomeworkSubmit(@PathVariable("assignmentId") Integer homeworkId,
+        @PathVariable("groupId") Integer groupId) {
+        boolean valid = courseService.inGroup(authFunctionality.getUser().getId().longValue(),
+            groupId);
+        if (!valid) {
+            return Result.err(ACCESS_DENIED, "你不是该小组的成员");
+        }
+        return Result.ok(courseService.getGroupSubmit(homeworkId, groupId));
+    }
+
     //获取课程所有老师
     @PreAuthorize(ROLE_CHECK)
     @GetMapping("/{courseId}/teacher")
@@ -59,7 +79,7 @@ public class CourseController {
     }
 
     //获取课程所有学生和sa
-    @PreAuthorize(ROLE_CHECK_TEACHER)
+    @PreAuthorize(ROLE_CHECK)
     @GetMapping("/{courseId}/member")
     public Result<?> getCourseUser(@PathVariable("courseId") Integer id) {
         return Result.ok(courseService.getCourseUser(id));

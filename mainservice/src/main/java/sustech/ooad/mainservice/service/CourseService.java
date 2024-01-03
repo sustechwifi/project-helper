@@ -246,8 +246,8 @@ public class CourseService {
     }
 
     public void addCourseGroup(Integer courseId, String name, Integer projectId, Long teacherId,
-        String preTime, Integer capacity,String introduction) {
-        groupRepository.addGroup(name, courseId, teacherId, preTime, capacity,introduction);
+        String preTime, Integer capacity, String introduction) {
+        groupRepository.addGroup(name, courseId, teacherId, preTime, capacity, introduction);
         Integer groupId = groupRepository.findGroupByNameAndCourse(name,
             courseRepository.findCourseById(courseId)).getId();
         groupProjectRepository.add(groupId, projectId);
@@ -268,8 +268,8 @@ public class CourseService {
     }
 
     public void modifyGroup(String name, Integer groupId, Long[] member, Long teacherId,
-        String preTime, Integer capacity, String ddl,String introduction) {
-        groupRepository.modifyGroup(name, teacherId, preTime, capacity, groupId, ddl,introduction);
+        String preTime, Integer capacity, String ddl, String introduction) {
+        groupRepository.modifyGroup(name, teacherId, preTime, capacity, groupId, ddl, introduction);
         groupMemberListRepository.deleteGroupMemberListsByGroup(
             groupRepository.findGroupById(groupId));
         for (Long i : member) {
@@ -541,7 +541,8 @@ public class CourseService {
         });
         return userDtoList;
     }
-    public List<userDto> getCourseTeacher(Integer courseId){
+
+    public List<userDto> getCourseTeacher(Integer courseId) {
         List<userDto> userDtoList = new ArrayList<>();
         courseAuthorityRepository.findCourseAuthoritiesByCourseIdAndCourseAuthority(courseId,
             AUTHORITY_TEACHER).forEach(a -> {
@@ -549,5 +550,23 @@ public class CourseService {
                 authUserRepository.findAuthUserById(new BigDecimal(a.getUserId())).getName()));
         });
         return userDtoList;
+    }
+
+    public List<submitDto> getGroupSubmit(Integer homeworkId, Integer groupId) {
+        List<submitDto> submitDtoList = new ArrayList<>();
+        submitRepository.findSubmitsByHomeworkAndGroupid(
+                homeworkRepository.findHomeworkById(homeworkId), groupRepository.findGroupById(groupId))
+            .forEach(
+                a -> submitDtoList.add(new submitDto(a, attachment.divide(a.getAttachment()))));
+        return submitDtoList;
+    }
+
+    public List<submitDto> getOwnHomeworkSubmit(Integer homeworkId) {
+        List<submitDto> submitDtoList = new ArrayList<>();
+        submitRepository.findSubmitsByHomeworkAndUserUuid(
+                homeworkRepository.findHomeworkById(homeworkId), authFunctionality.getUser())
+            .forEach(
+                a -> submitDtoList.add(new submitDto(a, attachment.divide(a.getAttachment()))));
+        return submitDtoList;
     }
 }

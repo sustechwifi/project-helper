@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 import sustech.ooad.mainservice.model.AuthUser;
+import sustech.ooad.mainservice.model.Group;
 import sustech.ooad.mainservice.model.Homework;
 import sustech.ooad.mainservice.model.Submit;
 
@@ -35,4 +36,8 @@ public interface submitRepository extends JpaRepository<Submit, Integer> {
     void deleteSubmitById(Integer id);
 
     List<Submit> findSubmitsByUserUuid(AuthUser user);
+
+    List<Submit> findSubmitsByHomeworkAndGroupid(Homework homework, Group group);
+
+    List<Submit> findSubmitsByHomeworkAndUserUuid(Homework homework,AuthUser user);
 }

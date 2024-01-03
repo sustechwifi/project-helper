@@ -478,4 +478,21 @@ public class CourseService {
     public void addGrade(String url, Integer homeworkId) {
         gradeRepository.addGrade(homeworkId, url);
     }
+
+    public List<submitDto> getOwnSubmit() {
+        List<submitDto> submitDtoList = new ArrayList<>();
+        submitRepository.findSubmitsByUserUuid(authFunctionality.getUser()).forEach(a -> {
+            submitDtoList.add(new submitDto(a, attachment.divide(a.getAttachment())));
+        });
+        return submitDtoList;
+    }
+
+    public GroupDto getGroup(Integer id) {
+        Group group = groupRepository.findGroupById(id);
+        List<GroupMemberList> groupMemberList = groupMemberListRepository.findGroupMemberListsByGroup(
+            group);
+        List<Long> member = groupMemberList.stream()
+            .map(a -> a.getUserUuid().getId().longValue()).toList();
+        return new GroupDto(group, member);
+    }
 }

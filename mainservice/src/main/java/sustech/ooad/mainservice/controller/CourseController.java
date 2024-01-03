@@ -40,6 +40,20 @@ public class CourseController {
         return str.toString();
     }
 
+    //获取某个小组
+    @PreAuthorize(ROLE_CHECK)
+    @GetMapping("/group/{groupId}")
+    public Result<?> getGroup(@RequestParam("groupId") Integer groupId) {
+        return Result.ok(courseService.getGroup(groupId));
+    }
+
+    //获取学生的提交
+    @PreAuthorize(ROLE_CHECK)
+    @GetMapping("/user/submit")
+    public Result<?> getOwnSubmit() {
+        return Result.ok(courseService.getOwnSubmit());
+    }
+
     //添加成绩册
     @PreAuthorize(ROLE_CHECK_TEACHER)
     @PostMapping("/{courseId}/assignment/{assignmentId}/grade/add")

@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
+import sustech.ooad.mainservice.model.AuthUser;
 import sustech.ooad.mainservice.model.Homework;
 import sustech.ooad.mainservice.model.Submit;
 
@@ -32,4 +33,6 @@ public interface submitRepository extends JpaRepository<Submit, Integer> {
     @Transactional(rollbackFor = Exception.class)
     @Modifying
     void deleteSubmitById(Integer id);
+
+    List<Submit> findSubmitsByUserUuid(AuthUser user);
 }

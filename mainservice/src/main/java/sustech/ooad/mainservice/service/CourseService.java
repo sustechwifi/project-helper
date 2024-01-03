@@ -499,6 +499,9 @@ public class CourseService {
     public gradeDto getGrade(Integer homeworkId) {
         Grade grade = gradeRepository.findGradeByHomeworkid(
             homeworkRepository.findHomeworkById(homeworkId));
+        if (grade == null) {
+            return new gradeDto();
+        }
         return new gradeDto(grade, attachment.divide(grade.getId().getUrl()));
     }
 

@@ -246,8 +246,8 @@ public class CourseService {
     }
 
     public void addCourseGroup(Integer courseId, String name, Integer projectId, Long teacherId,
-        String preTime, Integer capacity) {
-        groupRepository.addGroup(name, courseId, teacherId, preTime, capacity);
+        String preTime, Integer capacity,String introduction) {
+        groupRepository.addGroup(name, courseId, teacherId, preTime, capacity,introduction);
         Integer groupId = groupRepository.findGroupByNameAndCourse(name,
             courseRepository.findCourseById(courseId)).getId();
         groupProjectRepository.add(groupId, projectId);
@@ -268,8 +268,8 @@ public class CourseService {
     }
 
     public void modifyGroup(String name, Integer groupId, Long[] member, Long teacherId,
-        String preTime, Integer capacity, String ddl) {
-        groupRepository.modifyGroup(name, teacherId, preTime, capacity, groupId, ddl);
+        String preTime, Integer capacity, String ddl,String introduction) {
+        groupRepository.modifyGroup(name, teacherId, preTime, capacity, groupId, ddl,introduction);
         groupMemberListRepository.deleteGroupMemberListsByGroup(
             groupRepository.findGroupById(groupId));
         for (Long i : member) {

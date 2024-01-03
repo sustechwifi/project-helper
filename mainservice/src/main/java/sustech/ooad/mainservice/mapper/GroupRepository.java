@@ -12,16 +12,17 @@ public interface GroupRepository extends JpaRepository<Group, Integer> {
 
     @Transactional(rollbackFor = Exception.class)
     @Modifying
-    @Query(value = "insert into \"group\" (name,course_id,teacher_uuid,pre_time,capacity) values (?1,?2,?3,?4,?5);", nativeQuery = true)
+    @Query(value = "insert into \"group\" (name,course_id,teacher_uuid,pre_time,capacity,introduction) values (?1,?2,?3,?4,?5,?6);", nativeQuery = true)
     int addGroup(String name, Integer courseId, Long uuid, String preTime,
-        Integer capacity);
+        Integer capacity, String introduction);
 
     List<Group> findGroupsByCourse(Course course);
 
     @Transactional(rollbackFor = Exception.class)
     @Modifying
-    @Query(value = "update \"group\" set name=?1,teacher_uuid=?2,pre_time=?3,capacity=?4,ddl=?6 where id=?5", nativeQuery = true)
-    int modifyGroup(String name, Long uuid, String preTime, Integer capacity, Integer groupId,String ddl);
+    @Query(value = "update \"group\" set name=?1,teacher_uuid=?2,pre_time=?3,capacity=?4,ddl=?6,introduction=?7 where id=?5", nativeQuery = true)
+    int modifyGroup(String name, Long uuid, String preTime, Integer capacity, Integer groupId,
+        String ddl, String introduction);
 
     Group findGroupById(Integer id);
 

@@ -42,4 +42,7 @@ public class Group {
     @Column(name = "ddl", length = Integer.MAX_VALUE)
     private String ddl;
 
+    @Column(name = "introduction", length = Integer.MAX_VALUE)
+    private String introduction;
+
 }

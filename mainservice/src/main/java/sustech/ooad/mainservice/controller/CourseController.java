@@ -389,12 +389,13 @@ public class CourseController {
         @PathVariable("groupId") Integer groupId, @RequestParam("groupName") String name,
         @RequestParam("groupMemberID") Long[] member,
         @RequestParam("inspectorID") Long teacherId, @RequestParam("preTime") String preTime,
-        @RequestParam("groupSize") Integer capacity, @RequestParam("ddl") String ddl) {
+        @RequestParam("groupSize") Integer capacity, @RequestParam("ddl") String ddl,
+        @RequestParam("introduction") String introduction) {
         boolean valid = authFunctionality.inCourse(courseId);
         if (!valid) {
             return Result.err(ACCESS_COURSE_DENIED, "无法访问此课程");
         }
-        courseService.modifyGroup(name, groupId, member, teacherId, preTime, capacity, ddl);
+        courseService.modifyGroup(name, groupId, member, teacherId, preTime, capacity, ddl,introduction);
         return Result.ok("");
     }
 
@@ -415,12 +416,13 @@ public class CourseController {
     public Result<?> addCourseGroup(@PathVariable("courseId") long courseId,
         @PathVariable("projectId") Integer projectId, @RequestParam("groupName") String name,
         @RequestParam("inspectorID") Long teacherId, @RequestParam("preTime") String preTime,
-        @RequestParam("groupSize") Integer capacity) {
+        @RequestParam("groupSize") Integer capacity,
+        @RequestParam("introduction") String introduction) {
         boolean valid = authFunctionality.inCourse(courseId);
         if (!valid) {
             return Result.err(ACCESS_COURSE_DENIED, "无法访问此课程");
         }
-        courseService.addCourseGroup((int) courseId, name, projectId, teacherId, preTime, capacity);
+        courseService.addCourseGroup((int) courseId, name, projectId, teacherId, preTime, capacity,introduction);
         return Result.ok("");
     }
 

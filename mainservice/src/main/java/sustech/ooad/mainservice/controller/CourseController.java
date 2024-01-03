@@ -46,7 +46,7 @@ public class CourseController {
 
     //获取课程所有老师
     @PreAuthorize(ROLE_CHECK)
-    @GetMapping("/{courseId}/teacher}")
+    @GetMapping("/{courseId}/teacher")
     public Result<?> getCourseTeacher(@PathVariable("courseId") Integer courseId) {
         return Result.ok(courseService.getCourseTeacher(courseId));
     }

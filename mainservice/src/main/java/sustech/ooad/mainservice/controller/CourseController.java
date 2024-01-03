@@ -45,7 +45,7 @@ public class CourseController {
     }
 
     //获取某个用户的信息
-    @PreAuthorize(ROLE_CHECK_TEACHER)
+    @PreAuthorize(ROLE_CHECK)
     @GetMapping("/user/{uuid}/info")
     public Result<?> getUser(@PathVariable("uuid") long uuid) {
         return Result.ok(authUserRepository.findAuthUserById(new BigDecimal(uuid)));

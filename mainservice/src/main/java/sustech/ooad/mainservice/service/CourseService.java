@@ -206,7 +206,9 @@ public class CourseService {
         homeworkRepository.modifyHomework(name, attachment, description, ddl, homeworkId);
         Project project = projectRepository.findProjectByHomeworkid(
             homeworkRepository.findHomeworkById(homeworkId));
-        projectRepository.modifyddl(ddl, project.getId());
+        if (project != null) {
+            projectRepository.modifyddl(ddl, project.getId());
+        }
     }
 
     public ProjectDto getProject(Integer id) {
@@ -453,7 +455,7 @@ public class CourseService {
     }
 
     public List<noticeDto> getAnnouncement(Integer courseId) {
-        if(authFunctionality.getCourseAuthority(courseId).equals(AUTHORITY_TEACHER)){
+        if (authFunctionality.getCourseAuthority(courseId).equals(AUTHORITY_TEACHER)) {
             List<CourseAnnouncement> courseAnnouncementList = courseAnnouncementRepository.findCourseAnnouncementsByCourse(
                 courseRepository.findCourseById(courseId));
             List<noticeDto> noticeDtoList = new ArrayList<>();
@@ -462,11 +464,12 @@ public class CourseService {
                     a.getUserUuid().getId().longValue(), a.getUserUuid().getName()));
             });
             return noticeDtoList;
-        }else {
+        } else {
             List<CourseAnnouncement> courseAnnouncementList = courseAnnouncementRepository.findCourseAnnouncementsByCourse(
                 courseRepository.findCourseById(courseId));
             List<CourseAnnouncement> courseAnnouncementList1 = announcementUserRepository.findAnnouncementUsersByUuid(
-                authFunctionality.getUser()).stream().map(AnnouncementUser::getAnnouncementid).toList();
+                    authFunctionality.getUser()).stream().map(AnnouncementUser::getAnnouncementid)
+                .toList();
 
             List<noticeDto> noticeDtoList = new ArrayList<>();
             courseAnnouncementList.retainAll(courseAnnouncementList1);

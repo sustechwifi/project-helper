@@ -10,6 +10,7 @@ spring:
   cloud:
     nacos:
       discovery:
+        ip: ${SERVER_IP}
         server-addr: ${remote-ip}:8848
         namespace: ooad
         group: DEFAULT_GROUP

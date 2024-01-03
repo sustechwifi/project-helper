@@ -7,6 +7,7 @@ COPY ./mainservice-0.0.1-SNAPSHOT.jar ./app.jar
 
 # 设置环境变量指定运行端口（例如 8080）
 ENV PORT=8070
+ENV SERVER_IP=139.199.172.27
 
 # 对外开放运行端口
 EXPOSE $PORT

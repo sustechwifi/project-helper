@@ -77,8 +77,15 @@ public class MinioOssImpl implements OssClient {
                     .bucket(bucket)
                     .object(path)
                     .build());
-            content.setType(resp.headers().get("Content-Type"));
-            content.setData(resp.readAllBytes());
+            var type = resp.headers().get("Content-Type");
+            var data = resp.readAllBytes();
+            if ("application/octet-stream".equals(type)){
+                if (TextFileDetector.isTextFile(data)){
+                    type = "text/plain";
+                }
+            }
+            content.setType(type);
+            content.setData(data);
             return content;
         } catch (Exception e) {
             log.error("error when fetch "+path+" to bucket "+bucket);

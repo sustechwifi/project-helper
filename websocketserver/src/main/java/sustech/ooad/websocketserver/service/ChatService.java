@@ -124,8 +124,8 @@ public class ChatService {
     private ChatContent latestMessage(long uid, long withUser) {
         List<ChatContent> tmp = new ArrayList<>();
         getLatestMessage(tmp, uid, withUser, PREFIX_CHAT_NEW_MESSAGE);
-        getLatestMessage(tmp, withUser, uid, PREFIX_CHAT_OLD_MESSAGE);
-        getLatestMessage(tmp, uid, withUser, PREFIX_CHAT_NEW_MESSAGE);
+        getLatestMessage(tmp, uid, withUser, PREFIX_CHAT_OLD_MESSAGE);
+        getLatestMessage(tmp, withUser, uid, PREFIX_CHAT_NEW_MESSAGE);
         getLatestMessage(tmp, withUser, uid, PREFIX_CHAT_OLD_MESSAGE);
         var res = tmp.stream().max(Comparator.comparingLong(ChatContent::getTime));
         return res.orElse(null);
@@ -150,13 +150,17 @@ public class ChatService {
                 long withUid = Long.parseLong(o);
                 var withUser = findChatUserById(withUid);
                 if (withUser == null) {
+                    System.out.println("查不到此好友 uid = "+withUid);
                     continue;
                 }
+                System.out.printf("查找 uid = %d 的聊天好友 %s\n",uid, withUser);
                 var msg = latestMessage(uid, withUid);
                 if (msg == null){
+                    System.out.printf("找不到 %d -> %d 的聊天信息\n",uid, withUid);
                     continue;
                 }
                 var cnt = getNewContentCnt(uid, withUid);
+                System.out.printf("%d -> %d 的聊天信息数目为 %d\n",uid, withUid,cnt);
                 res.add(new ChatListRecord(
                         withUser.getId(),
                         withUser.getName(),
@@ -166,7 +170,8 @@ public class ChatService {
                         msg.getTime())
                 );
 
-            } catch (NumberFormatException ignored) {
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
             }
         }
         System.out.println(res);

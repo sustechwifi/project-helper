@@ -170,7 +170,7 @@ public class CourseService {
         Integer courseId, String state, long uuid) {
         courseRepository.addProject(projectName, courseId, ddl, state, description, attachment);
         homeworkRepository.addHomework(projectName + " final submit", ";",
-            "This is " + projectName + " final submit", null, courseId, 1, uuid);
+            "This is " + projectName + " final submit", ddl, courseId, 1, uuid);
         Integer homeworkId = homeworkRepository.findHomeworkByName(projectName + " final submit")
             .getId();
         Integer projectId = projectRepository.findByCourseAndName(
@@ -311,9 +311,9 @@ public class CourseService {
     }
 
     public boolean inGroup(Long uuid, Integer groupId) {
-        return Objects.equals(groupId, groupMemberListRepository.findGroupMemberListByUserUuid(
-                authUserMapper.selectOneById(uuid)).getGroup()
-            .getId());
+        return groupMemberListRepository.findGroupMemberListsByUserUuid(
+                authUserMapper.selectOneById(uuid)).stream().map(GroupMemberList::getGroup).toList()
+            .contains(groupRepository.findGroupById(groupId));
     }
 
     public void addTask(String name, String ddl, String attachment, String description,
@@ -499,11 +499,20 @@ public class CourseService {
     public gradeDto getGrade(Integer homeworkId) {
         Grade grade = gradeRepository.findGradeByHomeworkid(
             homeworkRepository.findHomeworkById(homeworkId));
+        if (grade == null) {
+            return new gradeDto();
+        }
         return new gradeDto(grade, attachment.divide(grade.getId().getUrl()));
     }
 
     public void addGrade(String url, Integer homeworkId) {
-        gradeRepository.addGrade(homeworkId, url);
+        Grade grade=gradeRepository.findGradeByHomeworkid(homeworkRepository.findHomeworkById(homeworkId));
+        if(grade==null){
+            gradeRepository.addGrade(homeworkId, url);
+        }else {
+            gradeRepository.modifyGrade(url, homeworkId);
+        }
+
     }
 
     public List<submitDto> getOwnSubmit() {

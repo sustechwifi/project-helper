@@ -127,13 +127,14 @@ public class AuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2U
 
     public boolean authRole(String email, String role) {
         AuthUser r = null;
+        System.out.println(email);
         try {
             r = authUserMapper.selectByEmail(email);
         } catch (Exception e) {
             log.error(e.getMessage());
             return false;
         }
-        if (StrUtil.isEmpty(r.getEmail())){
+        if (r == null || StrUtil.isEmpty(r.getEmail())){
             return false;
         }
         switch (role){

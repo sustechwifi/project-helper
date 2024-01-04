@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import sustech.ooad.mainservice.mapper.AuthUserRepository;
 import sustech.ooad.mainservice.mapper.CourseRepository;
 import sustech.ooad.mainservice.model.AuthUser;
 import sustech.ooad.mainservice.model.Course;
@@ -33,6 +34,9 @@ import static sustech.ooad.mainservice.util.ConstantField.*;
 @RestController
 @RequestMapping("/user")
 public class UserController {
+
+    @Autowired
+    private AuthUserRepository authUserRepository;
 
     @Resource
     AuthService authService;
@@ -79,20 +83,20 @@ public class UserController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/admin/users")
-    public Result<?> getAllUsers(){
-        if (!authFunctionality.getUser().getRole().equals(ROLE_ADMIN)){
-            return Result.err(ACCESS_DENIED,"admin only");
-        }else {
+    public Result<?> getAllUsers() {
+        if (!authFunctionality.getUser().getRole().equals(ROLE_ADMIN)) {
+            return Result.err(ACCESS_DENIED, "admin only");
+        } else {
             return Result.ok(userService.getAllUsers());
         }
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/admin/edit")
-    public Result<?> editUserInfo(@RequestBody AuthUser authUser){
-        if (!authFunctionality.getUser().getRole().equals(ROLE_ADMIN)){
-            return Result.err(ACCESS_DENIED,"admin only");
-        }else {
+    public Result<?> editUserInfo(@RequestBody AuthUser authUser) {
+        if (!authFunctionality.getUser().getRole().equals(ROLE_ADMIN)) {
+            return Result.err(ACCESS_DENIED, "admin only");
+        } else {
             return Result.ok(userService.editUserInfo(authUser));
         }
     }
@@ -114,9 +118,8 @@ public class UserController {
     @PostMapping("/auth/role")
     public Result<?> authRole(@RequestParam("code") String code,
         @RequestParam("role") String role) {
-        String email = authFunctionality.getUser().getEmail();
-        String key = EMAIL_AUTH_ROLE + email;
-        String s = stringRedisTemplate.opsForValue().get(key);
+        String email = authUserRepository.findAuthUserById(authFunctionality.getUser().getId())
+            .getEmail();
         if (authService.authRole(email, role)) {
             return Result.ok(role);
         } else {

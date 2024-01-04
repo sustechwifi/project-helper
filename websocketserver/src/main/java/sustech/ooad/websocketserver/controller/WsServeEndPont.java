@@ -66,6 +66,7 @@ public class WsServeEndPont {
     }
 
     private void sendEchoMessage(Session session, ChatContent chatContent) throws Exception {
+        System.out.printf("将消息发回给发送者uid = %d",chatContent.getFrom().getId());
         var echo = new ChatContent(
                 -1,
                 chatContent.getTo(),
@@ -110,16 +111,19 @@ public class WsServeEndPont {
         System.out.println(content);
         if (content.getType() == 1 || content.getType() == 2) {
             if (content.getFrom() == null) {
+                System.out.println("不能没有发送者");
                 return;
             }
             var fromSession = sessionMap.get(content.getFrom().getId());
             if (fromSession == null){
+                System.out.println("缺少发送者的 session");
                 return;
             }
             var from = content.getFrom().getId();
             String key = String.format("%s:%d", PREFIX_CHAT_MAPPING, from);
             String toUser = stringRedisTemplate.opsForValue().get(key);
             if (!Objects.equals(toUser, String.valueOf(content.getTo()))) {
+                System.out.printf("uid = %d 发送失败\n",content.getFrom().getId());
                 sendFailMessage(fromSession, content.getFrom().getId());
             } else {
                 // 将此消息发回各发送者
@@ -127,20 +131,24 @@ public class WsServeEndPont {
                 Session webSocketSession = sessionMap.get(content.getTo());
                 if (webSocketSession != null) {
                     // 判断对面在綫
+                    System.out.printf("聊天对象 uid = %d 在线\n",content.getTo());
                     String key2 = String.format("%s:%d", PREFIX_CHAT_MAPPING, content.getTo());
                     String toUser2 = stringRedisTemplate.opsForValue().get(key2);
                     if (Objects.equals(toUser2, String.valueOf(from))) {
                         // 对面也在一起聊天
+                        System.out.printf("聊天对象对面也在一起聊天， uid = %d 在线\n",content.getTo());
                         webSocketSession.getBasicRemote().sendText(objectMapper.writeValueAsString(content));
                         chatService.addOnlineMessage(content);
                     }else {
                         // 對面在綫，但是不是在同一個窗口
+                        System.out.printf("聊天对象在綫，但是不是在同一個窗口 uid = %d 在线\n",content.getTo());
                         chatService.addOfflineMessage(content);
                     }
                     List<ChatListRecord> chatRecords = chatService.findChatRecords(content.getTo());
                     var newList = updateChatList(chatRecords, from);
                     webSocketSession.getBasicRemote().sendText(objectMapper.writeValueAsString(newList));
                 } else {
+                    System.out.printf("聊天对象 uid = %d 不在线\n",content.getTo());
                     chatService.addOfflineMessage(content);
                 }
             }

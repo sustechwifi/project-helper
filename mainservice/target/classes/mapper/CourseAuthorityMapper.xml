@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="sustech.ooad.mainservice.mapper.CourseAuthorityMapper">
+
+    <resultMap id="objRM" type="sustech.ooad.mainservice.model.CourseAuthority">
+        <!--
+        id 只对主键进行映射
+        result 对一般字段的映射
+        -->
+        <result column="course_id" property="courseId"/>
+        <result column="auth_user_id" property="userId"/>
+        <result column="authority" property="courseAuthority"/>
+
+    </resultMap>
+    <select id="selectOne" resultMap="objRM">
+
+    </select>
+
+    <select id="findUserCourses" resultMap="objRM">
+        select * from ooad_project_helper.public.course_authority c
+                 where c.auth_user_id = #{uid}
+    </select>
+
+
+</mapper>

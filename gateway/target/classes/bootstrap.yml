@@ -1,0 +1,50 @@
+spring:
+  application:
+    name: gateway
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${remote-ip}:8848
+        namespace: ooad
+        group: DEFAULT_GROUP
+      config:
+        server-addr: ${remote-ip}:8848
+        namespace: ooad
+        group: GATEWAY
+        prefix: ${spring.application.name}
+        fileExtension: yaml
+
+
+# 自定义变量
+remote-ip: 139.199.172.27
+
+
+
+#server:
+#  port: 8080
+#
+#spring:
+#  cloud:
+#    loadbalancer:
+#      enabled: true
+#      nacos:
+#        enabled: true
+#    gateway:
+#      discovery:
+#        locator:
+#          enabled: false
+#          lower-case-service-id: true
+#      routes:
+#        - id: main_service
+#          uri: lb://main-service
+#          predicates:
+#            # 匹配的请求路径断言
+#            - Path=/**
+
+
+
+
+
+
